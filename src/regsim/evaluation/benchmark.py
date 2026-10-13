@@ -64,9 +64,12 @@ def evaluate_split(name: str, factory: Callable[[], object], data: ModelData, sp
         "mae": mae(P, data.Z, test),
         "seconds": time.perf_counter() - t0,
     }
-    scale = getattr(model, "scale_", None)
-    if scale is not None:
-        sigma = np.broadcast_to(scale, P.shape)
+    sigma = None
+    if hasattr(model, "predict_std"):
+        sigma = model.predict_std()
+    elif getattr(model, "scale_", None) is not None:
+        sigma = np.broadcast_to(model.scale_, P.shape)
+    if sigma is not None and np.isfinite(sigma[test]).all():
         row["crps"] = crps_gaussian(P, sigma, data.Z, test)
         inside = np.abs(P - data.Z)[test] <= Z90 * sigma[test]
         row["coverage90"] = float(inside.mean())

@@ -15,3 +15,11 @@
 - **Baseline intervals.** Baseline predictive distributions are Gaussian with the in-sample residual scale per column; they are too narrow for the low-rank and neighbour methods (90 % nominal coverage: 46–77 %). Calibrated intervals follow with split-conformal calibration (M5).
 - **Cold start (scheme M2).** RMSE depends strongly on which entities are drawn (standard deviation 0.07–0.10 between seed pairs); single runs are not comparable to ±0.05.
 - **MissForest.** About 30 s per fit on the Eurostat matrix (50 trees, 5 rounds); in-sample predictions at observed cells are out-of-bag predictions.
+
+## Core model (M3)
+
+- **Laplace posterior.** Block-diagonal per entity over (u, b) with V, mu and the hyperparameters fixed; uncertainty in the indicator factors and the aggregation constraints are not propagated. Ordinal and categorical columns get predictive probabilities but no Laplace term.
+- **Fold-in.** Uses continuous columns only; aggregation and children terms need the entity to be a row of the fitted data.
+- **Reconciliation.** Linearised projection (three Gauss-Newton steps); observed cells are never changed, so groups whose published values are inconsistent stay inconsistent.
+- **Tuning.** Inner cross-validation uses random cells for all schemes; it does not mimic cold start, country blocks or level transfer.
+- **Runtime.** About 6-15 s per fit on the Eurostat matrix (1,669 × 25) with 4 threads; tuning with 8 combinations and 2 folds about 9 minutes per split.

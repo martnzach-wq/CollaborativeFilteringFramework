@@ -1,5 +1,37 @@
 # Progress
 
+## M3 Core model HierTypedMF (2026-10-13)
+
+**Done**
+- `HierTypedMF` (PyTorch, float64, full-batch L-BFGS with preconditioned entity factors): typed losses (squared or Huber; cumulative logit for ordinal; multinomial for categorical columns), hierarchical prior with membership-weighted (fractional) parents, aggregation constraints on the original scale per `aggregation` metadata (ratios weighted by their denominator, sums only for fully covered parents), side information, optional spatial Laplacian (GISCO adjacency) and random-walk penalty for geo-time entities; couplings `none`, `broadcast` (LEVITATE), `prior_only`, `prior_and_constraint`.
+- Block-diagonal Laplace posterior per entity (`predict_std`, `predict_dist`); fold-in of entities (with children, parents' aggregation constraints and siblings when the entity is a row of the fitted data) and of indicators.
+- Coherence by a variance-weighted MinT-type projection on the model scale (observed cells fixed, with a measurement variance so that inconsistencies between published values are not pushed onto single predicted cells).
+- `Tuned`: hyperparameters by masked cross-validation within the training cells (nested in the benchmark); `configs/benchmark_m3.yaml`.
+- `prepare` builds several period windows as geo-time entities (decision D3), side information and adjacency; `ModelData.parent` now holds membership fractions.
+
+**Benchmark (Eurostat 2018/2022, prototype protocol, `runs/evaluate-d8409fe4239a`)**
+
+| Method | M1 random cells | M2 cold start | M3 country blocks | M4 level transfer |
+|---|---|---|---|---|
+| HierTypedMF (tuned) | **0.360** | **0.324** | 0.625 | **0.392** |
+| MF, hierarchical prior | 0.361 | 0.325 | 0.606 | 0.411 |
+| MF, broadcast (LEVITATE) | 0.441 | 0.417 | **0.499** | 0.507 |
+| ParentCarryDown | 0.729 | 0.807 | 0.556 | 0.615 |
+| MissForest | 0.590 | 0.860 | 0.737 | 0.724 |
+| Prototype "MF, prior + aggregation" | 0.425 | 0.507 | 0.723 | 0.410 |
+
+Other results: synthetic recovery (generator defaults, MCAR 30 %) 0.6° (indicator factors) and 6.8° (entity factors); with level-missingness (28 % observed) 8° and 16°. Fold-in vs full refit: NUTS-3 0.438 vs 0.437, NUTS-2 0.380 vs 0.407. Coherence after reconciliation: 95 % of parent groups with predicted children within 0.8 %.
+
+**Findings**
+- The hierarchical prior gives most of the gain over plain MF; the aggregation constraint adds to it in level transfer (M4: 0.411 → 0.392).
+- Country blocks (M3): when all regions of a country are hidden for an indicator, copying the national value (0.556) or broadcasting it into the matrix (0.499) beats the model (0.625), whose predicted regional variation adds error. Candidate remedies: a scheme-matched inner CV for `lam_u`/`lam_agg`, or shrinking towards the parent value when a block has no regional information.
+- The tuned model chose the prototype's hyperparameters (rank 12, λ_u = 0.03, λ_agg = 1) in this benchmark; tuning costs about 17 fits per split.
+
+**Open**
+- Calibration of the Laplace intervals on real data and conformal recalibration (M5).
+- Decisions D4, D7, D8, D9.
+
+
 ## M2 Baselines and evaluation harness (2026-10-13)
 
 **Done**

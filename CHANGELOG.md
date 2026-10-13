@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 (M3)
+- `HierTypedMF` with typed losses, hierarchical prior, aggregation constraints, side information, Laplacian and random-walk penalties, Laplace posterior, fold-in, MinT-type reconciliation; `Tuned` nested CV; geo-time `prepare`; `configs/benchmark_m3.yaml`.
+- `ModelData.parent` holds membership fractions; ratio indicators aggregate with their denominator's weights.
+
 ## 0.3.0 (M2)
 - Model matrix preparation, seven baselines, masking schemes M1–M4, metrics, benchmark runner, model card, `regsim evaluate`, `configs/benchmark_prototype.yaml`.
 - M2 acceptance: cold-start tolerance ±0.10 (see `docs/decisions.md`).
