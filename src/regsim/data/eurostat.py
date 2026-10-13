@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
-import re
 import time
 from collections.abc import Callable
 from pathlib import Path
@@ -14,6 +12,8 @@ from xml.etree import ElementTree
 import numpy as np
 import pandas as pd
 import requests
+
+from regsim.data.http import CachedClient, SourceError, TooLargeError, as_list
 
 BASE = "https://ec.europa.eu/eurostat/api/dissemination/"
 DATA_URL = BASE + "statistics/1.0/data/{dataset}"
@@ -35,7 +35,7 @@ OBS_COLUMNS = [
 ]
 
 
-class EurostatError(RuntimeError):
+class EurostatError(SourceError):
     pass
 
 
@@ -72,11 +72,16 @@ class EurostatConnector:
         timeout: float = 120.0,
     ):
         self.cache_dir = Path(cache_dir)
-        self.max_retries = max_retries
-        self.session = session or requests.Session()
-        self.sleep = sleep
-        self.offline = offline
-        self.timeout = timeout
+        self.client = CachedClient(
+            cache_dir,
+            session=session,
+            sleep=sleep,
+            offline=offline,
+            max_retries=max_retries,
+            timeout=timeout,
+            is_pending=_is_async,
+            error=EurostatError,
+        )
 
     # ------------------------------------------------------------------ structure and validation
     def structure(self, dataset: str) -> dict[str, list[str]]:
@@ -99,7 +104,7 @@ class EurostatConnector:
             if dim not in dims:
                 problems.append(f"dimension '{dim}' not in {dataset} (available: {sorted(dims)})")
                 continue
-            missing = [v for v in _as_list(values) if str(v) not in dims[dim]]
+            missing = [v for v in as_list(values) if str(v) not in dims[dim]]
             if missing:
                 problems.append(f"codes {missing} not available for '{dim}' in {dataset}")
         if problems:
@@ -134,7 +139,7 @@ class EurostatConnector:
         try:
             payload = json.loads(self._get(DATA_URL.format(dataset=dataset), params, kind="data"))
             frame = parse_jsonstat(payload)
-        except _TooLarge:
+        except TooLargeError:
             frame = self._fetch_split(dataset, params, spec)
             payload = {}
         return _to_observations(frame, spec, payload.get("updated", ""))
@@ -151,34 +156,8 @@ class EurostatConnector:
             )
         return pd.concat(frames, ignore_index=True)
 
-    # ------------------------------------------------------------------ HTTP with cache and retry
     def _get(self, url: str, params: dict, kind: str, fmt: str = "json") -> str:
-        key = _request_key(url, params)
-        path = self.cache_dir / kind / f"{key}.{fmt}"
-        if path.exists():
-            return path.read_text(encoding="utf-8")
-        if self.offline:
-            raise EurostatError(f"not cached and offline: {url} {params}")
-        delay = 2.0
-        for attempt in range(self.max_retries + 1):
-            r = self.session.get(url, params=_encode(params), timeout=self.timeout)
-            if r.status_code == 200 and not _is_async(r.text):
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(r.text, encoding="utf-8")
-                return r.text
-            retryable = r.status_code in (413, 429) or r.status_code >= 500 or _is_async(r.text)
-            if not retryable:
-                raise EurostatError(f"HTTP {r.status_code} for {r.url}: {r.text[:300]}")
-            if attempt < self.max_retries:
-                self.sleep(delay)
-                delay *= 2
-        if r.status_code == 413 or _is_async(r.text):
-            raise _TooLarge(url)
-        raise EurostatError(f"HTTP {r.status_code} after {self.max_retries} retries: {r.url}")
-
-
-class _TooLarge(EurostatError):
-    pass
+        return self.client.get(url, params, kind, fmt)
 
 
 def parse_jsonstat(payload: dict) -> pd.DataFrame:
@@ -235,20 +214,6 @@ def _to_observations(frame: pd.DataFrame, spec: dict, updated: str) -> pd.DataFr
     for c in extra:
         out[c] = frame[c].values
     return out.reset_index(drop=True)
-
-
-def _as_list(v: Any) -> list:
-    return list(v) if isinstance(v, (list, tuple)) else [v]
-
-
-def _encode(params: dict) -> list[tuple[str, str]]:
-    return [(k, str(x)) for k, v in params.items() for x in _as_list(v)]
-
-
-def _request_key(url: str, params: dict) -> str:
-    canon = url + "?" + "&".join(f"{k}={v}" for k, v in sorted(_encode(params)))
-    slug = re.sub(r"[^A-Za-z0-9]+", "_", url.rsplit("/", 1)[-1])[:40]
-    return f"{slug}_{hashlib.sha256(canon.encode()).hexdigest()[:16]}"
 
 
 def _is_async(text: str) -> bool:

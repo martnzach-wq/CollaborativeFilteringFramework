@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1
+- ARDECO connector and fallback registry (GDP per inhabitant, employment rate, population); shared cached HTTP client.
+
 ## 0.2.0 (M1)
 - Eurostat connector, NUTS/LAU 2024 geo registry with NUTS 2021 → 2024 correspondence, indicator registry with source links, Parquet/DuckDB observation store, D3.6 GeoPackage adapter, `regsim build`.
 - Registry: `fertility_rate` filtered to `TOTFERRT`; D3.6 registry for the 41 populated indicators.

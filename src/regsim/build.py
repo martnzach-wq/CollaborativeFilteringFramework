@@ -46,7 +46,9 @@ class Harmoniser:
 
     def __init__(self, target: str, cache_dir: str, sources: tuple[str, ...] = ("2021",)):
         self.target = target
-        self.valid = set(nuts_table(target, cache_dir).code)
+        table = nuts_table(target, cache_dir)
+        self.valid = set(table.code)
+        self.level = dict(zip(table.code, table.level, strict=True))
         self.tables = {s: correspondence(s, target, cache_dir) for s in sources if s != target}
 
     def harmonise(self, obs: pd.DataFrame, aggregation: Aggregation) -> tuple[pd.DataFrame, dict]:
@@ -88,14 +90,26 @@ class Harmoniser:
         return out, counts
 
 
-def build(config: RunConfig, connector: EurostatConnector | None = None) -> BuildReport:
-    """Fetch, harmonise and store observations as described by ``config``."""
+def build(
+    config: RunConfig,
+    connector: EurostatConnector | None = None,
+    connectors: dict[str, object] | None = None,
+) -> BuildReport:
+    """Fetch, harmonise and store observations as described by ``config``.
+
+    ``connector`` replaces the Eurostat connector, ``connectors`` any connector by name (used in tests).
+    """
     d = config.data
     raw = Path(d.raw_dir)
     gisco = str(raw / "gisco")
     store = ObservationStore(d.store)
     registry = IndicatorRegistry.from_yaml(*d.registries)
     connector = connector or EurostatConnector(cache_dir=str(raw / "eurostat"))
+    connectors = {"eurostat": connector, **(connectors or {})}
+    if "ardeco" in d.sources and "ardeco" not in connectors:
+        from regsim.data.ardeco import ArdecoConnector
+
+        connectors["ardeco"] = ArdecoConnector(cache_dir=str(raw / "ardeco"), version=d.nuts_version)
     since, until = d.span
     harmoniser = Harmoniser(d.nuts_version, gisco)
     report = BuildReport(config_hash=config.config_hash())
@@ -119,6 +133,22 @@ def build(config: RunConfig, connector: EurostatConnector | None = None) -> Buil
     population = pop_obs.groupby("geo_code").value.mean().to_dict()
     frames = [_finish(pop_obs, scheme_name)]
     report.per_indicator.append({"indicator_id": POPULATION_ID, **counts})
+    fb = registry.population_fallback
+    if fb and fb["connector"] in d.sources:
+        spec = {
+            "dataset": fb["dataset"],
+            "indicator_id": POPULATION_ID,
+            "filters": fb.get("filters", {}),
+            "since": since,
+            "until": until,
+        }
+        extra, counts = harmoniser.harmonise(connectors[fb["connector"]].fetch(spec), Aggregation.SUM)
+        extra = extra[~extra.geo_code.isin(population.keys())]
+        population.update(extra.groupby("geo_code").value.mean().to_dict())
+        frames.append(_finish(extra, scheme_name))
+        report.per_indicator.append(
+            {"indicator_id": f"{POPULATION_ID} ({fb['connector']})", **counts, "native": len(extra)}
+        )
 
     nuts = NutsScheme(d.nuts_version, gisco, population=population, levels=d.levels)
     units, edges = nuts.units(), nuts.edges()
@@ -129,26 +159,31 @@ def build(config: RunConfig, connector: EurostatConnector | None = None) -> Buil
     store.write_geo(units, edges)
     report.units_per_level = pd.Series([u.level for u in units]).value_counts().sort_index().to_dict()
 
-    if "eurostat" in d.sources:
-        for entry in registry:
-            if entry.source.connector != "eurostat":
-                continue
-            spec = {
-                "dataset": entry.source.dataset,
-                "indicator_id": entry.indicator_id,
-                "filters": entry.source.filters,
-                "since": since,
-                "until": until,
-            }
-            obs = connector.fetch(spec)
-            free = [c for c in _extra_dims(obs) if obs[c].nunique() > 1]
-            if free:
-                raise ValueError(f"{entry.indicator_id}: filters leave free dimensions {free}")
-            obs = obs.drop(columns=_extra_dims(obs))
-            obs, counts = harmoniser.harmonise(obs, entry.aggregation)
-            frames.append(_finish(obs, scheme_name))
-            report.per_indicator.append({"indicator_id": entry.indicator_id, **counts})
-            log.info("%s: %s", entry.indicator_id, counts)
+    for entry in registry:
+        name = entry.source.connector
+        if name not in ("eurostat", "ardeco") or name not in d.sources:
+            continue
+        spec = {
+            "dataset": entry.source.dataset,
+            "indicator_id": entry.indicator_id,
+            "filters": entry.source.filters,
+            "since": since,
+            "until": until,
+        }
+        levels = (entry.source.model_extra or {}).get("levels")
+        obs = connectors[name].fetch(
+            spec | ({"levels": levels} if levels is not None and name == "ardeco" else {})
+        )
+        free = [c for c in _extra_dims(obs) if obs[c].nunique() > 1]
+        if free:
+            raise ValueError(f"{entry.indicator_id}: filters leave free dimensions {free}")
+        obs = obs.drop(columns=_extra_dims(obs))
+        obs, counts = harmoniser.harmonise(obs, entry.aggregation)
+        if levels is not None:
+            obs = obs[obs.geo_code.map(harmoniser.level).isin(levels)]
+        frames.append(_finish(obs, scheme_name))
+        report.per_indicator.append({"indicator_id": entry.indicator_id, **counts})
+        log.info("%s: %s", entry.indicator_id, counts)
 
     if "d36" in d.sources:
         from regsim.data.d36 import fetch_d36, read_d36

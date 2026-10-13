@@ -76,6 +76,7 @@ class RegistryFile(BaseModel):
 
     registry_version: str
     population_weights: SourceSpec | dict | None = None
+    population_fallback: SourceSpec | None = None
     source_precedence: list[str] = Field(default_factory=lambda: list(DEFAULT_PRECEDENCE))
     indicators: list[IndicatorEntry]
 
@@ -98,6 +99,7 @@ class IndicatorRegistry:
         self.precedence = list(precedence)
         self.versions = list(versions)
         self.population_weights = population_weights
+        self.population_fallback: dict | None = None
         for e in self.entries.values():
             if e.same_as and e.same_as not in self.entries:
                 raise ValueError(f"{e.indicator_id}: same_as refers to unknown indicator {e.same_as}")
@@ -110,12 +112,15 @@ class IndicatorRegistry:
         pw = next((f.population_weights for f in files if f.population_weights), None)
         if isinstance(pw, SourceSpec):
             pw = pw.model_dump()
-        return cls(
+        fb = next((f.population_fallback for f in files if f.population_fallback), None)
+        reg = cls(
             [e for f in files for e in f.indicators],
             precedence=files[0].source_precedence if files else DEFAULT_PRECEDENCE,
             versions=[f.registry_version for f in files],
             population_weights=pw,
         )
+        reg.population_fallback = fb.model_dump() if fb else None
+        return reg
 
     def __len__(self) -> int:
         return len(self.entries)

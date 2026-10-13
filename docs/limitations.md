@@ -8,3 +8,4 @@
 - **United Kingdom.** NUTS 2024 has no UK regions, so UK data are dropped (decision D1).
 - **Population.** Units without Eurostat population (BA, UA, XK) use area shares as edge weights.
 - **LAU.** Only the LAU year matching the NUTS version is linked; LAU 2021 → 2024 changes are not mapped.
+- **ARDECO.** NUTS-3 employment rates are experimental ARDECO estimates and enter the model as observations flagged `ardeco`. ARDECO has no GVA counterpart in the Eurostat registry, so GVA is not used. Restrict an entry with `source.levels` to exclude levels.
