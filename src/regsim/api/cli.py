@@ -26,7 +26,14 @@ def fit(config: str):
 
 @app.command()
 def evaluate(config: str):
-    raise NotImplementedError("M2")
+    """Masked hold-out benchmark of the configured estimators; writes a model card."""
+    from regsim.config import RunConfig
+    from regsim.evaluation.benchmark import summarise
+    from regsim.evaluation.run import evaluate as run_evaluate
+
+    results, card = run_evaluate(RunConfig.from_yaml(config))
+    typer.echo(summarise(results).to_string(index=False))
+    typer.echo(f"model card: {card}")
 
 
 @app.command()

@@ -9,7 +9,7 @@ EPS = 1e-9
 
 def forward(x: np.ndarray, kind: str) -> np.ndarray:
     x = np.asarray(x, dtype=float)
-    if kind == "identity":
+    if kind in ("identity", "rank"):
         return x
     if kind == "log":
         return np.log(np.clip(x, EPS, None))
@@ -23,7 +23,7 @@ def forward(x: np.ndarray, kind: str) -> np.ndarray:
 
 def inverse(z: np.ndarray, kind: str) -> np.ndarray:
     z = np.asarray(z, dtype=float)
-    if kind == "identity":
+    if kind in ("identity", "rank"):
         return z
     if kind == "log":
         return np.exp(z)

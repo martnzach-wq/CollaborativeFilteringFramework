@@ -18,6 +18,7 @@ import duckdb
 import numpy as np
 import pandas as pd
 
+from regsim.geo.scheme import HierarchyGraph
 from regsim.schema import GeoEdge, GeoUnit, Lens
 
 OBSERVATION_COLUMNS = {
@@ -118,6 +119,15 @@ class ObservationStore:
 
     def units(self) -> pd.DataFrame:
         return self.query("SELECT * FROM geo_unit")
+
+    def graph(self) -> HierarchyGraph:
+        """Hierarchy graph of the stored geo units and edges."""
+        units = [
+            GeoUnit(**{k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in r.items()})
+            for r in self.units().to_dict("records")
+        ]
+        edges = [GeoEdge(**r) for r in self.query("SELECT * FROM geo_edge").to_dict("records")]
+        return HierarchyGraph(units, edges)
 
     def matrix(
         self,

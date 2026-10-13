@@ -56,9 +56,36 @@ class ModelConfig(BaseModel):
     seed: int = 0
 
 
+class EvaluationConfig(BaseModel):
+    """Masked hold-out benchmark (design §10)."""
+
+    period: str = "2018/2022"
+    levels: list[int] = Field(default_factory=lambda: [0, 2, 3])
+    registries: list[str] | None = None  # default: data.indicator_registry
+    indicators: list[str] | None = None  # default: the registry's model indicators
+    merge_copies: bool = True
+    require_population: bool = True
+    protocol: str = "prototype"
+    coarse_level: int = 2
+    fine_level: int = 3
+    estimators: dict[str, dict] = Field(
+        default_factory=lambda: {
+            "GlobalMean": {},
+            "LevelMean": {},
+            "ParentCarryDown": {},
+            "KNNGower": {"k": 10},
+            "SoftImpute": {"lam": 5.0, "rank_max": 12},
+            "IterativePCA": {"rank": 5},
+            "MissForest": {"n_estimators": 50, "max_iter": 5},
+        }
+    )
+    n_jobs: int = 1
+
+
 class RunConfig(BaseModel):
     data: DataConfig
     model: ModelConfig = ModelConfig()
+    evaluation: EvaluationConfig = EvaluationConfig()
     output_dir: str = "runs"
 
     def config_hash(self) -> str:

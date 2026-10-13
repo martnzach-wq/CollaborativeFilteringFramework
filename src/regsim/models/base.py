@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Protocol
 
 import numpy as np
@@ -10,12 +10,67 @@ import numpy as np
 
 @dataclass
 class ModelData:
-    Z: np.ndarray  # entities x columns, transformed + scaled, NaN = missing
-    mask: np.ndarray  # observed cells used for fitting
-    parent: list[list[tuple[int, float]]]  # fractional parents per row
-    agg: object  # sparse aggregation matrix (parents x rows) on original scale
-    column_meta: list  # Indicator per column (after CLR expansion)
-    side: np.ndarray | None = None  # side information x_g
+    """Model-ready matrix on the transformed and robust-scaled scale.
+
+    Attributes
+    ----------
+    Z : ndarray, shape (n_entities, n_columns)
+        Values on the model scale; NaN where missing.
+    mask : ndarray of bool
+        Cells used for fitting (observed and not held out).
+    parent : list of list of (int, float)
+        Parents of each row within the matrix, with population shares of the child in the parent.
+    agg : scipy.sparse matrix, shape (n_entities, n_entities)
+        Population-weighted aggregation of children to parents (row p holds the shares of p's children).
+    column_meta : list of Indicator
+        Indicator per column (after CLR expansion).
+    side : ndarray, optional
+        Side information x_g.
+    level : ndarray of int
+        Level of each row.
+    country : ndarray of str
+        Top-level ancestor of each row, used for grouped masking.
+    geo_ids, column_ids : list of str
+        Row and column labels.
+    scalers : list of (transform, location, scale)
+        Inverse mapping to the original scale per column.
+    """
+
+    Z: np.ndarray
+    mask: np.ndarray
+    parent: list[list[tuple[int, float]]]
+    agg: object
+    column_meta: list
+    side: np.ndarray | None = None
+    level: np.ndarray | None = None
+    country: np.ndarray | None = None
+    geo_ids: list[str] = field(default_factory=list)
+    column_ids: list[str] = field(default_factory=list)
+    scalers: list[tuple[str, float, float]] = field(default_factory=list)
+
+    @property
+    def shape(self) -> tuple[int, int]:
+        return self.Z.shape
+
+    def with_mask(self, mask: np.ndarray) -> ModelData:
+        """Copy that fits on ``mask`` (cells outside it are hidden from the estimator)."""
+        Z = np.where(mask, self.Z, np.nan)
+        return ModelData(
+            Z,
+            mask,
+            self.parent,
+            self.agg,
+            self.column_meta,
+            self.side,
+            self.level,
+            self.country,
+            self.geo_ids,
+            self.column_ids,
+            self.scalers,
+        )
+
+    def levels(self) -> np.ndarray:
+        return self.level if self.level is not None else np.zeros(self.Z.shape[0], dtype=int)
 
 
 class Estimator(Protocol):

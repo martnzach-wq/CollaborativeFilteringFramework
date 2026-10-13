@@ -1,0 +1,24 @@
+# Rerun of the feasibility benchmark (docs/prototype.md) on the regsim store: Eurostat indicators only,
+# 2018-2022 means, NUTS-0/2/3 units with population, prototype masking protocol.
+data:
+  indicator_registry: configs/indicators_eurostat_v1.yaml
+  geo_scheme: NUTS2024
+  levels: [0, 2, 3]
+  periods: ["2013/2017", "2018/2022"]
+  store: data/store
+  sources: [eurostat]
+evaluation:
+  period: "2018/2022"
+  levels: [0, 2, 3]
+  merge_copies: false
+  protocol: prototype
+  estimators:
+    GlobalMean: {}
+    LevelMean: {}
+    ParentCarryDown: {}
+    KNNGower: {k: 10}
+    SoftImpute: {lam: 5.0, rank_max: 12}
+    IterativePCA: {rank: 5}
+    MissForest: {n_estimators: 50, max_iter: 5}
+  n_jobs: 4
+output_dir: runs
