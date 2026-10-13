@@ -7,11 +7,11 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D1 | 2026-10-13 | Harmonise geo codes to **NUTS 2024** and **LAU 2024**. Data published under NUTS 2016/2021 are recoded via the GISCO correspondence tables. | M. Zach |
 | D2 | 2026-10-13 | Repository `martnzach-wq/CollaborativeFilteringFramework`; package name **`regsim`**; licence **Apache-2.0**. | M. Zach |
 | D3 | 2026-10-13 | Time enters v1 with **two period windows**, 2013/2017 and 2018/2022, as geo-time entities with a random-walk penalty (design §4.3). | M. Zach |
-| D4 | open | Default lens; whether polarity is shown | |
+| D4 | 2026-10-13 | Default lens: **all model indicators** (one per `same_as` group, all sources). **Polarity off** by default; available as a display option in views, never used in calculations. | M. Zach |
 | D5 | 2026-10-13 | v1 sources: **Eurostat** and **GISCO** (primary), **KNOWING D3.6 GeoPackage** (imported in full; only its non-Eurostat indicators enter the model), **JRC ARDECO** as fallback for population, GDP, employment and GVA, flagged as estimates. WDI and AlphaEarth are deferred to the extension beyond Europe. | M. Zach |
 | D6 | 2026-10-13 | **PyTorch is a core dependency.** `HierTypedMF` uses autograd for the typed losses and the Laplace posterior. | M. Zach |
 | D7 | open | Interactive front end | |
-| D8 | open | TRF classes for regsim similarities | |
+| D8 | 2026-10-13 | TRF classes (TRF1–TRF5) are reported **only in D3.6 compatibility mode**; regsim similarities are reported as percentile scores without classes. | M. Zach |
 | D9 | open | Severity of D3.6 gates in regsim mode | |
 
 ## Consequences
