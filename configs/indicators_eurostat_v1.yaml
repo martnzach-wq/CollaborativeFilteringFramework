@@ -1,0 +1,340 @@
+registry_version: eurostat_v1
+population_weights:
+  dataset: demo_r_pjangrp3
+  filters:
+    sex: T
+    age: TOTAL
+    unit: NR
+indicators:
+- indicator_id: pop_density
+  label: population density
+  dtype: continuous
+  transform: log
+  aggregation: ratio
+  native_levels:
+  - 3
+  source:
+    connector: eurostat
+    dataset: demo_r_d3dens
+    filters:
+      unit: PER_KM2
+  ratio_of:
+  - population
+  - area_km2
+- indicator_id: gdp_pps_hab
+  label: GDP per inhabitant (PPS)
+  dtype: continuous
+  transform: log
+  aggregation: wmean_pop
+  native_levels:
+  - 3
+  source:
+    connector: eurostat
+    dataset: nama_10r_3gdp
+    filters:
+      unit: PPS_EU27_2020_HAB
+- indicator_id: median_age
+  label: median age
+  dtype: continuous
+  transform: identity
+  aggregation: none
+  native_levels:
+  - 3
+  source:
+    connector: eurostat
+    dataset: demo_r_pjanind3
+    filters:
+      indic_de: MEDAGEPOP
+  note: medians are not aggregable
+- indicator_id: old_age_dependency
+  label: old-age dependency
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 3
+  source:
+    connector: eurostat
+    dataset: demo_r_pjanind3
+    filters:
+      indic_de: OLDDEP1
+  note: exact weight is population aged 15-64
+- indicator_id: share_age_0_14
+  label: share aged 0–14
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 3
+  source:
+    connector: eurostat
+    dataset: demo_r_pjanind3
+    filters:
+      indic_de: PC_Y0_14
+- indicator_id: pop_growth_rate
+  label: population growth
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 3
+  source:
+    connector: eurostat
+    dataset: demo_r_gind3
+    filters:
+      indic_de: GROWRT
+- indicator_id: net_migration_rate
+  label: net migration
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 3
+  source:
+    connector: eurostat
+    dataset: demo_r_gind3
+    filters:
+      indic_de: CNMIGRATRT
+- indicator_id: fertility_rate
+  label: fertility rate
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 3
+  source:
+    connector: eurostat
+    dataset: demo_r_find3
+    filters: {}
+  note: exact weight is women aged 15-49; population weight is an approximation
+- indicator_id: unemployment_rate
+  label: unemployment
+  dtype: continuous
+  transform: log
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: lfst_r_lfu3rt
+    filters:
+      sex: T
+      age: Y20-64
+      isced11: TOTAL
+      unit: PC
+  note: exact weight is the labour force; population weight is an approximation
+- indicator_id: employment_rate
+  label: employment rate
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: lfst_r_lfe2emprt
+    filters:
+      sex: T
+      age: Y20-64
+      unit: PC
+- indicator_id: tertiary_attainment
+  label: tertiary attainment
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: edat_lfse_04
+    filters:
+      sex: T
+      age: Y25-64
+      isced11: ED5-8
+      unit: PC
+- indicator_id: life_expectancy
+  label: life expectancy
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: demo_r_mlifexp
+    filters:
+      sex: T
+      age: Y_LT1
+      unit: YR
+- indicator_id: cars_per_1000
+  label: cars per 1,000
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: tran_r_vehst
+    filters:
+      vehicle: CAR
+      unit: P_THAB
+- indicator_id: hh_income_pps
+  label: household income (PPS)
+  dtype: continuous
+  transform: log
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: nama_10r_2hhinc
+    filters:
+      unit: PPS_EU27_2020_HAB
+      na_item: B6N
+      direct: BAL
+- indicator_id: road_deaths_pmh
+  label: road deaths
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: tran_r_acci
+    filters:
+      victim: KIL
+      unit: P_MHAB
+- indicator_id: rd_expenditure_gdp
+  label: R&D expenditure
+  dtype: continuous
+  transform: log1p
+  aggregation: none
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: rd_e_gerdreg
+    filters:
+      sectperf: TOTAL
+      unit: PC_GDP
+  note: GDP-weighted in reality; treated as not aggregable
+- indicator_id: poverty_exclusion_risk
+  label: poverty/exclusion risk
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: ilc_peps11n
+    filters:
+      unit: PC
+- indicator_id: hospital_beds
+  label: hospital beds
+  dtype: continuous
+  transform: log
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: hlth_rs_bdsrg2
+    filters:
+      unit: P_HTHAB
+- indicator_id: broadband_households
+  label: broadband households
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: isoc_r_broad_h
+    filters:
+      unit: PC_HH
+- indicator_id: lifelong_learning
+  label: lifelong learning
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_pop
+  native_levels:
+  - 2
+  source:
+    connector: eurostat
+    dataset: trng_lfse_04
+    filters:
+      sex: T
+      age: Y25-64
+      unit: PC
+- indicator_id: renewables_share
+  label: renewables share
+  dtype: continuous
+  transform: identity
+  aggregation: none
+  native_levels:
+  - 0
+  source:
+    connector: eurostat
+    dataset: nrg_ind_ren
+    filters:
+      nrg_bal: REN
+      unit: PC
+  note: energy-weighted in reality; treated as not aggregable
+- indicator_id: ghg_per_capita
+  label: GHG per capita
+  dtype: continuous
+  transform: log
+  aggregation: wmean_pop
+  native_levels:
+  - 0
+  source:
+    connector: eurostat
+    dataset: sdg_13_10
+    filters:
+      unit: T_HAB
+      src_crf: TOTX4_MEMO
+- indicator_id: gini
+  label: Gini
+  dtype: continuous
+  transform: identity
+  aggregation: none
+  native_levels:
+  - 0
+  source:
+    connector: eurostat
+    dataset: ilc_di12
+    filters:
+      age: TOTAL
+  note: not aggregable
+- indicator_id: heating_degree_days
+  label: heating degree days
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  source:
+    connector: eurostat
+    dataset: nrg_chdd_a
+    filters:
+      unit: NR
+      indic_nrg: HDD
+  note: check whether Eurostat national values are area- or population-weighted
+- indicator_id: cooling_degree_days
+  label: cooling degree days
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  source:
+    connector: eurostat
+    dataset: nrg_chdd_a
+    filters:
+      unit: NR
+      indic_nrg: CDD
+  note: check whether Eurostat national values are area- or population-weighted

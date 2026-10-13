@@ -1,0 +1,74 @@
+first_author,n_authors,year,title,venue,doi,url,check
+Aggarwal,3,2001,On the Surprising Behavior of Distance Metrics in High Dimensional Space,Lecture Notes in Computer Science,10.1007/3-540-44503-X_27,https://doi.org/10.1007/3-540-44503-X_27,CrossRef verified
+Aitchison,1,1982,The Statistical Analysis of Compositional Data,Journal of the Royal Statistical Society Series B: Statistical Methodology,10.1111/j.2517-6161.1982.tb01195.x,https://doi.org/10.1111/j.2517-6161.1982.tb01195.x,CrossRef verified
+Angelopoulos,2,2023,Conformal Prediction: A Gentle Introduction,Foundations and Trends® in Machine Learning,10.1561/2200000101,https://doi.org/10.1561/2200000101,CrossRef verified
+Assunção,4,2006,Efficient regionalization techniques for socio‐economic geographical units using minimum spanning trees,International Journal of Geographical Information Science,10.1080/13658810600665111,https://doi.org/10.1080/13658810600665111,CrossRef verified
+Athey,5,2021,Matrix Completion Methods for Causal Panel Data Models,Journal of the American Statistical Association,10.1080/01621459.2021.1891924,https://doi.org/10.1080/01621459.2021.1891924,CrossRef verified
+Bahadori,3,2014,Fast multivariate spatio-temporal analysis via low rank tensor learning,NeurIPS 2014,,https://proceedings.neurips.cc/paper/2014,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Bai,2,2021,"Matrix Completion, Counterfactuals, and Factor Analysis of Missing Data",Journal of the American Statistical Association,10.1080/01621459.2021.1967163,https://doi.org/10.1080/01621459.2021.1967163,CrossRef verified
+Bareinboim,2,2016,Causal inference and the data-fusion problem,Proceedings of the National Academy of Sciences,10.1073/pnas.1510507113,https://doi.org/10.1073/pnas.1510507113,CrossRef verified
+Bastin,15,2019,Understanding climate change from a global analysis of city analogues,PLOS ONE,10.1371/journal.pone.0217592,https://doi.org/10.1371/journal.pone.0217592,CrossRef verified
+Beyer,4,1999,When Is “Nearest Neighbor” Meaningful?,Lecture Notes in Computer Science,10.1007/3-540-49257-7_15,https://doi.org/10.1007/3-540-49257-7_15,CrossRef verified
+Brown,19,2025,AlphaEarth Foundations: An embedding field model for accurate and efficient global mapping from sparse label data,arXiv:2507.22291,,https://doi.org/10.48550/arXiv.2507.22291,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Campello,3,2013,Density-Based Clustering Based on Hierarchical Density Estimates,Lecture Notes in Computer Science,10.1007/978-3-642-37456-2_14,https://doi.org/10.1007/978-3-642-37456-2_14,CrossRef verified
+Candès,2,2009,Exact Matrix Completion via Convex Optimization,Foundations of Computational Mathematics,10.1007/s10208-009-9045-5,https://doi.org/10.1007/s10208-009-9045-5,CrossRef verified
+Chavent,4,2018,ClustGeo: an R package for hierarchical clustering with spatial constraints,Computational Statistics,10.1007/s00180-018-0791-1,https://doi.org/10.1007/s00180-018-0791-1,CrossRef verified
+Creutzig,5,2015,Global typology of urban energy use and potentials for an urbanization mitigation wedge,Proceedings of the National Academy of Sciences,10.1073/pnas.1315545112,https://doi.org/10.1073/pnas.1315545112,CrossRef verified
+Dhillon,1,2001,Co-clustering documents and words using bipartite spectral graph partitioning,Proceedings of the seventh ACM SIGKDD international conference on Knowledge discovery and data mining,10.1145/502512.502550,https://doi.org/10.1145/502512.502550,CrossRef verified
+Dijkstra,7,2021,Applying the Degree of Urbanisation to the globe: A new harmonised definition reveals a different picture of global urbanisation,Journal of Urban Economics,10.1016/j.jue.2020.103312,https://doi.org/10.1016/j.jue.2020.103312,CrossRef verified
+Duque,3,2012,THE MAX‐P‐REGIONS PROBLEM*,Journal of Regional Science,10.1111/j.1467-9787.2011.00743.x,https://doi.org/10.1111/j.1467-9787.2011.00743.x,CrossRef verified
+Elahi,3,2016,A survey of active learning in collaborative filtering recommender systems,Computer Science Review,10.1016/j.cosrev.2016.05.002,https://doi.org/10.1016/j.cosrev.2016.05.002,CrossRef verified
+Fay,2,1979,Estimates of Income for Small Places: An Application of James-Stein Procedures to Census Data,Journal of the American Statistical Association,10.1080/01621459.1979.10482505,https://doi.org/10.1080/01621459.1979.10482505,CrossRef verified
+Fitzpatrick,2,2019,Contemporary climatic analogs for 540 North American urban areas in the late 21st century,Nature Communications,10.1038/s41467-019-08540-3,https://doi.org/10.1038/s41467-019-08540-3,CrossRef verified
+Fotheringham,2,1991,The Modifiable Areal Unit Problem in Multivariate Statistical Analysis,Environment and Planning A: Economy and Space,10.1068/a231025,https://doi.org/10.1068/a231025,CrossRef verified
+Friedman,3,2008,Sparse inverse covariance estimation with the graphical lasso,Biostatistics,10.1093/biostatistics/kxm045,https://doi.org/10.1093/biostatistics/kxm045,CrossRef verified
+Gabriel,1,1971,The biplot graphic display of matrices with application to principal component analysis,Biometrika,10.1093/biomet/58.3.453,https://doi.org/10.1093/biomet/58.3.453,CrossRef verified
+Gale,4,2016,Creating the 2011 area classification for output areas (2011 OAC),Journal of Spatial Information Science,10.5311/JOSIS.2016.12.232,https://doi.org/10.5311/JOSIS.2016.12.232,CrossRef verified
+Gotway,2,2002,Combining Incompatible Spatial Data,Journal of the American Statistical Association,10.1198/016214502760047140,https://doi.org/10.1198/016214502760047140,CrossRef verified
+Gower,1,1971,A General Coefficient of Similarity and Some of Its Properties,Biometrics,10.2307/2528823,https://doi.org/10.2307/2528823,CrossRef verified
+Gower,1,1975,Generalized Procrustes Analysis,Psychometrika,10.1007/BF02291478,https://doi.org/10.1007/BF02291478,CrossRef verified
+Guo,2,2016,Entity embeddings of categorical variables,arXiv:1604.06737,,https://arxiv.org/abs/1604.06737,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Hastie,4,2015,Matrix completion and low-rank SVD via fast alternating least squares,Journal of Machine Learning Research 16,,https://jmlr.org/papers/v16/hastie15a.html,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Herlocker,4,1999,An algorithmic framework for performing collaborative filtering,Proceedings of the 22nd annual international ACM SIGIR conference on Research and development in information retrieval,10.1145/312624.312682,https://doi.org/10.1145/312624.312682,CrossRef verified
+Hyndman,4,2011,Optimal combination forecasts for hierarchical time series,Computational Statistics &amp; Data Analysis,10.1016/j.csda.2011.03.006,https://doi.org/10.1016/j.csda.2011.03.006,CrossRef verified
+Jain,2,2013,Provable inductive matrix completion,arXiv:1306.0626,,https://arxiv.org/abs/1306.0626,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Josse,2,2012,Handling missing values in exploratory multivariate data analysis methods,Journal de la SFdS 153(2),,http://journal-sfds.fr/article/view/122,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Josse,2,2016,missMDA : A Package for Handling Missing Values in Multivariate Data Analysis,Journal of Statistical Software,10.18637/jss.v070.i01,https://doi.org/10.18637/jss.v070.i01,CrossRef verified
+Kalofolias,4,2014,Matrix completion on graphs,arXiv:1408.1717,,https://arxiv.org/abs/1408.1717,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Klemmer,5,2025,"SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery",Proceedings of the AAAI Conference on Artificial Intelligence,10.1609/aaai.v39i4.32457,https://doi.org/10.1609/aaai.v39i4.32457,CrossRef verified
+Kohonen,1,1990,The self-organizing map,Proceedings of the IEEE,10.1109/5.58325,https://doi.org/10.1109/5.58325,CrossRef verified
+Kolda,2,2009,Tensor Decompositions and Applications,SIAM Review,10.1137/07070111X,https://doi.org/10.1137/07070111X,CrossRef verified
+Koren,3,2009,Matrix Factorization Techniques for Recommender Systems,Computer,10.1109/MC.2009.263,https://doi.org/10.1109/MC.2009.263,CrossRef verified
+Kruskal,1,1964,Multidimensional Scaling by Optimizing Goodness of Fit to a Nonmetric Hypothesis,Psychometrika,10.1007/BF02289565,https://doi.org/10.1007/BF02289565,CrossRef verified
+Kulis,1,2013,Metric Learning: A Survey,Foundations and Trends® in Machine Learning,10.1561/2200000019,https://doi.org/10.1561/2200000019,CrossRef verified
+Kummu,3,2018,Gridded global datasets for Gross Domestic Product and Human Development Index over 1990–2015,Scientific Data,10.1038/sdata.2018.4,https://doi.org/10.1038/sdata.2018.4,CrossRef verified
+Madeira,2,2004,Biclustering algorithms for biological data analysis: a survey,IEEE/ACM Transactions on Computational Biology and Bioinformatics,10.1109/TCBB.2004.2,https://doi.org/10.1109/TCBB.2004.2,CrossRef verified
+Mahony,4,2017,A closer look at novel climates: new methods and insights at continental to landscape scales,Global Change Biology,10.1111/gcb.13645,https://doi.org/10.1111/gcb.13645,CrossRef verified
+Marlin,2,2009,Collaborative prediction and ranking with non-random missing data,Proceedings of the third ACM conference on Recommender systems,10.1145/1639714.1639717,https://doi.org/10.1145/1639714.1639717,CrossRef verified
+Mazumder,3,2010,Spectral regularization algorithms for learning large incomplete matrices,Journal of Machine Learning Research 11,,https://jmlr.org/papers/v11/mazumder10a.html,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+McInnes,3,2018,UMAP: Uniform manifold approximation and projection for dimension reduction,arXiv:1802.03426,,https://arxiv.org/abs/1802.03426,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Monti,4,2003,Consensus Clustering: A Resampling-Based Method for Class Discovery and Visualization of Gene Expression Microarray Data,Machine Learning,10.1023/A:1023949509487,https://doi.org/10.1023/A:1023949509487,CrossRef verified
+Netzeva,21,2005,Current Status of Methods for Defining the Applicability Domain of (Quantitative) Structure-Activity Relationships,Alternatives to Laboratory Animals,10.1177/026119290503300209,https://doi.org/10.1177/026119290503300209,CrossRef verified
+Oudin,5,2008,"Spatial proximity, physical similarity, regression and ungaged catchments: A comparison of regionalization approaches based on 913 French catchments",Water Resources Research,10.1029/2007WR006240,https://doi.org/10.1029/2007WR006240,CrossRef verified
+Pearl,2,2014,External Validity: From Do-Calculus to Transportability Across Populations,Statistical Science,10.1214/14-STS486,https://doi.org/10.1214/14-STS486,CrossRef verified
+Rao,2,2015,Small Area Estimation,,10.1002/9781118735855,https://doi.org/10.1002/9781118735855,CrossRef verified
+Rao,4,2015,Collaborative filtering with graph information: consistency and scalable methods,NeurIPS 2015,,https://proceedings.neurips.cc/paper/2015/hash/f4573fc71c731d5c362f0d7860945b88-Abstract.html,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Razavi,2,2013,Streamflow Prediction in Ungauged Basins: Review of Regionalization Methods,Journal of Hydrologic Engineering,10.1061/(ASCE)HE.1943-5584.0000690,https://doi.org/10.1061/(ASCE)HE.1943-5584.0000690,CrossRef verified
+Rendle,1,2010,Factorization Machines,2010 IEEE International Conference on Data Mining,10.1109/ICDM.2010.127,https://doi.org/10.1109/ICDM.2010.127,CrossRef verified
+Rolf,8,2021,A generalizable and accessible approach to machine learning with global satellite imagery,Nature Communications,10.1038/s41467-021-24638-z,https://doi.org/10.1038/s41467-021-24638-z,CrossRef verified
+Salakhutdinov,2,2008,Bayesian probabilistic matrix factorization using Markov chain Monte Carlo,Proceedings of the 25th international conference on Machine learning - ICML '08,10.1145/1390156.1390267,https://doi.org/10.1145/1390156.1390267,CrossRef verified
+Schein,4,2002,Methods and metrics for cold-start recommendations,Proceedings of the 25th annual international ACM SIGIR conference on Research and development in information retrieval,10.1145/564376.564421,https://doi.org/10.1145/564376.564421,CrossRef verified
+Singh,2,2008,Relational learning via collective matrix factorization,Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining,10.1145/1401890.1401969,https://doi.org/10.1145/1401890.1401969,CrossRef verified
+Sportisse,3,2020,Imputation and low-rank estimation with Missing Not At Random data,Statistics and Computing,10.1007/s11222-020-09963-5,https://doi.org/10.1007/s11222-020-09963-5,CrossRef verified
+Stekhoven,2,2012,MissForest—non-parametric missing value imputation for mixed-type data,Bioinformatics,10.1093/bioinformatics/btr597,https://doi.org/10.1093/bioinformatics/btr597,CrossRef verified
+Stevens,4,2015,Disaggregating Census Data for Population Mapping Using Random Forests with Remotely-Sensed and Ancillary Data,PLOS ONE,10.1371/journal.pone.0107042,https://doi.org/10.1371/journal.pone.0107042,CrossRef verified
+Troyanskaya,8,2001,Missing value estimation methods for DNA microarrays,Bioinformatics,10.1093/bioinformatics/17.6.520,https://doi.org/10.1093/bioinformatics/17.6.520,CrossRef verified
+Udell,4,2016,Generalized Low Rank Models,Foundations and Trends® in Machine Learning,10.1561/2200000055,https://doi.org/10.1561/2200000055,CrossRef verified
+Venna,2,2001,Neighborhood Preservation in Nonlinear Projection Methods: An Experimental Study,Lecture Notes in Computer Science,10.1007/3-540-44668-0_68,https://doi.org/10.1007/3-540-44668-0_68,CrossRef verified
+Vickers,2,2007,Creating the UK National Statistics 2001 Output Area Classification,Journal of the Royal Statistical Society Series A: Statistics in Society,10.1111/j.1467-985X.2007.00466.x,https://doi.org/10.1111/j.1467-985X.2007.00466.x,CrossRef verified
+Vovk,0,2005,Algorithmic Learning in a Random World,,10.1007/b106715,https://doi.org/10.1007/b106715,CrossRef verified
+Weinberger,2,2009,Distance metric learning for large margin nearest neighbor classification,Journal of Machine Learning Research 10,,https://jmlr.org/papers/v10/weinberger09a.html,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+Wickramasuriya,3,2019,Optimal Forecast Reconciliation for Hierarchical and Grouped Time Series Through Trace Minimization,Journal of the American Statistical Association,10.1080/01621459.2018.1448825,https://doi.org/10.1080/01621459.2018.1448825,CrossRef verified
+Zhang,5,2020,Learning from aggregate observations,NeurIPS 2020; arXiv:2004.06316,,https://arxiv.org/abs/2004.06316,no CrossRef DOI; stable URL (arXiv DOI for Brown)
+van Buuren,2,2011,mice: Multivariate Imputation by Chained Equations inR,Journal of Statistical Software,10.18637/jss.v045.i03,https://doi.org/10.18637/jss.v045.i03,CrossRef verified
+van der Maaten,2,2008,Visualizing data using t-SNE,Journal of Machine Learning Research 9,,https://jmlr.org/papers/v9/vandermaaten08a.html,no CrossRef DOI; stable URL (arXiv DOI for Brown)

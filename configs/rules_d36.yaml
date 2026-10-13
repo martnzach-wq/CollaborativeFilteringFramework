@@ -1,0 +1,43 @@
+# KNOWING D3.6 eligibility gates (Table 10) as declarative rules. Severity in regsim mode: decision D9.
+# Expressions use `d` (demonstrator / reference) and `t` (target) with indicator ids from the D3.6 registry.
+rules:
+  - id: G001_coastal_eligibility
+    scope: [coastal]
+    when: "d.coastal_type in (1, 2) and t.coastal_type == 0"
+    severity_d36: hard
+  - id: G002_mountain_coastal_incompatibility
+    scope: [all]
+    when: "(d.mountain_type in (1, 2, 3) and t.coastal_type in (1, 2)) or (t.mountain_type in (1, 2, 3) and d.coastal_type in (1, 2))"
+    severity_d36: hard
+  - id: G003_urban_rural_incompatibility
+    scope: [urban]
+    when: "(d.degurba == 1 and t.degurba == 3) or (d.degurba == 3 and t.degurba == 1)"
+    severity_d36: soft
+  - id: G004_floodplain_absence
+    scope: [river]
+    when: "t.floodplain_extent_km2 < 1 and t.river_flood_prob_100yr < 0.01"
+    severity_d36: hard
+  - id: G005_koppen_distant
+    scope: [all]
+    when: "koppen_adjacency(d.koppen, t.koppen) == 'distant'"
+    severity_d36: hard
+  - id: G006_arid_humid_incompatibility
+    scope: [agroforestry]
+    when: "d.precip_mean > 0 and t.precip_mean > 0 and max(d.precip_mean / t.precip_mean, t.precip_mean / d.precip_mean) > 4.0"
+    severity_d36: soft
+  - id: G007_urban_cic_rural_target
+    scope: [urban]
+    when: "d.degurba in (1, 2) and t.degurba == 3"
+    severity_d36: hard
+  - id: G008_agroforestry_cic_urban_target
+    scope: [agroforestry]
+    when: "t.degurba in (1, 2)"
+    severity_d36: hard
+  - id: G009_coastal_cic_high_elevation
+    scope: [coastal]
+    when: "t.elevation_min > 50"
+    severity_d36: hard
+  - id: G010_low_coverage
+    scope: [all]
+    when: "min_tier_coverage(d, t) < 0.70"
+    severity_d36: soft

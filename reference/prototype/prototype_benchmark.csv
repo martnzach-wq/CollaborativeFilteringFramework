@@ -1,0 +1,148 @@
+scheme,seed,k,method,n_cells,rmse,mae,indicator
+M1 random cells,0,,level mean,1886,1.1687974251500273,0.842492551557035,
+M1 random cells,0,,parent carry-down,1886,0.6869536403685986,0.47329603977232476,
+M1 random cells,0,,kNN Gower (D3.6-type),1886,0.6803906770524598,0.4489893373529455,
+M1 random cells,0,,SoftImpute,1886,0.6261153372906875,0.4397061646498301,
+M1 random cells,0,,"MF, broadcast (LEVITATE-type)",1886,0.533371137521028,0.36934069569092404,
+M1 random cells,0,,"MF, hierarchical prior",1886,0.3895687520388858,0.2730687907916903,
+M1 random cells,0,,"MF, prior + aggregation",1886,0.3957941493479701,0.2746279429826945,
+M1 random cells,1,,level mean,1886,1.2188205591775803,0.8725678387236695,
+M1 random cells,1,,parent carry-down,1886,0.705124021623303,0.47629636944238357,
+M1 random cells,1,,kNN Gower (D3.6-type),1886,0.7225371189380718,0.444725327530344,
+M1 random cells,1,,SoftImpute,1886,0.724893026987514,0.4745787595225817,
+M1 random cells,1,,"MF, broadcast (LEVITATE-type)",1886,0.5807233380021942,0.39053160943239446,
+M1 random cells,1,,"MF, hierarchical prior",1886,0.435864333591131,0.2819410689261276,
+M1 random cells,1,,"MF, prior + aggregation",1886,0.4254099440520662,0.27714132344249637,
+M1 random cells,2,,level mean,1886,1.134382097765783,0.8503074131116058,
+M1 random cells,2,,parent carry-down,1886,0.7649964330485676,0.4971596385152161,
+M1 random cells,2,,kNN Gower (D3.6-type),1886,0.6879038205978318,0.4629635548534054,
+M1 random cells,2,,SoftImpute,1886,0.656135657603851,0.44940468028260006,
+M1 random cells,2,,"MF, broadcast (LEVITATE-type)",1886,0.6079150131677681,0.39246376832452523,
+M1 random cells,2,,"MF, hierarchical prior",1886,0.4640982818224877,0.2835243190623768,
+M1 random cells,2,,"MF, prior + aggregation",1886,0.4530324178148339,0.2872330069553527,
+M2 cold start (NUTS-2),0,1.0,level mean,749,1.3412775769757814,0.9359216080261137,
+M2 cold start (NUTS-2),0,1.0,parent carry-down,749,0.9267411198029818,0.5516429537375258,
+M2 cold start (NUTS-2),0,1.0,kNN Gower (D3.6-type),749,1.1072177018545013,0.7708663952597391,
+M2 cold start (NUTS-2),0,1.0,SoftImpute,749,1.2411440012848078,0.8640839639799291,
+M2 cold start (NUTS-2),0,1.0,"MF, broadcast (LEVITATE-type)",749,0.9505422977804598,0.5974604427086498,
+M2 cold start (NUTS-2),0,1.0,"MF, hierarchical prior",749,0.5629624611633919,0.35440655069631927,
+M2 cold start (NUTS-2),0,1.0,"MF, prior + aggregation",749,0.5499985810800498,0.3449449315147139,
+M2 cold start (NUTS-2),0,3.0,level mean,665,1.3674005161479916,0.9632834033757409,
+M2 cold start (NUTS-2),0,3.0,parent carry-down,665,0.9407863058251271,0.561925719440387,
+M2 cold start (NUTS-2),0,3.0,kNN Gower (D3.6-type),665,1.1141690823433046,0.7642368890062903,
+M2 cold start (NUTS-2),0,3.0,SoftImpute,665,1.2078988721944024,0.8378589098832511,
+M2 cold start (NUTS-2),0,3.0,"MF, broadcast (LEVITATE-type)",665,0.9440698492642188,0.6015506362314936,
+M2 cold start (NUTS-2),0,3.0,"MF, hierarchical prior",665,0.5687548605246178,0.35708512341222987,
+M2 cold start (NUTS-2),0,3.0,"MF, prior + aggregation",665,0.55618705494957,0.34426815845504394,
+M2 cold start (NUTS-2),0,6.0,level mean,539,1.248320698173124,0.9128536870782126,
+M2 cold start (NUTS-2),0,6.0,parent carry-down,539,0.8457280644461884,0.5393783501385746,
+M2 cold start (NUTS-2),0,6.0,kNN Gower (D3.6-type),539,0.8513752496485306,0.6275060523988949,
+M2 cold start (NUTS-2),0,6.0,SoftImpute,539,0.8902446097234292,0.6626269306337718,
+M2 cold start (NUTS-2),0,6.0,"MF, broadcast (LEVITATE-type)",539,0.7832314860398397,0.5290113918785739,
+M2 cold start (NUTS-2),0,6.0,"MF, hierarchical prior",539,0.48454091353141515,0.3197265870570034,
+M2 cold start (NUTS-2),0,6.0,"MF, prior + aggregation",539,0.47175657816219796,0.31397489453021027,
+M2 cold start (NUTS-2),0,10.0,level mean,371,1.2502316532921043,0.8986536525114585,
+M2 cold start (NUTS-2),0,10.0,parent carry-down,371,0.8600916094176431,0.5213911744080911,
+M2 cold start (NUTS-2),0,10.0,kNN Gower (D3.6-type),371,0.6992805094585679,0.46233291398140647,
+M2 cold start (NUTS-2),0,10.0,SoftImpute,371,0.7389842984281133,0.5248029538163304,
+M2 cold start (NUTS-2),0,10.0,"MF, broadcast (LEVITATE-type)",371,0.7384941323395448,0.48498143090579243,
+M2 cold start (NUTS-2),0,10.0,"MF, hierarchical prior",371,0.4238981511977782,0.2936130415673827,
+M2 cold start (NUTS-2),0,10.0,"MF, prior + aggregation",371,0.42159432329401464,0.28954753351744833,
+M2 cold start (NUTS-2),1,1.0,level mean,756,1.1975121103798485,0.8774863709202227,
+M2 cold start (NUTS-2),1,1.0,parent carry-down,756,0.8224820935476876,0.48884560330959337,
+M2 cold start (NUTS-2),1,1.0,kNN Gower (D3.6-type),756,1.1698779379085376,0.8029517493309621,
+M2 cold start (NUTS-2),1,1.0,SoftImpute,756,1.1486874833533527,0.8107345956878969,
+M2 cold start (NUTS-2),1,1.0,"MF, broadcast (LEVITATE-type)",756,0.8522201054386445,0.5407690803870877,
+M2 cold start (NUTS-2),1,1.0,"MF, hierarchical prior",756,0.5810598216966564,0.3676364540280842,
+M2 cold start (NUTS-2),1,1.0,"MF, prior + aggregation",756,0.5629440545030981,0.35557734003726127,
+M2 cold start (NUTS-2),1,3.0,level mean,672,1.1170598640572256,0.869576580134488,
+M2 cold start (NUTS-2),1,3.0,parent carry-down,672,0.7360100514119051,0.46807730459980834,
+M2 cold start (NUTS-2),1,3.0,kNN Gower (D3.6-type),672,0.9213577048161151,0.7046353347609294,
+M2 cold start (NUTS-2),1,3.0,SoftImpute,672,0.9678153892739925,0.753467758643727,
+M2 cold start (NUTS-2),1,3.0,"MF, broadcast (LEVITATE-type)",672,0.7166668764412907,0.5003767044162774,
+M2 cold start (NUTS-2),1,3.0,"MF, hierarchical prior",672,0.507253139769942,0.35483640688764334,
+M2 cold start (NUTS-2),1,3.0,"MF, prior + aggregation",672,0.48468633656690635,0.3322939444754517,
+M2 cold start (NUTS-2),1,6.0,level mean,546,1.1818835777427292,0.8756499636555949,
+M2 cold start (NUTS-2),1,6.0,parent carry-down,546,0.7821315940103284,0.4682270715222717,
+M2 cold start (NUTS-2),1,6.0,kNN Gower (D3.6-type),546,0.8670826560365937,0.6477333357247318,
+M2 cold start (NUTS-2),1,6.0,SoftImpute,546,0.8264767991425876,0.6324808901522107,
+M2 cold start (NUTS-2),1,6.0,"MF, broadcast (LEVITATE-type)",546,0.7244637071638265,0.4831787309004439,
+M2 cold start (NUTS-2),1,6.0,"MF, hierarchical prior",546,0.48581835577324833,0.33259781349580486,
+M2 cold start (NUTS-2),1,6.0,"MF, prior + aggregation",546,0.46280174807240904,0.31707004623998186,
+M2 cold start (NUTS-2),1,10.0,level mean,378,1.2268042602958276,0.8665586155269699,
+M2 cold start (NUTS-2),1,10.0,parent carry-down,378,0.8834617555315751,0.4985423565905153,
+M2 cold start (NUTS-2),1,10.0,kNN Gower (D3.6-type),378,0.8318029867706624,0.5090309873978847,
+M2 cold start (NUTS-2),1,10.0,SoftImpute,378,0.8556693085918142,0.5701797891484987,
+M2 cold start (NUTS-2),1,10.0,"MF, broadcast (LEVITATE-type)",378,0.8607071313758141,0.5013878816051079,
+M2 cold start (NUTS-2),1,10.0,"MF, hierarchical prior",378,0.5605642452963759,0.35096037588732737,
+M2 cold start (NUTS-2),1,10.0,"MF, prior + aggregation",378,0.5457947196009062,0.33287669046112994,
+M3 country blocks,0,,level mean,98,1.2398580166682802,1.043211747672418,
+M3 country blocks,0,,parent carry-down,98,0.8523213092716847,0.5546709883430075,
+M3 country blocks,0,,kNN Gower (D3.6-type),98,0.865665459500249,0.7170782490406743,
+M3 country blocks,0,,SoftImpute,98,0.8415505973655735,0.704287004835597,
+M3 country blocks,0,,"MF, broadcast (LEVITATE-type)",98,0.7436476056978352,0.5567539551916839,
+M3 country blocks,0,,"MF, hierarchical prior",98,0.8617826801784074,0.6670881116669883,
+M3 country blocks,0,,"MF, prior + aggregation",98,0.7774731969841155,0.6170218721222112,
+M3 country blocks,1,,level mean,112,1.30686697912366,1.175073379831295,
+M3 country blocks,1,,parent carry-down,112,0.7133384795233962,0.5146242411160309,
+M3 country blocks,1,,kNN Gower (D3.6-type),112,0.7195735572888411,0.585280736025007,
+M3 country blocks,1,,SoftImpute,112,0.8416165838553843,0.7091661721432158,
+M3 country blocks,1,,"MF, broadcast (LEVITATE-type)",112,0.6960651623858147,0.5432223346471475,
+M3 country blocks,1,,"MF, hierarchical prior",112,0.8046024060017318,0.5876880001167635,
+M3 country blocks,1,,"MF, prior + aggregation",112,0.6681030566080793,0.5279877437681746,
+M4 level transfer (NUTS-2 to NUTS-3),0,,level mean,1465,1.1343186471581208,0.865973033786031,pop_density
+M4 level transfer (NUTS-2 to NUTS-3),0,,parent carry-down,1465,0.6458977157078954,0.4416626810851254,pop_density
+M4 level transfer (NUTS-2 to NUTS-3),0,,kNN Gower (D3.6-type),1465,1.1343186471581208,0.865973033786031,pop_density
+M4 level transfer (NUTS-2 to NUTS-3),0,,SoftImpute,1465,1.0906615670106787,0.8274976215184422,pop_density
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, broadcast (LEVITATE-type)",1465,0.7009686444195611,0.5146210876826102,pop_density
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, hierarchical prior",1465,0.6177976170068885,0.4390461094829957,pop_density
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, prior + aggregation",1465,0.6138960924685452,0.4305306592999674,pop_density
+M4 level transfer (NUTS-2 to NUTS-3),0,,level mean,1286,1.0893431158107214,0.8317011834101382,gdp_pps_hab
+M4 level transfer (NUTS-2 to NUTS-3),0,,parent carry-down,1286,0.5966694331376338,0.43056871331020297,gdp_pps_hab
+M4 level transfer (NUTS-2 to NUTS-3),0,,kNN Gower (D3.6-type),1286,1.0893431158107214,0.8317011834101382,gdp_pps_hab
+M4 level transfer (NUTS-2 to NUTS-3),0,,SoftImpute,1286,0.9789150183083172,0.7524705996333377,gdp_pps_hab
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, broadcast (LEVITATE-type)",1286,0.6119631832122335,0.46178247240129283,gdp_pps_hab
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, hierarchical prior",1286,0.6245987466902598,0.47942933752722644,gdp_pps_hab
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, prior + aggregation",1286,0.6004067625686692,0.4573965552683596,gdp_pps_hab
+M4 level transfer (NUTS-2 to NUTS-3),0,,level mean,1550,1.1816446979688717,0.9311938613077247,median_age
+M4 level transfer (NUTS-2 to NUTS-3),0,,parent carry-down,1550,0.5561934884824824,0.39752688279614706,median_age
+M4 level transfer (NUTS-2 to NUTS-3),0,,kNN Gower (D3.6-type),1550,1.1816446979688717,0.9311938613077247,median_age
+M4 level transfer (NUTS-2 to NUTS-3),0,,SoftImpute,1550,0.6262651730186872,0.5259019564555252,median_age
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, broadcast (LEVITATE-type)",1550,0.4657977444352021,0.36565841747500555,median_age
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, hierarchical prior",1550,0.3847063253698585,0.2941466644019991,median_age
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, prior + aggregation",1550,0.34038156232848743,0.25410922314473766,median_age
+M4 level transfer (NUTS-2 to NUTS-3),0,,level mean,1535,1.2100033003200614,0.9315301997838711,old_age_dependency
+M4 level transfer (NUTS-2 to NUTS-3),0,,parent carry-down,1535,0.6036732167485397,0.42409183971915204,old_age_dependency
+M4 level transfer (NUTS-2 to NUTS-3),0,,kNN Gower (D3.6-type),1535,1.2100033003200614,0.9315301997838711,old_age_dependency
+M4 level transfer (NUTS-2 to NUTS-3),0,,SoftImpute,1535,0.8228631527150914,0.6270819950142482,old_age_dependency
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, broadcast (LEVITATE-type)",1535,0.5529154313269686,0.39924903091262265,old_age_dependency
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, hierarchical prior",1535,0.452909218795794,0.33227515872872704,old_age_dependency
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, prior + aggregation",1535,0.37625446471825996,0.28025354115060996,old_age_dependency
+M4 level transfer (NUTS-2 to NUTS-3),0,,level mean,1550,1.3886513488099417,1.0176307490729695,share_age_0_14
+M4 level transfer (NUTS-2 to NUTS-3),0,,parent carry-down,1550,0.4667217451243154,0.32747148433847606,share_age_0_14
+M4 level transfer (NUTS-2 to NUTS-3),0,,kNN Gower (D3.6-type),1550,1.3886513488099417,1.0176307490729695,share_age_0_14
+M4 level transfer (NUTS-2 to NUTS-3),0,,SoftImpute,1550,0.6776447427253995,0.5366528434305372,share_age_0_14
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, broadcast (LEVITATE-type)",1550,0.3803137540541553,0.2803239658562204,share_age_0_14
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, hierarchical prior",1550,0.3207729962823027,0.23577898484104826,share_age_0_14
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, prior + aggregation",1550,0.2997376739069606,0.2230847795629251,share_age_0_14
+M4 level transfer (NUTS-2 to NUTS-3),0,,level mean,1548,1.1773946736907845,0.8619399506636334,pop_growth_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,parent carry-down,1548,0.6442885640243246,0.43478463886294777,pop_growth_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,kNN Gower (D3.6-type),1548,1.1773946736907845,0.8619399506636334,pop_growth_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,SoftImpute,1548,0.6308533702343805,0.4377131509169234,pop_growth_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, broadcast (LEVITATE-type)",1548,0.49483283066469413,0.3570092982035253,pop_growth_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, hierarchical prior",1548,0.30555492313118565,0.22616942944042145,pop_growth_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, prior + aggregation",1548,0.23164234221874125,0.17076803314970324,pop_growth_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,level mean,1546,1.3582500709758256,0.9420230775435291,net_migration_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,parent carry-down,1546,0.8377689390431976,0.5463121721773632,net_migration_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,kNN Gower (D3.6-type),1546,1.3582500709758256,0.9420230775435291,net_migration_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,SoftImpute,1546,0.802538526372062,0.5497682949464964,net_migration_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, broadcast (LEVITATE-type)",1546,0.7024243890711861,0.47375210321888694,net_migration_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, hierarchical prior",1546,0.49006016588672885,0.34005859742596595,net_migration_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, prior + aggregation",1546,0.394950101807474,0.2681462220543463,net_migration_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,level mean,1537,1.17214991817698,0.8252368250752455,fertility_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,parent carry-down,1537,0.5505466995409063,0.39672988606774795,fertility_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,kNN Gower (D3.6-type),1537,1.17214991817698,0.8252368250752455,fertility_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,SoftImpute,1537,0.8489890395366343,0.6575162012187545,fertility_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, broadcast (LEVITATE-type)",1537,0.5452073388816722,0.4143568863209502,fertility_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, hierarchical prior",1537,0.48007107016134626,0.3644781151348839,fertility_rate
+M4 level transfer (NUTS-2 to NUTS-3),0,,"MF, prior + aggregation",1537,0.4235968436148976,0.31483825970140894,fertility_rate

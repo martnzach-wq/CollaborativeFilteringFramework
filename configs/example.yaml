@@ -1,0 +1,16 @@
+# Example run reproducing the feasibility prototype (docs/prototype.md)
+data:
+  indicator_registry: configs/indicators_eurostat_v1.yaml
+  geo_scheme: NUTS2021        # decision D1
+  levels: [0, 2, 3]
+  periods: ["2018/2022"]      # decision D3
+  store: data/store
+model:
+  estimator: HierTypedMF
+  rank: 12
+  lam_u: 0.03
+  lam_v: 0.1
+  lam_agg: 1.0
+  coupling: prior_and_constraint
+  seed: 0
+output_dir: runs

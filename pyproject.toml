@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "regsim"
+version = "0.0.1"
+description = "Similarity and prediction for multi-level regional indicators"
+requires-python = ">=3.12"
+license = { text = "TBD (decision D2)" }
+dependencies = [
+  "numpy>=1.26", "scipy>=1.11", "pandas>=2.1", "pyarrow>=14", "duckdb>=1.0",
+  "scikit-learn>=1.4", "matplotlib>=3.8", "pyyaml>=6", "pydantic>=2.5", "requests>=2.31", "typer>=0.12",
+]
+
+[project.optional-dependencies]
+geo = ["geopandas>=0.14", "shapely>=2"]
+viz = ["plotly>=5.18", "umap-learn>=0.5"]
+api = ["fastapi>=0.110", "uvicorn>=0.29"]
+torch = ["torch>=2.2"]
+dev = ["pytest>=8", "ruff>=0.4", "pre-commit>=3"]
+
+[project.scripts]
+regsim = "regsim.api.cli:app"
+
+[tool.ruff]
+line-length = 110
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
