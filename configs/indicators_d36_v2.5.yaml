@@ -1,0 +1,767 @@
+# Generated from the KNOWING D3.6 GeoPackage by regsim.data.d36.write_registry; populated indicators only.
+registry_version: d36_v2.5
+indicators:
+- indicator_id: d36_climate_zone_classification_1990_2020_majority
+  label: Climate Zone Classification (Köppen–Geiger)
+  dtype: categorical
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: category
+  categories:
+  - Af
+  - Am
+  - As
+  - Aw
+  - BSh
+  - BSk
+  - BWh
+  - BWk
+  - Cfa
+  - Cfb
+  - Cfc
+  - Csa
+  - Cwc
+  - Dfa
+  - Dfb
+  - Dfd
+  - Dsa
+  - Dwd
+  note: D3.6 theme 'Climate' (metadata only); normalisation none, distance koppen_match
+  source:
+    connector: d36
+    dataset: climate_zone_classification_1990_2020_majority
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_temperature_1990_2020_mean
+  label: Mean Annual Temperature
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: °C
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_temperature_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_temperature_1990_2020_max
+  label: Maximum Annual Temperature
+  dtype: continuous
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: °C
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_temperature_1990_2020_max
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_temperature_1990_2020_min
+  label: Minimum Annual Temperature
+  dtype: continuous
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: °C
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_temperature_1990_2020_min
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_precipitation_1990_2020_mean
+  label: Mean Annual Precipitation
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: mm
+  note: D3.6 theme 'Climate' (metadata only); normalisation log_minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_precipitation_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_precipitation_1990_2020_max
+  label: Maximum Annual Precipitation
+  dtype: continuous
+  transform: log1p
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: mm
+  note: D3.6 theme 'Climate' (metadata only); normalisation log_minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_precipitation_1990_2020_max
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_precipitation_1990_2020_min
+  label: Minimum Annual Precipitation
+  dtype: continuous
+  transform: log1p
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: mm
+  note: D3.6 theme 'Climate' (metadata only); normalisation log_minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_precipitation_1990_2020_min
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_wind_speed_1990_2020_mean
+  label: Wind Speed – Annual Mean
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: km/h
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_wind_speed_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_wind_speed_1990_2020_max
+  label: Wind Speed – Annual Maximum
+  dtype: continuous
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: km/h
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_wind_speed_1990_2020_max
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_wind_speed_1990_2020_min
+  label: Wind Speed – Annual Minimum
+  dtype: continuous
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: km/h
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_wind_speed_1990_2020_min
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_solar_radiation_1990_2020_mean
+  label: Solar Radiation – Annual Mean
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: kWh/m²/day
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_solar_radiation_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_solar_radiation_1990_2020_max
+  label: Solar Radiation – Annual Maximum
+  dtype: continuous
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: kWh/m²/day
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_solar_radiation_1990_2020_max
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_annual_solar_radiation_1990_2020_min
+  label: Solar Radiation – Annual Minimum
+  dtype: continuous
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: kWh/m²/day
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: annual_solar_radiation_1990_2020_min
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_heat_days_1990_2020_mean
+  label: Heat Days (number of days with Tmax > 30°C)
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: days/year
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: heat_days_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_tropical_nights_1990_2020_mean
+  label: Tropical Nights (number of days with Tmin ≥ 20°C)
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: days/year
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: tropical_nights_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_desert_days_1990_2020_mean
+  label: Desert Days (number of days with Tmax ≥ 35°C)
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: days/year
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: desert_days_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_ice_days_1990_2020_mean
+  label: Ice Days (number of days with Tmax < 0°C)
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: days/year
+  note: D3.6 theme 'Climate' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: ice_days_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_rx1day_1990_2020_mean
+  label: Extreme Precipitation (RX1day)
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: mm/day
+  note: D3.6 theme 'Climate' (metadata only); normalisation log_minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: rx1day_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_rx5day_1990_2020_mean
+  label: Extreme Precipitation (RX5day)
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: mm/5 days
+  note: D3.6 theme 'Climate' (metadata only); normalisation log_minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: rx5day_1990_2020_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_elevation_mean
+  label: Elevation – Mean
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: m
+  note: D3.6 theme 'Physical Geography' (metadata only); normalisation minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: elevation_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_elevation_max
+  label: Elevation – Maximum
+  dtype: continuous
+  transform: log1p
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: m
+  note: D3.6 theme 'Physical Geography' (metadata only); normalisation minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: elevation_max
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_elevation_min
+  label: Elevation – Minimum
+  dtype: continuous
+  transform: log1p
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: m
+  note: D3.6 theme 'Physical Geography' (metadata only); normalisation minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: elevation_min
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_slope_mean
+  label: Slope – Mean (%)
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: percentage
+  note: D3.6 theme 'Physical Geography' (metadata only); normalisation minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: slope_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_slope_max
+  label: Slope – Maximum (%)
+  dtype: continuous
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: percentage
+  note: D3.6 theme 'Physical Geography' (metadata only); normalisation minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: slope_max
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_slope_min
+  label: Slope – Minimum (%)
+  dtype: continuous
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: percentage
+  note: D3.6 theme 'Physical Geography' (metadata only); normalisation minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: slope_min
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_total_area
+  label: Total Area
+  dtype: continuous
+  transform: log1p
+  aggregation: sum
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: km²
+  note: D3.6 theme 'Physical Geography' (metadata only); normalisation log_minmax,
+    distance manhattan
+  source:
+    connector: d36
+    dataset: total_area
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_mountain_type
+  label: Mountain Type
+  dtype: categorical
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: category
+  categories:
+  - '0'
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  note: D3.6 theme 'Territorial Typology' (metadata only); normalisation none, distance
+    binary_match
+  source:
+    connector: d36
+    dataset: mountain_type
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_coastal_type
+  label: Coastal Type
+  dtype: categorical
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: category
+  categories:
+  - '0'
+  - '1'
+  - '2'
+  - '3'
+  note: D3.6 theme 'Territorial Typology' (metadata only); normalisation none, distance
+    binary_match
+  source:
+    connector: d36
+    dataset: coastal_type
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_urban_type
+  label: Urban Type
+  dtype: categorical
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: category
+  categories:
+  - '0'
+  - '1'
+  - '2'
+  - '3'
+  note: D3.6 theme 'Territorial Typology' (metadata only); normalisation none, distance
+    hierarchical_binary
+  source:
+    connector: d36
+    dataset: urban_type
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_degurba
+  label: Degree of Urbanisation (DEGURBA)
+  dtype: categorical
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: category
+  categories:
+  - '1'
+  - '2'
+  - '3'
+  - '9'
+  note: D3.6 theme 'Territorial Typology' (metadata only); normalisation none, distance
+    hierarchical_binary
+  source:
+    connector: d36
+    dataset: degurba
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_urban_rural_remoteness_type
+  label: Urban/Rural Remoteness Type
+  dtype: categorical
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: category
+  categories:
+  - '1'
+  - '21'
+  - '22'
+  - '31'
+  - '32'
+  note: D3.6 theme 'Territorial Typology' (metadata only); normalisation none, distance
+    binary_match
+  source:
+    connector: d36
+    dataset: urban_rural_remoteness_type
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_grazing_probability_mean
+  label: Grazing Probability
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: probability
+  note: D3.6 theme 'Ecology & Natural Resources' (metadata only); normalisation minmax,
+    distance manhattan
+  source:
+    connector: d36
+    dataset: grazing_probability_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_nitrogen_use_mean
+  label: Nitrogen Use
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: kg/ha/yr
+  note: D3.6 theme 'Ecology & Natural Resources' (metadata only); normalisation log_minmax,
+    distance manhattan
+  source:
+    connector: d36
+    dataset: nitrogen_use_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_carbon_sequestration_potential_2050_mean
+  label: Carbon Sequestration Potential
+  dtype: continuous
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: tC/ha/yr
+  note: D3.6 theme 'Ecology & Natural Resources' (metadata only); normalisation minmax,
+    distance manhattan
+  source:
+    connector: d36
+    dataset: carbon_sequestration_potential_2050_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_population_density
+  label: Population Density
+  dtype: continuous
+  transform: log1p
+  aggregation: ratio
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: persons/km²
+  note: D3.6 theme 'Socioeconomy' (metadata only); normalisation log_minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: population_density
+    version: '2.5'
+  same_as: pop_density
+  temporal: static
+- indicator_id: d36_transport_infrastructure_road_density_mean
+  label: Transport Infrastructure – Road Density
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: km/km²
+  note: D3.6 theme 'Infrastructure' (metadata only); normalisation log_minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: transport_infrastructure_road_density_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_transport_infrastructure_rail_lines_density_mean
+  label: Transport Infrastructure – Rail Density
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: km/km²
+  note: D3.6 theme 'Infrastructure' (metadata only); normalisation log_minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: transport_infrastructure_rail_lines_density_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_transport_infrastructure_cycling_lines_density_mean
+  label: Transport Infrastructure – Cycling Lines Density
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: km/km²
+  note: D3.6 theme 'Infrastructure' (metadata only); normalisation log_minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: transport_infrastructure_cycling_lines_density_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_transport_infrastructure_pedestrian_lines_density_mean
+  label: Transport Infrastructure – Pedestrian Lines Density
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: km/km²
+  note: D3.6 theme 'Infrastructure' (metadata only); normalisation log_minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: transport_infrastructure_pedestrian_lines_density_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_transport_infrastructure_parking_spaces_density_mean
+  label: Transport Infrastructure – Parking Areas Density
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: m²/km²
+  note: D3.6 theme 'Infrastructure' (metadata only); normalisation log_minmax, distance
+    manhattan
+  source:
+    connector: d36
+    dataset: transport_infrastructure_parking_spaces_density_mean
+    version: '2.5'
+  temporal: static
+- indicator_id: d36_electricity_total_demand_mean
+  label: Total Electricity Demand
+  dtype: continuous
+  transform: log1p
+  aggregation: sum
+  native_levels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  unit: ktoe
+  note: D3.6 theme 'Energy' (metadata only); normalisation minmax, distance manhattan
+  source:
+    connector: d36
+    dataset: electricity_total_demand_mean
+    version: '2.5'
+  temporal: static

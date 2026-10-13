@@ -1,10 +1,14 @@
 # Example run: prototype indicator set (docs/prototype.md) on NUTS 2024 with two period windows
 data:
-  indicator_registry: configs/indicators_eurostat_v1.yaml
+  indicator_registry:
+    - configs/indicators_eurostat_v1.yaml
+    - configs/indicators_d36_v2.5.yaml
   geo_scheme: NUTS2024        # decision D1
   levels: [0, 2, 3]
   periods: ["2013/2017", "2018/2022"]   # decision D3
   store: data/store
+  sources: [eurostat, d36]      # decision D5 (ARDECO fallback follows)
+  lau: false
 model:
   estimator: HierTypedMF
   rank: 12

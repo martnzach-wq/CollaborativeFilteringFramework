@@ -127,6 +127,7 @@ class ObservationStore:
         canonical: dict[str, str] | None = None,
         precedence: list[str] | None = None,
         geo_ids: list[str] | None = None,
+        static: set[str] | None = None,
     ) -> EntityMatrix:
         """Entity x indicator matrix (original scale) with the observed mask and row metadata.
 
@@ -146,6 +147,8 @@ class ObservationStore:
             Connector names in order of preference; matched against the prefix of ``source``.
         geo_ids : list of str, optional
             Explicit row order; overrides ``index_levels``.
+        static : set of str, optional
+            Indicator ids whose values are time-invariant descriptors; all their periods enter every window.
         """
         lens = lens or Lens()
         units = self.units()
@@ -161,7 +164,7 @@ class ObservationStore:
         )
         obs = obs[obs.geo_id.isin(set(geo_ids))]
         if period is not None:
-            obs = obs[_in_period(obs.period, period)]
+            obs = obs[_in_period(obs.period, period) | obs.indicator_id.isin(static or set())]
         if canonical:
             obs = obs.assign(indicator_id=obs.indicator_id.map(lambda i: canonical.get(i, i)))
         indicators = (

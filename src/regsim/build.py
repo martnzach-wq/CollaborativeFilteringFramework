@@ -150,11 +150,22 @@ def build(config: RunConfig, connector: EurostatConnector | None = None) -> Buil
             report.per_indicator.append({"indicator_id": entry.indicator_id, **counts})
             log.info("%s: %s", entry.indicator_id, counts)
 
-    if "d36" in d.sources and d.d36_gpkg:
-        from regsim.data.d36 import read_d36
+    if "d36" in d.sources:
+        from regsim.data.d36 import fetch_d36, read_d36
 
-        d36 = read_d36(d.d36_gpkg)
-        frames.append(d36.observations_for(scheme_name, harmoniser))
+        d36 = read_d36(d.d36_gpkg or fetch_d36(str(raw / "d36")))
+        obs, counts = d36.observations(scheme_name, f"LAU{d.nuts_version}", harmoniser.valid)
+        frames.append(obs)
+        report.per_indicator.append(
+            {
+                "indicator_id": "d36 (all)",
+                "native": counts["stored"],
+                "recoded": 0,
+                "dropped": counts["unmapped"],
+                "empty": counts["empty"],
+                "rows": counts["rows"],
+            }
+        )
         store.write_frame(d36.scores, "d36_precomputed_scores")
 
     observations = pd.concat(frames, ignore_index=True)

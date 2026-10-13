@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -45,6 +45,7 @@ class IndicatorEntry(BaseModel):
     note: str = ""
     source: SourceSpec
     same_as: str | None = None
+    temporal: Literal["annual", "static"] = "annual"  # static values enter every period window
 
     @field_validator("polarity")
     @classmethod
@@ -152,6 +153,9 @@ class IndicatorRegistry:
             for members in self.groups().values()
             if len(members) > 1
         ]
+
+    def static_indicators(self) -> set[str]:
+        return {i for i, e in self.entries.items() if e.temporal == "static"}
 
     def model_indicators(self) -> list[str]:
         """Indicator ids that enter the model, in registry order."""
