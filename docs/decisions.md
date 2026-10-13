@@ -20,3 +20,9 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 - D3: the M1 build and the example config cover 2013–2022; the prototype reference numbers refer to the 2018/2022 window only.
 - D5: of the about 60 D3.6 indicators, 13 are copies of Eurostat tables (SOEC01/03/05/07/11, URB02–03, ENERG01–03, TRNPT06/08; D3.6 Table 20), and GEOG03–05 and URBN01 come from GISCO. In the GeoPackage v2.5 only 41 of 79 indicators are populated and none of the Eurostat copies is among them; `population_density` matches Eurostat `pop_density` (Spearman 0.976, median ratio 0.993 at NUTS-3) and is linked with `same_as`. The indicator registry links such duplicates with a source precedence (Eurostat > ARDECO > D3.6); the store keeps all copies with their `source`, the model matrix uses one copy per indicator, and the redundancy is reported. D3.6 copies remain available for the D3.6 compatibility mode (M4).
 - D6: `torch` moves from the optional extras into the core dependencies. CI installs the CPU wheels.
+
+## Changes to acceptance criteria
+
+| Milestone | Date | Change | By |
+|---|---|---|---|
+| M1 | 2026-10-13 | Under NUTS 2024 (D1) the UK is excluded. The prototype matrix is compared after subtracting the UK cells found in current Eurostat tables (2018–2022, NUTS-0/2/3): observed cells within ±2 %, indicators without UK data within ±5 % each; the number of units is reported only, since the prototype counted some regions under old and new codes. | M. Zach |
