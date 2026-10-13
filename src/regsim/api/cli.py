@@ -103,8 +103,54 @@ def similar(
 
 
 @app.command()
-def typology(config: str, lens: str = "all", level: int = 3):
-    raise NotImplementedError("M5")
+def typology(
+    config: str,
+    lens: str = "all",
+    level: int = 3,
+    algorithm: str = "gmm",
+    k: int = 0,
+    period: str = "",
+    seed: int = 0,
+):
+    """Typology of the entities at LEVEL on the completed profiles of HierTypedMF (``--k 0``: chosen by
+    stability and BIC). Writes the resolved run, the cluster table and the assignments to the output folder."""
+    import json
+    from pathlib import Path
+
+    import pandas as pd
+
+    from regsim.config import RunConfig
+    from regsim.models.hier_mf import HierTypedMF
+    from regsim.prep.matrix import prepare
+    from regsim.registry import IndicatorRegistry
+    from regsim.schema import Lens
+    from regsim.store.store import ObservationStore
+    from regsim.typology.run import TypologyRun, run_typology
+
+    cfg = RunConfig.from_yaml(config)
+    registry = IndicatorRegistry.from_yaml(*cfg.data.registries)
+    data = prepare(
+        ObservationStore(cfg.data.store), registry, period or cfg.data.periods[-1], levels=cfg.data.levels
+    )
+    mc = cfg.model
+    model = HierTypedMF(
+        rank=mc.rank, lam_u=mc.lam_u, lam_v=mc.lam_v, lam_agg=mc.lam_agg, coupling=mc.coupling, seed=mc.seed
+    ).fit(data)
+    indicators = None if lens == "all" else tuple(x.strip() for x in lens.split(","))
+    run = TypologyRun(
+        lens=Lens(indicators=indicators, levels=(level,)), algorithm=algorithm, k=k or None, seed=seed
+    )
+    ty = run_typology(model, data, run, samples=model.predict_dist(run.n_posterior, noise=False))
+    out = Path(cfg.output_dir) / f"typology-{ty.config_hash}"
+    out.mkdir(parents=True, exist_ok=True)
+    cfg.write_resolved(out)
+    (out / "run.json").write_text(json.dumps({"config_hash": ty.config_hash, "run": repr(run)}, indent=1))
+    ty.to_frame().to_csv(out / "assignments.csv")
+    ty.cluster_table.to_csv(out / "clusters.csv")
+    ty.selection.to_csv(out / "selection.csv", index=False)
+    pd.set_option("display.width", 200)
+    typer.echo(f"{out}  k={ty.k}  stability={ty.stability:.2f}")
+    typer.echo(ty.cluster_table.to_string())
 
 
 @app.command()
