@@ -1,4 +1,5 @@
 """Geo-entity similarity (design §5.1): S-profile, S-latent, S-gower, percentile scores, contributions."""
+
 from __future__ import annotations
 
 

@@ -1,4 +1,5 @@
 """Error and calibration metrics."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -6,7 +7,7 @@ import numpy as np
 
 def rmse(pred, true, mask) -> float:
     e = (np.asarray(pred) - np.asarray(true))[mask]
-    return float(np.sqrt(np.mean(e ** 2)))
+    return float(np.sqrt(np.mean(e**2)))
 
 
 def mae(pred, true, mask) -> float:

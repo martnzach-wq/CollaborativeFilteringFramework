@@ -1,4 +1,5 @@
 """Typed transforms and robust scaling (design §3)."""
+
 from __future__ import annotations
 
 import numpy as np

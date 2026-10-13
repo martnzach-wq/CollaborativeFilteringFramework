@@ -1,4 +1,5 @@
 """Typology runs (design §6)."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -8,9 +9,9 @@ from dataclasses import dataclass
 class TypologyRun:
     lens: object
     levels: tuple[int, ...]
-    representation: str = "whitened_profile"    # or "latent"
-    algorithm: str = "gmm"                      # gmm | ward | hdbscan | ward_spatial | cocluster
-    k: int | None = None                        # None = choose by stability and BIC
+    representation: str = "whitened_profile"  # or "latent"
+    algorithm: str = "gmm"  # gmm | ward | hdbscan | ward_spatial | cocluster
+    k: int | None = None  # None = choose by stability and BIC
     k_range: tuple[int, int] = (3, 12)
     n_boot: int = 50
     seed: int = 0

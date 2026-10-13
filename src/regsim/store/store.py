@@ -1,4 +1,5 @@
 """Observation store: Parquet files queried with DuckDB."""
+
 from __future__ import annotations
 
 

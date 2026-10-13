@@ -1,4 +1,5 @@
 """Indicator similarity (design §5.2): I-model, I-observed, I-partial, I-predictive."""
+
 from __future__ import annotations
 
 

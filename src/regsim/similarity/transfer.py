@@ -1,4 +1,5 @@
 """Transfer-specific similarity (design §5.3): learned non-negative indicator weights for a target quantity."""
+
 from __future__ import annotations
 
 

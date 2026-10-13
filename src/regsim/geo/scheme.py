@@ -1,7 +1,9 @@
 """Geo-scheme abstraction (design §2.2). Models see only a weighted directed acyclic graph of units."""
+
 from __future__ import annotations
 
-from typing import Iterable, Protocol
+from collections.abc import Iterable
+from typing import Protocol
 
 from regsim.schema import GeoEdge, GeoUnit
 

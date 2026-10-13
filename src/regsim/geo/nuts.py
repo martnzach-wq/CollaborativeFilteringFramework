@@ -1,4 +1,5 @@
 """NUTS and LAU schemes from Eurostat GISCO (versions 2016, 2021, 2024)."""
+
 from __future__ import annotations
 
 

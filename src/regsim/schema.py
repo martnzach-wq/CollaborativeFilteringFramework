@@ -1,11 +1,12 @@
 """Core data types (design §2). Values are stored on the original scale."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 
 
-class DType(str, Enum):
+class DType(StrEnum):
     CONTINUOUS = "continuous"
     COUNT = "count"
     SHARE = "share"
@@ -14,7 +15,7 @@ class DType(str, Enum):
     COMPOSITIONAL = "compositional"
 
 
-class Transform(str, Enum):
+class Transform(StrEnum):
     IDENTITY = "identity"
     LOG = "log"
     LOG1P = "log1p"
@@ -24,12 +25,12 @@ class Transform(str, Enum):
     YEOJOHNSON = "yeojohnson"
 
 
-class Aggregation(str, Enum):
-    SUM = "sum"                # extensive quantities (population, emissions)
-    WMEAN_POP = "wmean_pop"    # intensive, population-weighted (rates per inhabitant)
+class Aggregation(StrEnum):
+    SUM = "sum"  # extensive quantities (population, emissions)
+    WMEAN_POP = "wmean_pop"  # intensive, population-weighted (rates per inhabitant)
     WMEAN_AREA = "wmean_area"  # intensive, area-weighted (climate means, land shares)
-    RATIO = "ratio"            # numerator/denominator given in `ratio_of`
-    NONE = "none"              # not aggregable (typologies, medians); parent value is a covariate only
+    RATIO = "ratio"  # numerator/denominator given in `ratio_of`
+    NONE = "none"  # not aggregable (typologies, medians); parent value is a covariate only
 
 
 @dataclass(frozen=True)
@@ -40,17 +41,17 @@ class Indicator:
     aggregation: Aggregation = Aggregation.NONE
     ratio_of: tuple[str, str] | None = None
     native_levels: tuple[str, ...] = ()
-    polarity: int | None = None          # display only (LEVITATE TargetVal); never used in fitting
+    polarity: int | None = None  # display only (LEVITATE TargetVal); never used in fitting
     unit: str = ""
     definition: str = ""
     source: str = ""
-    tags: tuple[str, ...] = ()           # search and lens construction only; never used in models
-    categories: tuple[str, ...] = ()     # for ordinal/categorical/compositional
+    tags: tuple[str, ...] = ()  # search and lens construction only; never used in models
+    categories: tuple[str, ...] = ()  # for ordinal/categorical/compositional
 
 
 @dataclass(frozen=True)
 class GeoUnit:
-    geo_id: str                          # scheme-qualified, e.g. "NUTS2021:AT130"
+    geo_id: str  # scheme-qualified, e.g. "NUTS2021:AT130"
     scheme: str
     level: int
     name: str = ""
@@ -86,7 +87,8 @@ class Observation:
 @dataclass(frozen=True)
 class Lens:
     """Selection under which similarity and typology are computed (design §5)."""
-    indicators: tuple[str, ...] | None = None   # None = all
+
+    indicators: tuple[str, ...] | None = None  # None = all
     levels: tuple[int, ...] | None = None
     period: str | None = None
     scenario: str = "observed"

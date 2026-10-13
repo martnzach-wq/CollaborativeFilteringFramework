@@ -1,4 +1,5 @@
 """Split-conformal recalibration with Mondrian groups (design §8)."""
+
 from __future__ import annotations
 
 
