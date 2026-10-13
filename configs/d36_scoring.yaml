@@ -1,0 +1,241 @@
+# Generated from the D3.6 GeoPackage v2.5; see note.
+scheme: KNOWING D3.6 Four-Tier Weighted Similarity (GeoPackage v2.5)
+note: T2 and T4 weights were recovered from the published precomputed_scores by non-negative
+  least squares (exact for all four CICs at NUTS-3). Indicators linked to all four
+  CICs carry weight 4, CIC-specific indicators weight 1, which matches one row per
+  (indicator, CIC) link in the scoring query. T1 weights follow the same pattern (climate
+  1, terrain 4, categorical 1; DEGURBA and urban type contribute nothing); the Köppen
+  partial distance is inferred (identical 0, two of three letters 0.25, same main
+  group 0.6, otherwise 1). Class limits follow the published scores (TRF1 >= 80, ...).
+  A tier without any value for a pair has distance 1 (as in the published scores).
+tier_weights:
+  default:
+    T1: 0.4
+    T2: 0.25
+    T3: 0.15
+    T4: 0.2
+  equal:
+    T1: 0.25
+    T2: 0.25
+    T3: 0.25
+    T4: 0.25
+  domain_primacy:
+    T1: 0.25
+    T2: 0.4
+    T3: 0.15
+    T4: 0.2
+trf_classes:
+- - TRF1
+  - 80.0
+- - TRF2
+  - 60.0
+- - TRF3
+  - 40.0
+- - TRF4
+  - 20.0
+- - TRF5
+  - -1000000000.0
+categorical:
+  climate_zone_classification_1990_2020_majority: koppen
+  coastal_type: binary
+  mountain_type: binary
+  urban_rural_remoteness_type: binary
+  degurba: hierarchical
+  urban_type: hierarchical
+demonstrators:
+  urban:
+  - EE@LAU:4:0784
+  river:
+  - ES@LAU:4:08096
+  coastal:
+  - IT@LAU:4:063049
+  - IT@NUTS:3:ITF33
+  agroforestry:
+  - DE@NUTS:3:DEB3K
+cics:
+  agroforestry:
+    T1:
+      annual_precipitation_1990_2020_max: 1.0
+      annual_precipitation_1990_2020_mean: 1.0
+      annual_precipitation_1990_2020_min: 1.0
+      annual_solar_radiation_1990_2020_max: 1.0
+      annual_solar_radiation_1990_2020_mean: 1.0
+      annual_solar_radiation_1990_2020_min: 1.0
+      annual_temperature_1990_2020_max: 1.0
+      annual_temperature_1990_2020_mean: 1.0
+      annual_temperature_1990_2020_min: 1.0
+      annual_wind_speed_1990_2020_max: 1.0
+      annual_wind_speed_1990_2020_mean: 1.0
+      annual_wind_speed_1990_2020_min: 1.0
+      elevation_max: 4.0
+      elevation_mean: 4.0
+      elevation_min: 4.0
+      slope_max: 4.0
+      slope_mean: 4.0
+      slope_min: 4.0
+      climate_zone_classification_1990_2020_majority: 1.0
+      coastal_type: 1.0
+      degurba: 0.0
+      mountain_type: 1.0
+      urban_type: 0.0
+    T2:
+      carbon_sequestration_potential_2050_mean: 1.0
+      elevation_max: 4.0
+      elevation_mean: 4.0
+      elevation_min: 4.0
+      grazing_probability_mean: 1.0
+      ice_days_1990_2020_mean: 1.0
+      nitrogen_use_mean: 1.0
+      population_density: 4.0
+      slope_max: 4.0
+      slope_mean: 4.0
+      slope_min: 4.0
+    T3:
+      urban_rural_remoteness_type: 1.0
+    T4:
+      electricity_total_demand_mean: 1.0
+      population_density: 4.0
+      total_area: 1.0
+      transport_infrastructure_cycling_lines_density_mean: 1.0
+      transport_infrastructure_parking_spaces_density_mean: 1.0
+      transport_infrastructure_pedestrian_lines_density_mean: 1.0
+      transport_infrastructure_rail_lines_density_mean: 1.0
+      transport_infrastructure_road_density_mean: 1.0
+  coastal:
+    T1:
+      annual_precipitation_1990_2020_max: 1.0
+      annual_precipitation_1990_2020_mean: 1.0
+      annual_precipitation_1990_2020_min: 1.0
+      annual_solar_radiation_1990_2020_max: 1.0
+      annual_solar_radiation_1990_2020_mean: 1.0
+      annual_solar_radiation_1990_2020_min: 1.0
+      annual_temperature_1990_2020_max: 1.0
+      annual_temperature_1990_2020_mean: 1.0
+      annual_temperature_1990_2020_min: 1.0
+      annual_wind_speed_1990_2020_max: 1.0
+      annual_wind_speed_1990_2020_mean: 1.0
+      annual_wind_speed_1990_2020_min: 1.0
+      elevation_max: 4.0
+      elevation_mean: 4.0
+      elevation_min: 4.0
+      slope_max: 4.0
+      slope_mean: 4.0
+      slope_min: 4.0
+      climate_zone_classification_1990_2020_majority: 1.0
+      coastal_type: 1.0
+      degurba: 0.0
+      mountain_type: 1.0
+      urban_type: 0.0
+    T2:
+      elevation_max: 1.0
+      elevation_mean: 1.0
+      elevation_min: 1.0
+      population_density: 1.0
+      slope_max: 1.0
+      slope_mean: 1.0
+      slope_min: 1.0
+    T3:
+      urban_rural_remoteness_type: 1.0
+    T4:
+      electricity_total_demand_mean: 1.0
+      population_density: 4.0
+      total_area: 1.0
+      transport_infrastructure_cycling_lines_density_mean: 1.0
+      transport_infrastructure_parking_spaces_density_mean: 1.0
+      transport_infrastructure_pedestrian_lines_density_mean: 1.0
+      transport_infrastructure_rail_lines_density_mean: 1.0
+      transport_infrastructure_road_density_mean: 1.0
+  river:
+    T1:
+      annual_precipitation_1990_2020_max: 1.0
+      annual_precipitation_1990_2020_mean: 1.0
+      annual_precipitation_1990_2020_min: 1.0
+      annual_solar_radiation_1990_2020_max: 1.0
+      annual_solar_radiation_1990_2020_mean: 1.0
+      annual_solar_radiation_1990_2020_min: 1.0
+      annual_temperature_1990_2020_max: 1.0
+      annual_temperature_1990_2020_mean: 1.0
+      annual_temperature_1990_2020_min: 1.0
+      annual_wind_speed_1990_2020_max: 1.0
+      annual_wind_speed_1990_2020_mean: 1.0
+      annual_wind_speed_1990_2020_min: 1.0
+      elevation_max: 4.0
+      elevation_mean: 4.0
+      elevation_min: 4.0
+      slope_max: 4.0
+      slope_mean: 4.0
+      slope_min: 4.0
+      climate_zone_classification_1990_2020_majority: 1.0
+      coastal_type: 1.0
+      degurba: 0.0
+      mountain_type: 1.0
+      urban_type: 0.0
+    T2:
+      elevation_max: 4.0
+      elevation_mean: 4.0
+      elevation_min: 4.0
+      population_density: 4.0
+      rx1day_1990_2020_mean: 1.0
+      rx5day_1990_2020_mean: 1.0
+      slope_max: 4.0
+      slope_mean: 4.0
+      slope_min: 4.0
+    T3:
+      urban_rural_remoteness_type: 1.0
+    T4:
+      electricity_total_demand_mean: 1.0
+      population_density: 4.0
+      total_area: 1.0
+      transport_infrastructure_cycling_lines_density_mean: 1.0
+      transport_infrastructure_parking_spaces_density_mean: 1.0
+      transport_infrastructure_pedestrian_lines_density_mean: 1.0
+      transport_infrastructure_rail_lines_density_mean: 1.0
+      transport_infrastructure_road_density_mean: 1.0
+  urban:
+    T1:
+      annual_precipitation_1990_2020_max: 1.0
+      annual_precipitation_1990_2020_mean: 1.0
+      annual_precipitation_1990_2020_min: 1.0
+      annual_solar_radiation_1990_2020_max: 1.0
+      annual_solar_radiation_1990_2020_mean: 1.0
+      annual_solar_radiation_1990_2020_min: 1.0
+      annual_temperature_1990_2020_max: 1.0
+      annual_temperature_1990_2020_mean: 1.0
+      annual_temperature_1990_2020_min: 1.0
+      annual_wind_speed_1990_2020_max: 1.0
+      annual_wind_speed_1990_2020_mean: 1.0
+      annual_wind_speed_1990_2020_min: 1.0
+      elevation_max: 4.0
+      elevation_mean: 4.0
+      elevation_min: 4.0
+      slope_max: 4.0
+      slope_mean: 4.0
+      slope_min: 4.0
+      climate_zone_classification_1990_2020_majority: 1.0
+      coastal_type: 1.0
+      degurba: 0.0
+      mountain_type: 1.0
+      urban_type: 0.0
+    T2:
+      desert_days_1990_2020_mean: 1.0
+      elevation_max: 4.0
+      elevation_mean: 4.0
+      elevation_min: 4.0
+      heat_days_1990_2020_mean: 1.0
+      population_density: 4.0
+      slope_max: 4.0
+      slope_mean: 4.0
+      slope_min: 4.0
+      tropical_nights_1990_2020_mean: 1.0
+    T3:
+      urban_rural_remoteness_type: 1.0
+    T4:
+      electricity_total_demand_mean: 1.0
+      population_density: 4.0
+      total_area: 1.0
+      transport_infrastructure_cycling_lines_density_mean: 1.0
+      transport_infrastructure_parking_spaces_density_mean: 1.0
+      transport_infrastructure_pedestrian_lines_density_mean: 1.0
+      transport_infrastructure_rail_lines_density_mean: 1.0
+      transport_infrastructure_road_density_mean: 1.0
+empty_tier_distance: 1.0
