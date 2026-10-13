@@ -284,9 +284,12 @@ class HierTypedMF:
             out[:, j] = np.sqrt(var)
         return out
 
-    def predict_dist(self, n_samples: int = 200, seed: int | np.random.Generator = 0) -> np.ndarray:
-        """Samples ``(n_samples, n, p)``: entity parameters from the Laplace posterior plus observation noise;
-        ordinal and categorical cells are drawn from their predictive probabilities."""
+    def predict_dist(
+        self, n_samples: int = 200, seed: int | np.random.Generator = 0, noise: bool = True
+    ) -> np.ndarray:
+        """Samples ``(n_samples, n, p)``: entity parameters from the Laplace posterior plus observation noise
+        (``noise=False``: expected values only); ordinal and categorical cells are drawn from their predictive
+        probabilities."""
         rng = np.random.default_rng(seed)
         n, p = self.P_.shape
         lay = self.layout_
@@ -297,7 +300,8 @@ class HierTypedMF:
             lat = self.mu_ + (self.b_ + theta[:, -1])[:, None] + (self.U_ + theta[:, :-1]) @ self.V_.T
             for j in range(p):
                 if lay.kinds[j] == GAUSS:
-                    out[s, :, j] = lat[:, lay.start[j]] + np.sqrt(self.sigma2_[j]) * rng.standard_normal(n)
+                    eps = np.sqrt(self.sigma2_[j]) * rng.standard_normal(n) if noise else 0.0
+                    out[s, :, j] = lat[:, lay.start[j]] + eps
                 else:
                     pr = self._proba(lat, j)
                     u = rng.random(n)[:, None]

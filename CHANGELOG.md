@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0 (M4)
+- D3.6 compatibility mode with inferred scoring rules (`configs/d36_scoring.yaml`); entity similarity S-profile, S-latent, S-gower with percentile scores, contributions and intervals; transfer-specific weights; indicator similarity I-model, I-observed, I-partial, I-predictive; neighbour-prediction skill; `regsim similar`.
+- `HierTypedMF.predict_dist(noise=...)`.
+
 ## 0.4.0 (M3)
 - `HierTypedMF` with typed losses, hierarchical prior, aggregation constraints, side information, Laplacian and random-walk penalties, Laplace posterior, fold-in, MinT-type reconciliation; `Tuned` nested CV; geo-time `prepare`; `configs/benchmark_m3.yaml`.
 - `ModelData.parent` holds membership fractions; ratio indicators aggregate with their denominator's weights.

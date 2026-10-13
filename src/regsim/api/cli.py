@@ -37,8 +37,65 @@ def evaluate(config: str):
 
 
 @app.command()
-def similar(config: str, geo_id: str, k: int = 10, lens: str = "all"):
-    raise NotImplementedError("M4")
+def similar(
+    config: str,
+    geo_id: str,
+    k: int = 10,
+    lens: str = "all",
+    mode: str = "profile",
+    cic: str = "urban",
+    period: str = "",
+):
+    """Most similar entities to GEO_ID.
+
+    ``--mode profile`` (default): S-profile on the completed profiles of HierTypedMF fitted with the config's
+    model settings; ``--lens`` is ``all`` or a comma-separated list of indicator ids. ``--mode d36``: KNOWING
+    D3.6 scoring of all regions against the demonstrator GEO_ID (a D3.6 geocode) for ``--cic``.
+    """
+    import pandas as pd
+
+    from regsim.config import RunConfig
+
+    cfg = RunConfig.from_yaml(config)
+    pd.set_option("display.width", 200)
+    if mode == "d36":
+        from regsim.data.d36 import fetch_d36
+        from regsim.similarity.d36 import D36Scorer, load_tables
+
+        gpkg = cfg.data.d36_gpkg or str(fetch_d36(f"{cfg.data.raw_dir}/d36"))
+        scores = D36Scorer(load_tables(gpkg)).score(geo_id, cic)
+        cols = [
+            "composite_score",
+            "transferability_class",
+            "tier1_score",
+            "tier2_score",
+            "tier3_score",
+            "tier4_score",
+            "coverage_ratio",
+        ]
+        typer.echo(
+            scores.drop(index=geo_id, errors="ignore").nlargest(k, "composite_score")[cols].to_string()
+        )
+        return
+    from regsim.models.hier_mf import HierTypedMF
+    from regsim.prep.matrix import prepare
+    from regsim.registry import IndicatorRegistry
+    from regsim.schema import Lens
+    from regsim.similarity.entities import nearest, s_profile
+    from regsim.store.store import ObservationStore
+
+    registry = IndicatorRegistry.from_yaml(*cfg.data.registries)
+    window = period or cfg.data.periods[-1]
+    data = prepare(ObservationStore(cfg.data.store), registry, window, levels=cfg.data.levels)
+    mc = cfg.model
+    model = HierTypedMF(
+        rank=mc.rank, lam_u=mc.lam_u, lam_v=mc.lam_v, lam_agg=mc.lam_agg, coupling=mc.coupling, seed=mc.seed
+    ).fit(data)
+    chosen = Lens() if lens == "all" else Lens(indicators=tuple(x.strip() for x in lens.split(",")))
+    space = s_profile(model, data, chosen)
+    typer.echo(
+        nearest(space, geo_id, k=k, samples=model.predict_dist(100, noise=False)).to_string(index=False)
+    )
 
 
 @app.command()

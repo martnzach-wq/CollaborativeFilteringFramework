@@ -23,3 +23,10 @@
 - **Reconciliation.** Linearised projection (three Gauss-Newton steps); observed cells are never changed, so groups whose published values are inconsistent stay inconsistent.
 - **Tuning.** Inner cross-validation uses random cells for all schemes; it does not mimic cold start, country blocks or level transfer.
 - **Runtime.** About 6-15 s per fit on the Eurostat matrix (1,669 × 25) with 4 threads; tuning with 8 combinations and 2 folds about 9 minutes per split.
+
+## Similarity (M4)
+
+- **D3.6 scoring rules.** Indicator weights, categorical partial distances and the empty-tier rule are inferred from `precomputed_scores`, not taken from the deliverable. T1 deviates in some regions (median 0.4, maximum 17 points for Tallinn) because the treatment of missing climate values and of `degurba` and `urban_type` is not fully determined by the published scores; T2–T4 are exact.
+- **Empty tiers.** The published table leaves the score of an empty tier NaN while its composite uses distance 1; `D36Scorer` reports distance 1 (score 0) for the tier as well.
+- **S-profile.** Distances use completed profiles; for entities with few observed cells they reflect the model more than the data, which the observed share and the intervals make visible.
+- **Transfer weights.** With fewer than about 30 labelled entities the weights are a diagnostic; the bootstrap intervals are wide.

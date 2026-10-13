@@ -1,5 +1,24 @@
 # Progress
 
+## M4 Similarity (2026-10-13)
+
+**Done**
+- D3.6 compatibility mode (`regsim.similarity.d36`, `configs/d36_scoring.yaml`): per-tier weighted Gower distance on the D3.6 normalised values, composite with the weight schemes `default`, `equal` and `domain_primacy`, TRF1–TRF5 classes (decision D8: classes only in this mode), per-indicator partial distances (Layer 4). The rules not specified in the deliverable were inferred from `precomputed_scores`: indicators linked to all four CICs carry weight 4 (join fan-out), CIC-specific ones weight 1; T1 categorical weights climate 1, terrain 4, others 1, `degurba` and `urban_type` 0; Köppen distance 0 / 0.25 / 0.6 / 1; an empty tier has distance 1.
+- Entity similarity (`regsim.similarity.entities`): S-profile (whitened completed profiles with the model-implied covariance), S-latent, S-gower with coverage ratio, percentile scores among all pairs at the same level, Mahalanobis contributions per indicator, 90 % distance intervals from posterior samples; lens selection (decision D4: all model indicators, no polarity).
+- Transfer-specific weights (`regsim.similarity.transfer`): non-negative indicator weights minimising the leave-one-out error of kernel-weighted neighbour predictions, pulled towards equal weights, with bootstrap intervals.
+- Indicator similarity (`regsim.similarity.indicators`): I-model, I-observed (Spearman with Fisher intervals), I-partial (graphical lasso), I-predictive.
+- Neighbour-prediction skill (`regsim.evaluation.neighbours`) and `regsim similar` (modes `profile` and `d36`).
+
+**Results**
+- D3.6 mode against `precomputed_scores` (all CICs, NUTS-3 targets): T2, T3 and T4 exact; composite median absolute deviation 0.1–0.9 points, 95th percentile below 1 point, maximum 13 points; TRF class agreement 96–99 %. Tallinn (urban): T2 exact for 1,523 of 1,524 targets (the remaining one has an empty T2, NaN in the table and distance 1 in the published composite), composite median 0.17, p95 0.96, maximum 6.7 points; TRF agreement 98.7 %.
+- Neighbour skill on M2 cold start (NUTS 2, seeds 100 and 101, k = 10): RMSE S-profile 0.617, S-gower 0.909, coverage 1.0 for both.
+- I-model and I-observed agree (correlation of the pairwise values 0.92).
+
+**Tests**: 91 unit tests pass; M0–M4 acceptance pass.
+
+**Open**
+- Decisions D7 (M6) and D9 (M5).
+
 ## M3 Core model HierTypedMF (2026-10-13)
 
 **Done**
