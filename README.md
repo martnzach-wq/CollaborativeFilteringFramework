@@ -12,3 +12,12 @@ Similarity and prediction for indicators observed on geo-entities at several lev
 | `docs/prototype.md` | Feasibility benchmark on Eurostat data |
 | `docs/visualisation.md` | Visualisation catalogue with rendered examples |
 | `docs/data_sources.md` | Data sources, known pitfalls, D3.6 database caveats |
+
+## Installation
+
+```
+pip install -e ".[dev]"
+pytest
+```
+
+Licence: Apache-2.0 (`LICENSE`).
