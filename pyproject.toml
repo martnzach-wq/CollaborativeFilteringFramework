@@ -12,6 +12,7 @@ license-files = ["LICENSE"]
 dependencies = [
   "numpy>=1.26", "scipy>=1.11", "pandas>=2.1", "pyarrow>=14", "duckdb>=1.0",
   "scikit-learn>=1.4", "matplotlib>=3.8", "pyyaml>=6", "pydantic>=2.5", "requests>=2.31", "typer>=0.12",
+  "openpyxl>=3.1",
   "torch>=2.2",  # decision D6
 ]
 
@@ -19,7 +20,7 @@ dependencies = [
 geo = ["geopandas>=0.14", "shapely>=2"]
 viz = ["plotly>=5.18", "umap-learn>=0.5"]
 api = ["fastapi>=0.110", "uvicorn>=0.29"]
-dev = ["pytest>=8", "ruff>=0.4", "pre-commit>=3"]
+dev = ["pytest>=8", "ruff>=0.4", "pre-commit>=3", "shapely>=2"]
 
 [project.scripts]
 regsim = "regsim.api.cli:app"
