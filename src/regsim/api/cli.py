@@ -50,7 +50,8 @@ def similar(
 
     ``--mode profile`` (default): S-profile on the completed profiles of HierTypedMF fitted with the config's
     model settings; ``--lens`` is ``all`` or a comma-separated list of indicator ids. ``--mode d36``: KNOWING
-    D3.6 scoring of all regions against the demonstrator GEO_ID (a D3.6 geocode) for ``--cic``.
+    D3.6 scoring of all regions against the demonstrator GEO_ID (a D3.6 geocode) for ``--cic``, with the D3.6
+    gates (pairs failing a hard gate are not listed; soft gates are shown in ``gates_fired``).
     """
     import pandas as pd
 
@@ -60,10 +61,12 @@ def similar(
     pd.set_option("display.width", 200)
     if mode == "d36":
         from regsim.data.d36 import fetch_d36
-        from regsim.similarity.d36 import D36Scorer, load_tables
+        from regsim.similarity.d36 import D36Scorer, apply_gates, load_tables, load_values
 
         gpkg = cfg.data.d36_gpkg or str(fetch_d36(f"{cfg.data.raw_dir}/d36"))
         scores = D36Scorer(load_tables(gpkg)).score(geo_id, cic)
+        scores = apply_gates(scores, load_values(gpkg), geo_id, cic)
+        scores = scores[scores.eligible]
         cols = [
             "composite_score",
             "transferability_class",
@@ -72,6 +75,7 @@ def similar(
             "tier3_score",
             "tier4_score",
             "coverage_ratio",
+            "gates_fired",
         ]
         typer.echo(
             scores.drop(index=geo_id, errors="ignore").nlargest(k, "composite_score")[cols].to_string()

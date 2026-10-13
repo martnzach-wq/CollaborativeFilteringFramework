@@ -1,43 +1,104 @@
-# KNOWING D3.6 eligibility gates (Table 10) as declarative rules. Severity in regsim mode: decision D9.
-# Expressions use `d` (demonstrator / reference) and `t` (target) with indicator ids from the D3.6 registry.
+# KNOWING D3.6 eligibility gates (Table 10) as declarative rules.
+#
+# Expressions use `d` (demonstrator / reference) and `t` (target) with D3.6 indicator ids or the aliases below.
+# Supported: and, or, comparisons, `in` / `not in` with tuples, + - * /, max, min, abs, and the functions
+# koppen_adjacency(a, b) and min_tier_coverage(d, t). A comparison with a missing value is false, so a gate
+# never fires on missing data.
+#
+# Severities:
+#   severity_table10   as printed in D3.6 Table 10
+#   severity_published as stored in GeoPackage v2.5 `precomputed_scores` (only G001 is hard there; eligible = 0
+#                      exactly where G001 fires); used by the D3.6 compatibility mode
+#   regsim mode treats every gate as soft (decision D9).
+aliases:
+  koppen: climate_zone_classification_1990_2020_majority
+  precip_mean: annual_precipitation_1990_2020_mean
+
+# D3.6 refers to a `koppen_adjacency` lookup table that is not part of the GeoPackage export. The adjacent pairs
+# below are those implied by the published G005 firings (demonstrator zones BSk, Cfa, Cwc, Dfa against all zones;
+# symmetric). Identical zones are adjacent. For a pair with an observed zone the list is complete (unlisted =
+# distant); other pairs are adjacent if they share the main group (first letter).
+koppen_adjacency:
+  observed_zones: [BSk, Cfa, Cwc, Dfa]
+  adjacent:
+    - [BSh, BSk]
+    - [BSh, Cfa]
+    - [BSk, BWh]
+    - [BSk, BWk]
+    - [BSk, Cfb]
+    - [BSk, Dfb]
+    - [Cfa, Cfb]
+    - [Cfa, Cfc]
+    - [Cfa, Csa]
+    - [Cfa, Cwc]
+    - [Cfa, Dfa]
+    - [Cfb, Cwc]
+    - [Cfc, Cwc]
+    - [Csa, Cwc]
+    - [Dfa, Dfb]
+    - [Dfa, Dfd]
+    - [Dfa, Dsa]
+    - [Dfa, Dwd]
+
 rules:
   - id: G001_coastal_eligibility
+    name: Coastal eligibility
     scope: [coastal]
     when: "d.coastal_type in (1, 2) and t.coastal_type == 0"
-    severity_d36: hard
+    severity_table10: hard
+    severity_published: hard
   - id: G002_mountain_coastal_incompatibility
+    name: Mountain–coastal structural incompatibility
     scope: [all]
     when: "(d.mountain_type in (1, 2, 3) and t.coastal_type in (1, 2)) or (t.mountain_type in (1, 2, 3) and d.coastal_type in (1, 2))"
-    severity_d36: hard
+    severity_table10: hard
+    severity_published: soft
   - id: G003_urban_rural_incompatibility
+    name: Urban–rural settlement incompatibility
     scope: [urban]
     when: "(d.degurba == 1 and t.degurba == 3) or (d.degurba == 3 and t.degurba == 1)"
-    severity_d36: soft
+    severity_table10: soft
+    severity_published: soft
   - id: G004_floodplain_absence
+    name: Floodplain absence
     scope: [river]
     when: "t.floodplain_extent_km2 < 1 and t.river_flood_prob_100yr < 0.01"
-    severity_d36: hard
+    severity_table10: hard
+    severity_published: soft
   - id: G005_koppen_distant
+    name: Distant Köppen climate zones
     scope: [all]
     when: "koppen_adjacency(d.koppen, t.koppen) == 'distant'"
-    severity_d36: hard
+    severity_table10: hard
+    severity_published: soft
   - id: G006_arid_humid_incompatibility
+    name: Arid–humid precipitation incompatibility
     scope: [agroforestry]
     when: "d.precip_mean > 0 and t.precip_mean > 0 and max(d.precip_mean / t.precip_mean, t.precip_mean / d.precip_mean) > 4.0"
-    severity_d36: soft
+    severity_table10: soft
+    severity_published: soft
   - id: G007_urban_cic_rural_target
+    name: Urban CIC inapplicable to rural target
     scope: [urban]
     when: "d.degurba in (1, 2) and t.degurba == 3"
-    severity_d36: hard
+    severity_table10: hard
+    severity_published: soft
   - id: G008_agroforestry_cic_urban_target
+    name: AgroForestry CIC inapplicable to urban/suburban target
     scope: [agroforestry]
     when: "t.degurba in (1, 2)"
-    severity_d36: hard
-  - id: G009_coastal_cic_high_elevation
+    severity_table10: hard
+    severity_published: soft
+  - id: G009_coastal_cic_high_elevation_target
+    name: Coastal CIC inapplicable to high-elevation target
     scope: [coastal]
     when: "t.elevation_min > 50"
-    severity_d36: hard
+    severity_table10: hard
+    severity_published: soft
   - id: G010_low_coverage
+    name: Low indicator coverage
     scope: [all]
     when: "min_tier_coverage(d, t) < 0.70"
-    severity_d36: soft
+    severity_table10: soft
+    severity_published: soft
+    published: false  # not evaluated in the v2.5 export

@@ -102,16 +102,19 @@ class D36Scorer:
         weight_sum = np.zeros(len(targets))
         n_obs = np.zeros(len(targets))
         n_all = 0
+        coverage = []
         for tier in TIERS:
             weights = tiers.get(tier, {})
             num = np.zeros(len(targets))
             den = np.zeros(len(targets))
+            n_tier = np.zeros(len(targets))
             for k, w in weights.items():
                 p = self._partial(demonstrator, targets, k)
                 ok = np.isfinite(p)
                 num += np.where(ok, w * p, 0.0)
                 den += np.where(ok, w, 0.0)
                 n_obs += ok
+                n_tier += ok
                 n_all += 1
                 if contributions:
                     out[f"p:{tier}:{k}"] = p
@@ -119,6 +122,8 @@ class D36Scorer:
             with np.errstate(invalid="ignore", divide="ignore"):
                 dist = np.where(den > 0, num / den, np.nan if empty is None else float(empty))
             out[f"tier{tier[1]}_distance"] = dist
+            if weights:
+                coverage.append(n_tier / len(weights))
             out[f"tier{tier[1]}_score"] = (1 - dist) * 100
             ok = np.isfinite(dist)
             composite += np.where(ok, tw[tier] * dist, 0.0)
@@ -128,6 +133,7 @@ class D36Scorer:
         out["composite_score"] = (1 - out.composite_distance) * 100
         out["transferability_class"] = [self._trf(s) for s in out.composite_score]
         out["coverage_ratio"] = n_obs / max(n_all, 1)
+        out["min_tier_coverage"] = np.min(coverage, axis=0) if coverage else np.nan
         return out
 
     # ------------------------------------------------------------------ partial distances
@@ -186,6 +192,34 @@ def koppen_distance(a: str, b: str) -> float:
     return 1.0
 
 
+def load_values(
+    gpkg_path: str | Path,
+    regions: list[str] | None = None,
+    indicators: list[str] | None = None,
+    rcp: str = "baseline",
+) -> pd.DataFrame:
+    """Raw indicator values (``knowing.indicator_values``) as a wide table; text values where present."""
+    con = sqlite3.connect(f"file:{Path(gpkg_path).as_posix()}?mode=ro", uri=True)
+    cond, params = ["rcp = ?"], [rcp]
+    if regions:
+        cond.append("region_geocode IN ({})".format(",".join("?" * len(regions))))
+        params += list(regions)
+    if indicators:
+        cond.append("indicator_id IN ({})".format(",".join("?" * len(indicators))))
+        params += list(indicators)
+    try:
+        raw = pd.read_sql(
+            "SELECT region_geocode, indicator_id, value_numeric, value_text "
+            f'FROM "knowing.indicator_values" WHERE {" AND ".join(cond)}',
+            con,
+            params=params,
+        )
+    finally:
+        con.close()
+    raw["value"] = raw.value_text.where(raw.value_text.notna(), raw.value_numeric)
+    return raw.pivot_table(index="region_geocode", columns="indicator_id", values="value", aggfunc="first")
+
+
 def published_scores(
     gpkg_path: str | Path, demonstrator: str, weight_scheme: str = "default", target_level: int | None = None
 ) -> pd.DataFrame:
@@ -201,3 +235,48 @@ def published_scores(
         ).set_index("target_geocode")
     finally:
         con.close()
+
+
+def published_gates(gpkg_path: str | Path, demonstrator: str, cic: str | None = None) -> pd.DataFrame:
+    """Published gate outcomes of one demonstrator: boolean flag per target (rows) and gate id (columns),
+    plus ``eligible``."""
+    import json
+
+    pub = published_scores(gpkg_path, demonstrator)
+    if cic is not None:
+        pub = pub[pub.cic_context == cic]
+    flags = pd.DataFrame(
+        [{g["gate_id"]: bool(g["fired"]) for g in json.loads(s)} for s in pub.gates], index=pub.index
+    )
+    flags["eligible"] = pub.eligible.astype(bool).to_numpy()
+    return flags
+
+
+def apply_gates(
+    scores: pd.DataFrame,
+    values: pd.DataFrame,
+    demonstrator: str,
+    cic: str,
+    rules=None,
+    mode: str = "d36",
+    severity: str = "published",
+) -> pd.DataFrame:
+    """Add ``gates_fired`` and ``eligible`` to the output of :meth:`D36Scorer.score`.
+
+    ``values`` are raw indicator values (:func:`load_values`). In D3.6 mode a hard gate makes the pair ineligible
+    and removes its TRF class (the published table also sets the score to NULL); distances and scores are kept.
+    """
+    from regsim.rules.engine import evaluate, gate_summary, load_rules
+
+    rules = rules or load_rules()
+    flags = evaluate(
+        rules,
+        values.loc[demonstrator] if demonstrator in values.index else pd.Series(dtype=object),
+        values.reindex(scores.index),
+        cic=cic,
+        coverage=scores.get("min_tier_coverage"),
+    )
+    out = scores.join(gate_summary(flags, rules, mode=mode, severity=severity))
+    if "transferability_class" in out:
+        out["transferability_class"] = out.transferability_class.where(out.eligible, None)
+    return out

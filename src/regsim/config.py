@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from typing import Literal
 
 import yaml
 from pydantic import BaseModel, Field, field_validator
@@ -103,3 +104,39 @@ class RunConfig(BaseModel):
         path.write_text(yaml.safe_dump(self.model_dump(), sort_keys=False), encoding="utf-8")
         (folder / f"{name}.hash").write_text(self.config_hash() + "\n", encoding="utf-8")
         return path
+
+
+# ---------------------------------------------------------------------------------------------- rules (design §8)
+class Rule(BaseModel):
+    """One declarative gate: a condition on demonstrator ``d`` and target ``t`` with its severities."""
+
+    id: str
+    name: str = ""
+    scope: list[str] = Field(default_factory=lambda: ["all"])
+    when: str
+    severity_table10: Literal["hard", "soft"] = "soft"
+    severity_published: Literal["hard", "soft"] = "soft"
+    published: bool = True
+
+    @field_validator("when")
+    @classmethod
+    def _parses(cls, v: str) -> str:
+        from regsim.rules.engine import check_expression
+
+        check_expression(v)
+        return v
+
+
+class KoppenAdjacency(BaseModel):
+    observed_zones: list[str] = Field(default_factory=list)
+    adjacent: list[tuple[str, str]] = Field(default_factory=list)
+
+
+class RuleSet(BaseModel):
+    aliases: dict[str, str] = Field(default_factory=dict)
+    koppen_adjacency: KoppenAdjacency = KoppenAdjacency()
+    rules: list[Rule]
+
+    @classmethod
+    def from_yaml(cls, path: str | Path) -> RuleSet:
+        return cls.model_validate(yaml.safe_load(Path(path).read_text(encoding="utf-8")))
