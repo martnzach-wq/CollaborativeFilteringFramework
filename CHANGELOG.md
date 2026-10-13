@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0 (M5)
+- Rule engine with `configs/rules_d36.yaml` (G001–G010, Table 10 and published severities, derived Köppen adjacency); gates in the D3.6 mode and in `regsim similar --mode d36`; per-tier coverage in `D36Scorer`; `load_values`, `published_gates`, `apply_gates`.
+- `Conformalised` (Mondrian split-conformal intervals), `applicability` (applicability domain).
+- Typology runs (GMM, Ward, HDBSCAN, spatial Ward) with stability, labels, tracking and configuration hash; `regsim typology`.
+- Decision D9: gates are soft in regsim mode.
+
 ## 0.5.0 (M4)
 - D3.6 compatibility mode with inferred scoring rules (`configs/d36_scoring.yaml`); entity similarity S-profile, S-latent, S-gower with percentile scores, contributions and intervals; transfer-specific weights; indicator similarity I-model, I-observed, I-partial, I-predictive; neighbour-prediction skill; `regsim similar`.
 - `HierTypedMF.predict_dist(noise=...)`.

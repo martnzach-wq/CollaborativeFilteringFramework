@@ -1,5 +1,34 @@
 # Progress
 
+## M5 Typology, uncertainty, applicability domain, rules (2026-10-13)
+
+**Done**
+- Rule engine (`regsim.rules.engine`, `configs/rules_d36.yaml` validated by `regsim.config.RuleSet`): gates G001–G010 as conditions on demonstrator `d` and target `t` in a restricted expression language (parsed and checked with `ast`, evaluated vectorised over all targets; a comparison with a missing value is false). Each rule carries the severity of D3.6 Table 10 and the one stored in GeoPackage v2.5 (only G001 hard). Regsim mode treats all gates as soft flags (decision D9); D3.6 mode marks pairs failing a hard gate as ineligible and drops their TRF class. The `koppen_adjacency` table of D3.6 is not in the export; its adjacent pairs were derived from the published G005 firings. `regsim similar --mode d36` lists eligible pairs with their fired gates.
+- Split-conformal calibration (`regsim.uncertainty.conformal.Conformalised`): calibration cells are random cells plus cold-start entities (k = 1, 3, 6 or 10 cells kept) at every level; normalised scores |z − ẑ|/σ pooled over three calibration splits; quantiles per Mondrian group (level × observed-count bin ≤3, 4–7, 8–12, ≥13) with fallbacks; predictions from the first calibration model.
+- Applicability domain (`regsim.uncertainty.domain.applicability`): observed count, k-NN distance in the latent space to well-observed entities and RMS standardised residual, as percentiles within the level; `in_domain`, `edge` (< 5 observed or > 95th percentile), `outside` (< 2 observed or > 99th percentile).
+- Typology runs (`regsim.typology.run`): GMM (diagonal), Ward, HDBSCAN and contiguity-constrained Ward on whitened completed profiles or the latent projection; consensus over bootstrap resamples and posterior samples; k by bootstrap stability (ARI ≥ 0.7) and BIC; labels from standardised centroid deviations with dispersion; Hungarian tracking with transition matrices; configuration hash over run, model parameters and data. `regsim typology` writes the resolved config, assignments, cluster table and selection table.
+
+**Results**
+- Gates: the published flags of all nine evaluated gates and `eligible` are reproduced for all five demonstrators (502,130 pairs, 100 %). G005 agrees by construction (its adjacency table was derived from the same flags); the other gates are independent checks.
+- Coverage of nominal 90 % intervals (Eurostat 2018/2022, prototype protocol):
+
+| Hold-out | Level | Laplace | Conformal |
+|---|---|---|---|
+| M1 random cells (seeds 0–2) | NUTS 0 | 0.948 | 0.926 |
+| | NUTS 2 | 0.860 | 0.909 |
+| | NUTS 3 | 0.937 | 0.891 |
+| M2 cold start (seeds 100, 101) | NUTS 2 | 0.916 | 0.899 |
+
+  Over more seeds (M1 0–5, M2 100–107) the conformal coverage is 0.919 / 0.914 / 0.900 (M1) and 0.913 (M2, ensemble variant 0.912). Calibrating once without pooling gave 0.885–0.934 between seeds; refitting on all cells after calibration over-covered cold start (0.936).
+- Applicability domain on M2 cold start: RMSE 0.291 (`in_domain`), 0.297 (`edge`), 0.425 (`outside`); standardised RMS error 0.88 / 0.85 / 1.18, so `outside` flags entities whose intervals are too narrow before calibration.
+- Typology of the NUTS-2 regions (`configs/example.yaml`, GMM): bootstrap stability 0.62 for k = 3 and 0.36–0.44 for k = 4–12, while BIC decreases up to k ≈ 7–12. The regions form a continuum rather than well-separated types; typologies are reported with their stability for this reason.
+
+**Tests**: 106 unit tests pass; M0–M5 acceptance pass.
+
+**Open**
+- Decision D7 (front end, M6).
+- The D3.6 Köppen adjacency for zone pairs not covered by the five demonstrators (asked of the D3.6 authors together with the categorical rules).
+
 ## M4 Similarity (2026-10-13)
 
 **Done**

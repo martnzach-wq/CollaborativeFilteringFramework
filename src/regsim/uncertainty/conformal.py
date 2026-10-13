@@ -106,10 +106,11 @@ def calibration_split(
 class Conformalised:
     """Estimator wrapper with split-conformal calibrated intervals (Mondrian by level and observed count).
 
-    ``n_splits`` models are fitted, each without its own calibration cells; their normalised scores are pooled
-    for the quantiles, and predictions and standard deviations are the means over the models. Pooling reduces
-    the variance of the quantiles; a model refitted on all cells would be more accurate than the calibration
-    models and its intervals too wide (``refit=True`` keeps that option).
+    ``n_splits`` models are fitted, each without its own calibration cells, and their normalised scores are
+    pooled for the quantiles, which reduces the variance of the quantiles. Predictions come from the first of
+    these models, so that predictions and scores come from models of the same kind. The mean over the models
+    (``ensemble=True``) or a model refitted on all cells (``refit=True``) predict better but are more accurate
+    than the models the scores come from, so their intervals over-cover.
 
     Parameters
     ----------
@@ -119,8 +120,10 @@ class Conformalised:
         Miscoverage of the reference interval (0.1 for 90 % intervals).
     n_splits : int
         Number of calibration splits and models.
+    ensemble : bool
+        Predict with the mean of the calibration models.
     refit : bool
-        Predict with one model refitted on all training cells instead of the calibration models.
+        Predict with one model refitted on all training cells.
     bins : tuple of int
         Upper edges of the observed-count bins.
     cell_frac, entity_frac : float
@@ -136,6 +139,7 @@ class Conformalised:
         factory: Callable[[], object],
         alpha: float = 0.1,
         n_splits: int = 3,
+        ensemble: bool = False,
         refit: bool = False,
         bins: tuple[int, ...] = DEFAULT_BINS,
         cell_frac: float = 0.1,
@@ -146,6 +150,7 @@ class Conformalised:
         self.factory = factory
         self.alpha = alpha
         self.n_splits = n_splits
+        self.ensemble = ensemble
         self.refit = refit
         self.bins = bins
         self.cell_frac = cell_frac
@@ -180,6 +185,8 @@ class Conformalised:
             np.concatenate(scores), np.concatenate(groups), self.alpha, self.min_count
         )
         self.models_ = [self._fit_one(data, data.mask)] if self.refit else models
+        if not (self.refit or self.ensemble):
+            self.models_ = models[:1]
         self.estimator_ = self.models_[0]
         self.groups_ = mondrian_groups(level, data.mask, self.bins)
         self.calibration_masks_ = cals

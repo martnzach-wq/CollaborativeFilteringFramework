@@ -30,3 +30,11 @@
 - **Empty tiers.** The published table leaves the score of an empty tier NaN while its composite uses distance 1; `D36Scorer` reports distance 1 (score 0) for the tier as well.
 - **S-profile.** Distances use completed profiles; for entities with few observed cells they reflect the model more than the data, which the observed share and the intervals make visible.
 - **Transfer weights.** With fewer than about 30 labelled entities the weights are a diagnostic; the bootstrap intervals are wide.
+
+## Typology, uncertainty and rules (M5)
+
+- **Köppen adjacency.** Derived from the published G005 flags, which cover pairs with the zones BSk, Cfa, Cwc and Dfa; other pairs fall back to "same main group = adjacent". The published G005 flags agree by construction.
+- **Gate severities.** D3.6 Table 10 lists six hard gates, the GeoPackage v2.5 export stores only G001 as hard; the D3.6 mode follows the export by default (`severity="table10"` for the table). G004 needs floodplain indicators that are not in the export and never fires; G010 is not evaluated in the export.
+- **Conformal intervals.** Calibration assumes that held-out cells resemble the calibration cells (random cells or cold-start entities); other hold-out patterns (country blocks, level transfer) are not calibrated. Predictions come from a model fitted without the calibration cells; the mean of the calibration models predicts better (M1 RMSE 0.337 vs 0.377 at NUTS 3) but over-covers (0.943 at NUTS 0). At NUTS 0, with about 80 hold-out cells per seed, the coverage of a single split varies between 0.85 and 0.97.
+- **Applicability domain.** Percentile thresholds are relative to each level, so a level always has about 5 % of its well-observed entities at `edge` or beyond.
+- **Typologies.** NUTS-2 regions show low cluster stability (ARI ≤ 0.62); the number of clusters is then chosen by stability alone. Consensus matrices are dense (n × n) and limit runs to a few thousand entities.
