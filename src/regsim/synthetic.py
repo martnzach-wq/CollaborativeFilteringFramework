@@ -155,6 +155,39 @@ class SyntheticData:
         n = self.n_entities
         return sparse.csr_matrix((vals, (rows, cols)), shape=(n, n))
 
+    def model_data(self, period: int = 0, observed_only: bool = True):
+        """``ModelData`` for one period on the transformed scale (no robust scaling; ordinal codes kept)."""
+        from regsim.models.base import ModelData
+        from regsim.prep.transforms import forward
+
+        X = self.X[period]
+        Z = np.empty_like(X)
+        scalers = []
+        for k, ind in enumerate(self.indicators):
+            kind = "identity" if ind.dtype is DType.ORDINAL else ind.transform.value
+            Z[:, k] = forward(X[:, k], kind)
+            scalers.append((kind, 0.0, 1.0))
+        mask = self.observed[period] if observed_only else np.ones_like(self.observed[period])
+        parent = [[(p, self.membership[(c, p)]) for p, _ in ps] for c, ps in enumerate(self.parent)]
+        parent = [[(p, w / sum(x for _, x in ps)) for p, w in ps] for ps in parent]
+        has_child = np.zeros(self.n_entities, dtype=bool)
+        has_child[[p for ps in self.parent for p, _ in ps]] = True
+        return ModelData(
+            Z=np.where(mask, Z, np.nan),
+            mask=mask,
+            parent=parent,
+            agg=self.aggregation_matrix("pop"),
+            column_meta=list(self.indicators),
+            level=self.level.copy(),
+            country=np.array([self.geo_ids[self.root_of(i)] for i in range(self.n_entities)]),
+            geo_ids=list(self.geo_ids),
+            column_ids=[ind.indicator_id for ind in self.indicators],
+            scalers=scalers,
+            agg_area=self.aggregation_matrix("pop"),
+            agg_sum=self.aggregation_matrix("membership"),
+            agg_cover=has_child.astype(float),
+        )
+
     def to_observations(self) -> pd.DataFrame:
         """Observed cells in the long format of design §2.1 (original scale)."""
         t, g, k = np.nonzero(self.observed)

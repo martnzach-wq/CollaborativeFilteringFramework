@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Protocol
 
 import numpy as np
@@ -19,9 +19,14 @@ class ModelData:
     mask : ndarray of bool
         Cells used for fitting (observed and not held out).
     parent : list of list of (int, float)
-        Parents of each row within the matrix, with population shares of the child in the parent.
+        Parents of each row within the matrix, with the fraction of the child lying in each parent (sums to one
+        per child).
     agg : scipy.sparse matrix, shape (n_entities, n_entities)
         Population-weighted aggregation of children to parents (row p holds the shares of p's children).
+    agg_area, agg_sum : scipy.sparse matrix, optional
+        Area-weighted means and membership-weighted sums of children.
+    agg_cover : ndarray, optional
+        Share of each parent's population covered by its children in the matrix.
     column_meta : list of Indicator
         Indicator per column (after CLR expansion).
     side : ndarray, optional
@@ -34,6 +39,14 @@ class ModelData:
         Row and column labels.
     scalers : list of (transform, location, scale)
         Inverse mapping to the original scale per column.
+    side_names : list of str
+        Names of the side-information columns.
+    adjacency : scipy.sparse matrix, optional
+        Symmetric spatial adjacency of rows at the same level (for the Laplacian penalty).
+    period : ndarray of str, optional
+        Period window of each row (geo-time entities).
+    time_pairs : ndarray of int, shape (n_pairs, 2), optional
+        Rows of the same entity in consecutive windows (random-walk penalty).
     """
 
     Z: np.ndarray
@@ -47,6 +60,13 @@ class ModelData:
     geo_ids: list[str] = field(default_factory=list)
     column_ids: list[str] = field(default_factory=list)
     scalers: list[tuple[str, float, float]] = field(default_factory=list)
+    agg_area: object = None
+    agg_sum: object = None
+    agg_cover: np.ndarray | None = None
+    side_names: list[str] = field(default_factory=list)
+    adjacency: object = None
+    period: np.ndarray | None = None
+    time_pairs: np.ndarray | None = None
 
     @property
     def shape(self) -> tuple[int, int]:
@@ -54,20 +74,7 @@ class ModelData:
 
     def with_mask(self, mask: np.ndarray) -> ModelData:
         """Copy that fits on ``mask`` (cells outside it are hidden from the estimator)."""
-        Z = np.where(mask, self.Z, np.nan)
-        return ModelData(
-            Z,
-            mask,
-            self.parent,
-            self.agg,
-            self.column_meta,
-            self.side,
-            self.level,
-            self.country,
-            self.geo_ids,
-            self.column_ids,
-            self.scalers,
-        )
+        return replace(self, Z=np.where(mask, self.Z, np.nan), mask=mask)
 
     def levels(self) -> np.ndarray:
         return self.level if self.level is not None else np.zeros(self.Z.shape[0], dtype=int)

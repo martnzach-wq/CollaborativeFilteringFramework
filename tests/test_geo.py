@@ -50,7 +50,9 @@ def test_aggregation_matrix():
     # Renormalisation over the children present in the index.
     W2, _ = g.aggregation_matrix(["S:A1", "S:y"], "pop")
     assert W2[0, 1] == pytest.approx(1.0)
-    assert g.parent_index(index)[3] == [(1, pytest.approx(1 / 6)), (2, pytest.approx(0.25))]
+    # Membership weights: x lies half in A1 and half in A2.
+    assert g.parent_index(index)[3] == [(1, pytest.approx(0.5)), (2, pytest.approx(0.5))]
+    assert g.parent_index(index, "pop")[3] == [(1, pytest.approx(1 / 6)), (2, pytest.approx(0.25))]
 
 
 def test_correspondence_lau_overlap(cache):

@@ -127,10 +127,21 @@ class HierarchyGraph:
         W = sparse.csr_matrix((vals, (rows, cols)), shape=(n, n))
         return W, sorted(set(rows))
 
-    def parent_index(self, index: list[str]) -> list[list[tuple[int, float]]]:
-        """Parents of each row restricted to ``index``, as ``(row, population share)`` (``ModelData.parent``)."""
+    def parent_index(self, index: list[str], weight: str = "membership") -> list[list[tuple[int, float]]]:
+        """Parents of each row within ``index`` as ``(row, weight)``.
+
+        With ``weight="membership"`` (``ModelData.parent``) the weights are the fractions of the child lying in
+        each parent, renormalised to sum to one over the parents present in ``index``.
+        """
         pos = {g: i for i, g in enumerate(index)}
-        return [[(pos[p], w) for p, w in self.parents(g) if p in pos] for g in index]
+        out = []
+        for g in index:
+            ps = [(pos[p], w) for p, w in self.parents(g, weight) if p in pos]
+            if weight == "membership" and ps:
+                tot = sum(w for _, w in ps)
+                ps = [(p, w / tot if tot > 0 else 1.0 / len(ps)) for p, w in ps]
+            out.append(ps)
+        return out
 
     def subgraph(self, geo_ids: Iterable[str]) -> HierarchyGraph:
         keep = set(geo_ids)

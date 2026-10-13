@@ -282,6 +282,31 @@ def recode(values: pd.DataFrame, table: pd.DataFrame, how: str, min_coverage: fl
     )
 
 
+def adjacency_pairs(version: str = "2024", cache_dir: str = "data/raw/gisco") -> set[tuple[str, str]]:
+    """Pairs of NUTS codes of the same level whose 1:1 million boundaries touch (cached as parquet)."""
+    cache = Path(cache_dir) / f"nuts_adjacency_{version}.parquet"
+    if cache.exists():
+        t = pd.read_parquet(cache)
+        return set(zip(t.a, t.b, strict=True))
+    import shapely
+
+    src = download(
+        GISCO + f"nuts/parquet/NUTS_RG_01M_{version}_3035.parquet",
+        Path(cache_dir) / f"NUTS_RG_01M_{version}_3035.parquet",
+    )
+    raw = pd.read_parquet(src, columns=["NUTS_ID", "LEVL_CODE", "Shape"])
+    pairs = []
+    for _, grp in raw.groupby("LEVL_CODE"):
+        codes = grp.NUTS_ID.to_numpy()
+        geoms = shapely.buffer(shapely.from_wkb(grp.Shape.values), 50.0)  # 50 m closes generalisation gaps
+        tree = shapely.STRtree(geoms)
+        left, right = tree.query(geoms, predicate="intersects")
+        pairs += [(codes[i], codes[j]) for i, j in zip(left, right, strict=True) if i < j]
+    t = pd.DataFrame(pairs, columns=["a", "b"])
+    t.to_parquet(cache)
+    return set(pairs)
+
+
 # ---------------------------------------------------------------------------------------------- schemes
 class NutsScheme:
     """NUTS regions of one version as a ``GeoScheme``.
