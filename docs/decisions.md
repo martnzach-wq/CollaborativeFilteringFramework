@@ -12,13 +12,14 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D6 | 2026-10-13 | **PyTorch is a core dependency.** `HierTypedMF` uses autograd for the typed losses and the Laplace posterior. | M. Zach |
 | D7 | open | Interactive front end | |
 | D8 | 2026-10-13 | TRF classes (TRF1–TRF5) are reported **only in D3.6 compatibility mode**; regsim similarities are reported as percentile scores without classes. | M. Zach |
-| D9 | open | Severity of D3.6 gates in regsim mode | |
+| D9 | 2026-10-13 | D3.6 gates are **soft** in regsim mode: a triggered gate adds a warning flag with its reason to the pair; scores and rankings are unchanged. Hard exclusion (D3.6 `eligible = 0`) applies only in D3.6 compatibility mode. | M. Zach |
 
 ## Consequences
 
 - D1: the M1 acceptance criterion (1,929 units, 18,863 cells, ±2 % after code harmonisation) is evaluated after recoding the prototype matrix to NUTS 2024.
 - D3: the M1 build and the example config cover 2013–2022; the prototype reference numbers refer to the 2018/2022 window only.
 - D5: of the about 60 D3.6 indicators, 13 are copies of Eurostat tables (SOEC01/03/05/07/11, URB02–03, ENERG01–03, TRNPT06/08; D3.6 Table 20), and GEOG03–05 and URBN01 come from GISCO. In the GeoPackage v2.5 only 41 of 79 indicators are populated and none of the Eurostat copies is among them; `population_density` matches Eurostat `pop_density` (Spearman 0.976, median ratio 0.993 at NUTS-3) and is linked with `same_as`. The indicator registry links such duplicates with a source precedence (Eurostat > ARDECO > D3.6); the store keeps all copies with their `source`, the model matrix uses one copy per indicator, and the redundancy is reported. D3.6 copies remain available for the D3.6 compatibility mode (M4).
+- D9: the rule engine (M5) evaluates every gate for each pair and returns flags; the D3.6 mode additionally sets `eligible`.
 - D6: `torch` moves from the optional extras into the core dependencies. CI installs the CPU wheels.
 
 ## Changes to acceptance criteria
