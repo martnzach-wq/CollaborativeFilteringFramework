@@ -26,3 +26,4 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | Milestone | Date | Change | By |
 |---|---|---|---|
 | M1 | 2026-10-13 | Under NUTS 2024 (D1) the UK is excluded. The prototype matrix is compared after subtracting the UK cells found in current Eurostat tables (2018–2022, NUTS-0/2/3): observed cells within ±2 %, indicators without UK data within ±5 % each; the number of units is reported only, since the prototype counted some regions under old and new codes. | M. Zach |
+| M2 | 2026-10-13 | Cold start (scheme M2) is compared with a tolerance of ±0.10 instead of ±0.05, since its RMSE varies between seed pairs with a standard deviation of 0.07–0.10 (20 seed pairs). Ranking and the ±0.05 tolerance for M1 and M4 are unchanged. | M. Zach |

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 (M2)
+- Model matrix preparation, seven baselines, masking schemes M1–M4, metrics, benchmark runner, model card, `regsim evaluate`, `configs/benchmark_prototype.yaml`.
+- M2 acceptance: cold-start tolerance ±0.10 (see `docs/decisions.md`).
+
 ## 0.2.1
 - ARDECO connector and fallback registry (GDP per inhabitant, employment rate, population); shared cached HTTP client.
 

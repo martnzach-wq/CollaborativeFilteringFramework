@@ -111,6 +111,9 @@ def summarise(results: pd.DataFrame) -> pd.DataFrame:
 
 def cold_start_table(results: pd.DataFrame) -> pd.DataFrame:
     m2 = results[results.scheme.str.startswith("M2")]
+    if m2.empty:
+        return pd.DataFrame()
+    m2 = m2.assign(k=m2.k.astype(int))
     return m2.pivot_table(index="method", columns="k", values="rmse", aggfunc="mean")
 
 
