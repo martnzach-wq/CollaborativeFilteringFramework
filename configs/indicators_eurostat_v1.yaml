@@ -105,7 +105,8 @@ indicators:
   source:
     connector: eurostat
     dataset: demo_r_find3
-    filters: {}
+    filters:
+      indic_de: TOTFERRT
   note: exact weight is women aged 15-49; population weight is an approximation
 - indicator_id: unemployment_rate
   label: unemployment

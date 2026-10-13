@@ -10,7 +10,13 @@ app = typer.Typer(help="regsim: similarity and prediction for multi-level region
 @app.command()
 def build(config: str):
     """Fetch, harmonise and store observations."""
-    raise NotImplementedError("M1")
+    from regsim.build import build as run_build
+    from regsim.config import RunConfig
+
+    report = run_build(RunConfig.from_yaml(config))
+    typer.echo(f"units per level: {report.units_per_level}")
+    typer.echo(f"observations: {report.observations}")
+    typer.echo(report.to_frame()[["indicator_id", "native", "recoded", "dropped"]].to_string(index=False))
 
 
 @app.command()
