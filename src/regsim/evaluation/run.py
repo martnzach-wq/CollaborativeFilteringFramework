@@ -10,17 +10,29 @@ import pandas as pd
 from regsim.config import RunConfig
 from regsim.evaluation.benchmark import model_card, prototype_splits, run_benchmark
 from regsim.models.baselines import BASELINES
+from regsim.models.hier_mf import HierTypedMF
+from regsim.models.tuning import Tuned
 from regsim.prep.matrix import prepare
 from regsim.registry import IndicatorRegistry
 from regsim.store.store import ObservationStore
 
+ESTIMATORS = {**BASELINES, "HierTypedMF": HierTypedMF, "Tuned": Tuned}
+
 
 def estimator_factories(spec: dict[str, dict]) -> dict:
+    """Factories from ``{label: params}``; ``params["class"]`` names the estimator (default: the label).
+
+    ``class: Tuned`` takes ``estimator`` (class name), ``grid`` and optional ``base``, ``n_folds``, ``frac``.
+    """
     out = {}
-    for name, params in spec.items():
-        if name not in BASELINES:
-            raise ValueError(f"unknown estimator {name}; available: {sorted(BASELINES)}")
-        out[name] = partial(BASELINES[name], **(params or {}))
+    for label, params in spec.items():
+        params = dict(params or {})
+        cls_name = params.pop("class", label)
+        if cls_name not in ESTIMATORS:
+            raise ValueError(f"unknown estimator {cls_name}; available: {sorted(ESTIMATORS)}")
+        if cls_name == "Tuned":
+            params["estimator"] = ESTIMATORS[params.get("estimator", "HierTypedMF")]
+        out[label] = partial(ESTIMATORS[cls_name], **params)
     return out
 
 

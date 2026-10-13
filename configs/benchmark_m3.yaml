@@ -1,0 +1,30 @@
+# M3 benchmark: HierTypedMF variants against the baselines on the prototype protocol (Eurostat 2018-2022).
+data:
+  indicator_registry: configs/indicators_eurostat_v1.yaml
+  geo_scheme: NUTS2024
+  levels: [0, 2, 3]
+  periods: ["2013/2017", "2018/2022"]
+  store: data/store
+  sources: [eurostat]
+evaluation:
+  period: "2018/2022"
+  levels: [0, 2, 3]
+  merge_copies: false
+  protocol: prototype
+  estimators:
+    LevelMean: {}
+    ParentCarryDown: {}
+    KNNGower: {k: 10}
+    SoftImpute: {lam: 5.0, rank_max: 12}
+    IterativePCA: {rank: 5}
+    MissForest: {n_estimators: 50, max_iter: 5}
+    "MF, broadcast (LEVITATE-type)": {class: HierTypedMF, rank: 12, lam_u: 0.03, coupling: broadcast}
+    "MF, hierarchical prior": {class: HierTypedMF, rank: 12, lam_u: 0.03, coupling: prior_only}
+    "MF, prior + aggregation": {class: HierTypedMF, rank: 12, lam_u: 0.03, coupling: prior_and_constraint}
+    "HierTypedMF (tuned)":
+      class: Tuned
+      estimator: HierTypedMF
+      grid: {rank: [8, 12], lam_u: [0.03, 0.3], lam_agg: [1.0, 10.0]}
+      n_folds: 2
+  n_jobs: 8
+output_dir: runs

@@ -102,10 +102,12 @@ def test_fold_in_close_to_refit(synth):
     without[rows] = False
     base = HierTypedMF(rank=3, lam_u=0.3, reconcile=False).fit(md.with_mask(without))
     keep = md.mask[rows] & ~hide[rows]
-    F = base.fold_in(np.where(keep, md.Z[rows], 0.0), keep, parent_new=[md.parent[g] for g in rows])
+    F = base.fold_in(
+        np.where(keep, md.Z[rows], 0.0), keep, parent_new=[md.parent[g] for g in rows], rows=rows
+    )
     e_full = rmse(full.predict()[rows], Z[rows], hide[rows])
     e_fold = rmse(F, Z[rows], hide[rows])
-    assert abs(e_fold - e_full) < 0.05
+    assert abs(e_fold - e_full) < 0.02
     assert base.fold_in_cov_.shape == (15, 4, 4)
 
 
@@ -205,3 +207,24 @@ def test_reproducible(synth):
     a = HierTypedMF(rank=3, seed=5).fit(md).predict()
     b = HierTypedMF(rank=3, seed=5).fit(md).predict()
     assert np.array_equal(a, b)
+
+
+def test_tuned_wrapper(synth):
+    from regsim.models.tuning import Tuned
+
+    _, md, _ = synth
+    t = Tuned(HierTypedMF, {"lam_u": [0.03, 1.0]}, base={"rank": 3, "reconcile": False}, n_folds=1).fit(md)
+    assert set(t.cv_results_.columns) == {"lam_u", "rmse"} and t.best_params_["lam_u"] in (0.03, 1.0)
+    assert t.predict().shape == md.Z.shape and t.predict_std().shape == md.Z.shape
+
+
+def test_factories_with_class_key():
+    from regsim.evaluation.run import estimator_factories
+
+    f = estimator_factories(
+        {
+            "MF": {"class": "HierTypedMF", "rank": 4},
+            "MF tuned": {"class": "Tuned", "estimator": "HierTypedMF", "grid": {"rank": [2, 3]}},
+        }
+    )
+    assert f["MF"]().rank == 4 and f["MF tuned"]().estimator is HierTypedMF

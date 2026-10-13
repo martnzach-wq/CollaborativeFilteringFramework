@@ -319,11 +319,16 @@ class HierTypedMF:
         )
 
     # ================================================================================================ fold-in
-    def fold_in(self, z_new, mask_new, parent_new=None, side_new=None) -> np.ndarray:
+    def fold_in(
+        self, z_new, mask_new, parent_new=None, side_new=None, rows=None, n_steps: int = 2
+    ) -> np.ndarray:
         """Predictions for new entities from their observed continuous cells, parents and side information.
 
-        Solves the penalised least-squares problem for (u, b) with the indicator side fixed (design §7, P2);
-        the posterior covariance of the new entities is kept in ``fold_in_cov_``.
+        Solves the penalised least-squares problem for (u, b) with the indicator side fixed (design §7, P2).
+        With ``rows`` (the entities' rows in the fitted data, whose own cells were not used for fitting) and
+        ``coupling="prior_and_constraint"``, the observed values of their parents enter as linearised
+        aggregation pseudo-observations with the siblings' values fixed (``n_steps`` Gauss-Newton steps).
+        The posterior covariance of the new entities is kept in ``fold_in_cov_``.
         """
         z_new = np.atleast_2d(np.asarray(z_new, dtype=float))
         mask_new = np.atleast_2d(np.asarray(mask_new, dtype=bool))
@@ -337,6 +342,8 @@ class HierTypedMF:
         out_lat = np.empty((m, lay.n_latent))
         covs = np.empty((m, r + 1, r + 1))
         prior_on = self.coupling in ("prior_only", "prior_and_constraint")
+        use_agg = rows is not None and self.coupling == "prior_and_constraint" and self.lam_agg > 0
+        agg_cols = self._fold_in_agg_columns() if use_agg else []
         for i in range(m):
             prior = np.zeros(r)
             if prior_on:
@@ -348,13 +355,104 @@ class HierTypedMF:
             Phi = np.column_stack([self.V_[[lay.start[j] for j in cols]], np.ones(len(cols))])
             y = z_new[i, cols] - self.mu_[[lay.start[j] for j in cols]]
             reg = np.diag(np.r_[np.full(r, lam_u), lam_b])
+            rhs = Phi.T @ y + np.r_[lam_u * prior, 0.0]
+            if rows is not None and prior_on:
+                # Children in the fitted data: their factors inform u through their prior.
+                for c, w in self._children().get(int(rows[i]), []):
+                    reg[:r, :r] += lam_u * w**2 * np.eye(r)
+                    rhs[:r] += lam_u * w * self.U_[c]
+            if use_agg:
+                Ac, tc = self._agg_from_children(int(rows[i]), agg_cols, mask_new[i])
+                if Ac:
+                    Ac, tc = np.array(Ac), np.array(tc)
+                    reg = reg + self.lam_agg * Ac.T @ Ac
+                    rhs = rhs + self.lam_agg * Ac.T @ tc
             H = Phi.T @ Phi + reg
-            theta = np.linalg.solve(H, Phi.T @ y + np.r_[lam_u * prior, 0.0])
+            theta = np.linalg.solve(H, rhs)
+            if use_agg:
+                for _ in range(n_steps):
+                    A_rows, t_rows = self._agg_pseudo(int(rows[i]), theta, agg_cols, mask_new[i])
+                    if not A_rows:
+                        break
+                    Aa, ta = np.array(A_rows), np.array(t_rows)
+                    H = Phi.T @ Phi + reg + self.lam_agg * Aa.T @ Aa
+                    theta = np.linalg.solve(H, rhs + self.lam_agg * Aa.T @ ta)
             out_lat[i] = self.mu_ + theta[-1] + theta[:-1] @ self.V_.T
             s2 = np.mean([self.sigma2_[j] for j in cols]) if cols else np.mean(list(self.sigma2_.values()))
             covs[i] = np.linalg.inv(H) * s2
         self.fold_in_cov_ = covs
         return self._outputs(out_lat)
+
+    def _fold_in_agg_columns(self) -> list[tuple]:
+        data = self.data_
+        out = []
+        for j in self.gauss_:
+            ind = data.column_meta[j]
+            agg = getattr(ind, "aggregation", Aggregation.NONE)
+            W = _agg_matrix(data, agg, getattr(ind, "ratio_of", None))
+            if W is None:
+                continue
+            sc = data.scalers[j] if data.scalers else ("identity", 0.0, 1.0)
+            out.append((j, agg, sparse.csr_matrix(W), sparse.csc_matrix(W), sc))
+        return out
+
+    def _children(self) -> dict[int, list[tuple[int, float]]]:
+        if "children_" not in self.__dict__:
+            out: dict[int, list[tuple[int, float]]] = {}
+            for c, ps in enumerate(self.data_.parent):
+                for p, w in ps:
+                    out.setdefault(p, []).append((c, w))
+            self.children_ = out
+        return self.children_
+
+    def _agg_from_children(self, g: int, agg_cols: list[tuple], own_mask: np.ndarray):
+        """Rows ``phi_j . theta ~ T(aggregate of children) - mu_j`` for unobserved cells of a parent row ``g``."""
+        data = self.data_
+        lay = self.layout_
+        A_rows, t_rows = [], []
+        for j, agg, Wr, _, sc in agg_cols:
+            if own_mask[j]:
+                continue
+            kids = Wr.indices[Wr.indptr[g] : Wr.indptr[g + 1]]
+            if kids.size == 0:
+                continue
+            if agg is Aggregation.SUM and data.agg_cover is not None and data.agg_cover[g] < COVER_MIN:
+                continue
+            w = Wr.data[Wr.indptr[g] : Wr.indptr[g + 1]]
+            zc = np.where(data.mask[kids, j], data.Z[kids, j], self.latent_[kids, lay.start[j]])
+            kind, loc, scale = sc
+            target = (_np_forward(np.array([np.sum(w * _to_orig(zc, sc))]), kind)[0] - loc) / scale
+            A_rows.append(np.append(self.V_[lay.start[j]], 1.0))
+            t_rows.append(target - self.mu_[lay.start[j]])
+        return A_rows, t_rows
+
+    def _agg_pseudo(self, g: int, theta: np.ndarray, agg_cols: list[tuple], own_mask: np.ndarray):
+        """Linearised aggregation rows for entity row ``g``: parent value ~ aggregate with siblings fixed."""
+        data = self.data_
+        lay = self.layout_
+        A_rows, t_rows = [], []
+        for j, agg, Wr, Wc, sc in agg_cols:
+            if own_mask[j]:
+                continue
+            col = Wc[:, g]
+            for p, w_g in zip(col.indices, col.data, strict=True):
+                if not data.mask[p, j]:
+                    continue
+                if agg is Aggregation.SUM and data.agg_cover is not None and data.agg_cover[p] < COVER_MIN:
+                    continue
+                kids = Wr.indices[Wr.indptr[p] : Wr.indptr[p + 1]]
+                w = Wr.data[Wr.indptr[p] : Wr.indptr[p + 1]]
+                others = kids != g
+                zc = np.where(data.mask[kids, j], data.Z[kids, j], self.latent_[kids, lay.start[j]])
+                phi = np.append(self.V_[lay.start[j]], 1.0)
+                z0 = self.mu_[lay.start[j]] + phi @ theta
+                S0 = np.sum(w[others] * _to_orig(zc[others], sc)) + w_g * _to_orig(np.array([z0]), sc)[0]
+                kind, loc, scale = sc
+                zS0 = (_np_forward(np.array([S0]), kind)[0] - loc) / scale
+                a = _forward_slope(S0, kind) / scale * w_g * _derivative(np.array([z0]), sc)[0]
+                A_rows.append(a * phi)
+                t_rows.append(data.Z[p, j] - zS0 + a * (phi @ theta))
+        return A_rows, t_rows
 
     def fold_in_indicator(self, z_col, mask_col) -> np.ndarray:
         """Predictions for a new continuous indicator observed on some entities (design §7, P3)."""
@@ -665,6 +763,18 @@ def reconcile(
             z = z + np.where(is_free, dz, 0.0)
         P[cells[is_free], j] = z[is_free]
     return P
+
+
+def _forward_slope(x: float, kind: str) -> float:
+    """d T(x) / d x of the transform at x."""
+    if kind == "log":
+        return 1.0 / max(x, EPS)
+    if kind == "log1p":
+        return 1.0 / max(1.0 + x, EPS)
+    if kind == "logit":
+        x = min(max(x, EPS), 1 - EPS)
+        return 1.0 / (x * (1 - x))
+    return 1.0
 
 
 def _derivative(z: np.ndarray, sc) -> np.ndarray:
