@@ -8,7 +8,7 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D2 | 2026-10-13 | Repository `martnzach-wq/CollaborativeFilteringFramework`; package name **`regsim`**; licence **Apache-2.0**. | M. Zach |
 | D3 | 2026-10-13 | Time enters v1 with **two period windows**, 2013/2017 and 2018/2022, as geo-time entities with a random-walk penalty (design §4.3). | M. Zach |
 | D4 | open | Default lens; whether polarity is shown | |
-| D5 | open | Sources beyond Eurostat in v1 | |
+| D5 | 2026-10-13 | v1 sources: **Eurostat** and **GISCO** (primary), **KNOWING D3.6 GeoPackage** (imported in full; only its non-Eurostat indicators enter the model), **JRC ARDECO** as fallback for population, GDP, employment and GVA, flagged as estimates. WDI and AlphaEarth are deferred to the extension beyond Europe. | M. Zach |
 | D6 | 2026-10-13 | **PyTorch is a core dependency.** `HierTypedMF` uses autograd for the typed losses and the Laplace posterior. | M. Zach |
 | D7 | open | Interactive front end | |
 | D8 | open | TRF classes for regsim similarities | |
@@ -18,4 +18,5 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 
 - D1: the M1 acceptance criterion (1,929 units, 18,863 cells, ±2 % after code harmonisation) is evaluated after recoding the prototype matrix to NUTS 2024.
 - D3: the M1 build and the example config cover 2013–2022; the prototype reference numbers refer to the 2018/2022 window only.
+- D5: of the about 60 D3.6 indicators, 13 are copies of Eurostat tables (SOEC01/03/05/07/11, URB02–03, ENERG01–03, TRNPT06/08; D3.6 Table 20), and GEOG03–05 and URBN01 come from GISCO. The indicator registry links such duplicates with a source precedence (Eurostat > ARDECO > D3.6); the store keeps all copies with their `source`, the model matrix uses one copy per indicator, and the redundancy is reported. D3.6 copies remain available for the D3.6 compatibility mode (M4).
 - D6: `torch` moves from the optional extras into the core dependencies. CI installs the CPU wheels.
