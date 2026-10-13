@@ -22,7 +22,7 @@
 
 Other results: synthetic recovery (generator defaults, MCAR 30 %) 0.6° (indicator factors) and 6.8° (entity factors); with level-missingness (28 % observed) 8° and 16°. Fold-in vs full refit: NUTS-3 0.438 vs 0.437, NUTS-2 0.380 vs 0.407. Coherence after reconciliation: 95 % of parent groups with predicted children within 0.8 %.
 
-**Tests**: 84 unit tests pass; M0–M3 acceptance pass (M3: subspace recovery, RMSE below the prototype in M1–M4 with the tuned model, coherence within 1 % for 95 % of groups, NUTS-3 fold-in within 0.02 of a full refit; 15 minutes on 8 cores).
+**Tests**: 82 unit tests pass; M0–M3 acceptance pass (M3: subspace recovery, RMSE below the prototype in M1–M4 with the tuned model, coherence within 1 % for 95 % of groups, NUTS-3 fold-in within 0.02 of a full refit; 15 minutes on 8 cores).
 
 **Calibration**: nominal 90 % Laplace intervals cover 92 % of held-out cells in M1 (NUTS-0 96 %, NUTS-2 88 %, NUTS-3 94 %).
 
