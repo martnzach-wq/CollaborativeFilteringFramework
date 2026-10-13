@@ -7,7 +7,7 @@
 
 ## Code
 - Python ≥ 3.12, `src/` layout, type hints throughout, `ruff` for lint and format, NumPy-style docstrings.
-- Core dependencies: numpy, scipy, pandas, pyarrow, duckdb, scikit-learn, matplotlib, pyyaml, pydantic. Optional extras: `geo` (geopandas, shapely), `viz` (plotly, umap-learn), `api` (fastapi, uvicorn), `torch` (only if decision D6 allows it).
+- Core dependencies: numpy, scipy, pandas, pyarrow, duckdb, scikit-learn, matplotlib, pyyaml, pydantic, torch (decision D6). Optional extras: `geo` (geopandas, shapely), `viz` (plotly, umap-learn), `api` (fastapi, uvicorn).
 - No hard-coded geo-schemes: code paths refer to `GeoScheme` and the hierarchy graph, never to NUTS string prefixes.
 - No thematic indicator classes inside models, similarity or typology. `tags` are metadata for search and lens construction only.
 - Every estimator implements `regsim.models.base.Estimator`. Every random operation takes a `seed` or `numpy.random.Generator`.

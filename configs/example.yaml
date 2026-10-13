@@ -1,9 +1,9 @@
-# Example run reproducing the feasibility prototype (docs/prototype.md)
+# Example run: prototype indicator set (docs/prototype.md) on NUTS 2024 with two period windows
 data:
   indicator_registry: configs/indicators_eurostat_v1.yaml
-  geo_scheme: NUTS2021        # decision D1
+  geo_scheme: NUTS2024        # decision D1
   levels: [0, 2, 3]
-  periods: ["2018/2022"]      # decision D3
+  periods: ["2013/2017", "2018/2022"]   # decision D3
   store: data/store
 model:
   estimator: HierTypedMF
