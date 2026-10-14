@@ -5,6 +5,7 @@ from __future__ import annotations
 import numpy as np
 from scipy import sparse
 
+from regsim.geo.nuts import LAU_LEVEL
 from regsim.geo.scheme import HierarchyGraph
 from regsim.models.base import ModelData
 from regsim.prep.transforms import forward, inverse, robust_scale
@@ -73,7 +74,10 @@ def prepare(
         keep = np.ones(len(m.geo_ids), dtype=bool)
         if require_population:
             pop = store.matrix(Lens(indicators=(POPULATION_ID,)), geo_ids=m.geo_ids, period=w)
-            keep = pop.observed[:, 0]
+            units = store.units().set_index("geo_id")
+            # LAUs have no Eurostat population series; their population comes from the LAU list
+            listed = units.population.reindex(m.geo_ids).notna().to_numpy() & (m.level >= LAU_LEVEL)
+            keep = pop.observed[:, 0] | listed
         blocks.append((w, [g for g, k in zip(m.geo_ids, keep, strict=True) if k], m.X[keep], m.level[keep]))
     base_ids = [g for _, ids, _, _ in blocks for g in ids]
     graph = store.graph().subgraph(set(base_ids))

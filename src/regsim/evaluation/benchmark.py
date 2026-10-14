@@ -155,3 +155,27 @@ def _markdown(df: pd.DataFrame) -> list[str]:
     sep = "|" + "---|" * len(df.columns)
     body = ["| " + " | ".join(str(v) for v in row) + " |" for row in df.itertuples(index=False)]
     return [head, sep, *body]
+
+
+def level_transfer_benchmark(
+    data: ModelData,
+    columns: list[str],
+    estimators: dict[str, Callable[[], object]],
+    fine_level: int,
+    reference: str = "ParentCarryDown",
+    n_jobs: int = 1,
+) -> pd.DataFrame:
+    """Scheme M4 for selected columns: each column is hidden in turn at ``fine_level`` (e.g. LAU) and predicted
+    from coarser values and the other columns. Adds the skill 1 - MSE / MSE(``reference``) per column, i.e. the
+    share of the within-parent variation recovered beyond carrying the parent value down."""
+    level = data.levels()
+    splits = [
+        masking.level_transfer(data.mask, level, data.column_ids.index(c), fine_level, c)
+        for c in columns
+        if c in data.column_ids
+    ]
+    res = run_benchmark(data, estimators, splits, n_jobs=n_jobs)
+    if reference in set(res.method):
+        ref = res[res.method == reference].set_index("indicator").rmse
+        res["skill"] = 1 - (res.rmse / res.indicator.map(ref)) ** 2
+    return res

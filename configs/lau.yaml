@@ -1,0 +1,20 @@
+# LAU extension (M6): NUTS-3 -> LAU level transfer with the KNOWING D3.6 indicators (available for all LAUs)
+data:
+  indicator_registry:
+    - configs/indicators_eurostat_v1.yaml
+    - configs/indicators_d36_v2.5.yaml
+  geo_scheme: NUTS2024        # decision D1 (LAU 2024)
+  levels: [0, 2, 3, 4]        # 4 = LAU
+  periods: ["2018/2022"]
+  store: data/store_lau
+  sources: [eurostat, d36]
+  lau: true
+model:
+  estimator: HierTypedMF
+  rank: 12
+  lam_u: 0.03
+  lam_v: 0.1
+  lam_agg: 1.0
+  coupling: prior_and_constraint
+  seed: 0
+output_dir: runs
