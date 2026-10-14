@@ -46,6 +46,10 @@ def prepare_data(cfg: RunConfig, period: str | list[str] | None = None) -> Model
     from regsim.registry import IndicatorRegistry
     from regsim.store.store import ObservationStore
 
+    if not (Path(cfg.data.store) / "geo_unit.parquet").exists():
+        raise SystemExit(
+            f"no data store in {cfg.data.store!r}: run `regsim build <config>` first (downloads and builds the store)"
+        )
     registry = IndicatorRegistry.from_yaml(*cfg.data.registries)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -70,6 +74,10 @@ def fit(cfg: RunConfig, period: str | None = None, refresh: bool = False) -> Fit
     from regsim.uncertainty.conformal import Conformalised
 
     period = period or cfg.data.periods[-1]
+    if not (Path(cfg.data.store) / "geo_unit.parquet").exists():
+        raise SystemExit(
+            f"no data store in {cfg.data.store!r}: run `regsim build <config>` first (downloads and builds the store)"
+        )
     folder = Path(cfg.output_dir) / f"fit-{fit_key(cfg)}-{period.replace('/', '_')}"
     path = folder / "model.pkl"
     if path.exists() and not refresh:
