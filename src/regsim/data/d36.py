@@ -126,7 +126,8 @@ class D36Data:
                 "geo_id": obs.geo_id[~unmapped].values,
                 "indicator_id": PREFIX + obs.indicator_id[~unmapped].values,
                 "period": obs.period[~unmapped].values,
-                "scenario": obs.scenario[~unmapped].values,
+                # the D3.6 "baseline" is the present state, i.e. observed values; RCP scenarios keep their names
+                "scenario": obs.scenario[~unmapped].replace({"baseline": "observed"}).values,
                 "value": obs.value[~unmapped].values,
                 "component": obs.component[~unmapped].values,
                 "se": np.nan,

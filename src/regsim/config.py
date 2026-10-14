@@ -83,10 +83,58 @@ class EvaluationConfig(BaseModel):
     n_jobs: int = 1
 
 
+CAPITAL_REGIONS = [
+    "AT13",
+    "BE10",
+    "BG41",
+    "CZ01",
+    "DE30",
+    "DK01",
+    "EE00",
+    "EL30",
+    "ES30",
+    "FI1B",
+    "FR10",
+    "HR05",
+    "HU11",
+    "IE06",
+    "ITI4",
+    "LT01",
+    "LV00",
+    "NL32",
+    "PL91",
+    "PT1A",
+    "RO32",
+    "SE11",
+    "SI04",
+    "SK01",
+]
+
+
+class ReportConfig(BaseModel):
+    """Figures of `regsim report` (docs/visualisation.md)."""
+
+    level: int = 3
+    reference: str = "AT130"  # V4 similarity map and V6 difference profile
+    pair_with: str | None = None  # V6 partner; default: nearest region of the reference
+    similarity_level: int = 2  # V2
+    trajectory_level: int = 2  # V7
+    trajectory_regions: list[str] = Field(default_factory=lambda: list(CAPITAL_REGIONS))
+    observed_share: float = 0.5  # lens b of V4: indicators observed for at least this share of `level`
+    typology_k: int | None = None
+    typology_boot: int = 20
+    n_sample_distortion: int = 400
+    benchmark: str | None = None  # benchmark.csv of `regsim evaluate`; None runs a reduced benchmark
+    html: bool = True  # also write interactive plotly versions
+    dpi: int = 150
+    seed: int = 0
+
+
 class RunConfig(BaseModel):
     data: DataConfig
     model: ModelConfig = ModelConfig()
     evaluation: EvaluationConfig = EvaluationConfig()
+    report: ReportConfig = ReportConfig()
     output_dir: str = "runs"
 
     def config_hash(self) -> str:

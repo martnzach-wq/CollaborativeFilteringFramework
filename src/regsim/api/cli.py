@@ -20,8 +20,13 @@ def build(config: str):
 
 
 @app.command()
-def fit(config: str):
-    raise NotImplementedError("M3")
+def fit(config: str, period: str = "", refresh: bool = False):
+    """Fit the calibrated model of the config (cached in ``<output_dir>/fit-<hash>-<period>``)."""
+    from regsim.api.runtime import fit as run_fit
+    from regsim.config import RunConfig
+
+    f = run_fit(RunConfig.from_yaml(config), period or None, refresh=refresh)
+    typer.echo(f"{f.folder}  entities={f.data.Z.shape[0]}  indicators={f.data.Z.shape[1]}")
 
 
 @app.command()
@@ -154,10 +159,28 @@ def typology(
 
 
 @app.command()
-def predict(config: str, geo_id: str):
-    raise NotImplementedError("M3")
+def predict(config: str, geo_id: str, indicator: str = "", period: str = "", alpha: float = 0.1):
+    """Completed values of GEO_ID with calibrated intervals (task P1) and its applicability domain."""
+    import pandas as pd
+
+    from regsim.api.runtime import fit as run_fit
+    from regsim.config import RunConfig
+    from regsim.predict.tasks import fill_gaps
+    from regsim.uncertainty.domain import applicability
+
+    f = run_fit(RunConfig.from_yaml(config), period or None)
+    pd.set_option("display.width", 200)
+    typer.echo(f"applicability: {applicability(f.model, f.data).loc[geo_id, 'domain']}")
+    typer.echo(fill_gaps(f.model, geo_id, indicator or None, alpha=alpha).to_string(index=False))
 
 
 @app.command()
-def report(config: str):
-    raise NotImplementedError("M6")
+def report(config: str, out: str = "", only: str = ""):
+    """Regenerate the figures of docs/visualisation.md (PNG and interactive HTML) from the config."""
+    from regsim.config import RunConfig
+    from regsim.viz.report import generate
+
+    folder = generate(
+        RunConfig.from_yaml(config), out or None, [x.strip() for x in only.split(",")] if only else None
+    )
+    typer.echo(f"figures: {folder / 'figures'}")

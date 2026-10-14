@@ -85,6 +85,7 @@ def test_read_and_round_trip(gpkg):
     o = obs.set_index(["geo_id", "indicator_id"])
     assert o.loc[("NUTS2024:AT130", "d36_heat_days_1990_2020_mean"), "period"] == "1990/2020"
     assert o.loc[("LAU2024:AT:90001", "d36_degurba"), "period"] == "2026"
+    assert set(obs.scenario) == {"observed"}  # D3.6 baseline = present state
     # Categorical values are integer codes into the sorted categories ["1", "3"].
     assert o.loc[("NUTS2024:AT130", "d36_degurba"), "value"] == 0.0
     assert o.loc[("NUTS2024:AT", "d36_degurba"), "value"] == 1.0
