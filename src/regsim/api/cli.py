@@ -164,11 +164,13 @@ def predict(config: str, geo_id: str, indicator: str = "", period: str = "", alp
     import pandas as pd
 
     from regsim.api.runtime import fit as run_fit
+    from regsim.api.runtime import resolve_id
     from regsim.config import RunConfig
     from regsim.predict.tasks import fill_gaps
     from regsim.uncertainty.domain import applicability
 
     f = run_fit(RunConfig.from_yaml(config), period or None)
+    geo_id = resolve_id(f.data, geo_id)
     pd.set_option("display.width", 200)
     typer.echo(f"applicability: {applicability(f.model, f.data).loc[geo_id, 'domain']}")
     typer.echo(fill_gaps(f.model, geo_id, indicator or None, alpha=alpha).to_string(index=False))
@@ -184,3 +186,30 @@ def report(config: str, out: str = "", only: str = ""):
         RunConfig.from_yaml(config), out or None, [x.strip() for x in only.split(",")] if only else None
     )
     typer.echo(f"figures: {folder / 'figures'}")
+
+
+@app.command()
+def serve(config: str, host: str = "127.0.0.1", port: int = 8000):
+    """REST service for the config (FastAPI; extra `api`)."""
+    import uvicorn
+
+    from regsim.api.service import create_app
+    from regsim.config import RunConfig
+
+    uvicorn.run(create_app(RunConfig.from_yaml(config)), host=host, port=port)
+
+
+@app.command(name="app")
+def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool = False):
+    """Interactive explorer with linked map and embedding (Dash; extra `app`, decision D7)."""
+    from pathlib import Path
+
+    from regsim.api.runtime import fit as run_fit
+    from regsim.app.dash_app import create_dash
+    from regsim.config import RunConfig
+    from regsim.viz.views import load_geometry
+
+    cfg = RunConfig.from_yaml(config)
+    path = Path(cfg.data.raw_dir) / "gisco" / f"NUTS_RG_01M_{cfg.data.nuts_version}_3035.parquet"
+    geometry = load_geometry(path) if path.exists() else None
+    create_dash(run_fit(cfg), geometry).run(host=host, port=port, debug=debug)

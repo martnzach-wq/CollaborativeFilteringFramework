@@ -503,7 +503,7 @@ def difference_profile(
                 marker={"symbol": ["circle" if both[i] else "circle-open" for i in order], "size": 9},
             )
         )
-        fig.update_layout(title=title, xaxis_title="difference (robust-scaled)")
+        fig.update_layout(title=title.replace("\n", "<br>"), xaxis_title="difference (robust-scaled)")
         return fig
     fig, ax = plt.subplots(figsize=(8, 0.25 * len(cols) + 2))
     y = np.arange(len(cols))

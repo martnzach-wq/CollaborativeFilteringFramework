@@ -23,7 +23,7 @@ class Fitted:
 
     @property
     def base(self):
-        return self.model.estimator_
+        return getattr(self.model, "estimator_", self.model)
 
 
 def model_factory(cfg: RunConfig):
