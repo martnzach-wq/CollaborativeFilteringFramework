@@ -22,8 +22,8 @@ viz = ["plotly>=5.18", "umap-learn>=0.5"]
 api = ["fastapi>=0.110", "uvicorn>=0.29"]
 app = ["dash>=2.16", "plotly>=5.18"]  # decision D7
 dev = [
-  "pytest>=8", "ruff>=0.4", "pre-commit>=3", "shapely>=2", "plotly>=5.18", "fastapi>=0.110", "httpx>=0.27",
-  "dash>=2.16",
+  "pytest>=8", "ruff>=0.4", "pre-commit>=3", "shapely>=2", "plotly>=5.18", "fastapi>=0.110", "uvicorn>=0.29",
+  "httpx>=0.27", "dash>=2.16",
 ]
 
 [project.scripts]

@@ -182,7 +182,10 @@ def report(config: str, out: str = "", only: str = ""):
 @app.command()
 def serve(config: str, host: str = "127.0.0.1", port: int = 8000):
     """REST service for the config (FastAPI; extra `api`)."""
-    import uvicorn
+    try:
+        import uvicorn
+    except ImportError as e:
+        raise SystemExit('regsim serve needs FastAPI and uvicorn: pip install -e ".[api]"') from e
 
     from regsim.api.service import create_app
     from regsim.config import RunConfig
@@ -194,6 +197,11 @@ def serve(config: str, host: str = "127.0.0.1", port: int = 8000):
 def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool = False):
     """Interactive explorer with linked map and embedding (Dash; extra `app`, decision D7)."""
     from pathlib import Path
+
+    try:
+        import dash  # noqa: F401
+    except ImportError as e:
+        raise SystemExit('regsim app needs Dash: pip install -e ".[app]"') from e
 
     from regsim.api.runtime import fit as run_fit
     from regsim.app.dash_app import create_dash

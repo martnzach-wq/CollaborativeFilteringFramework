@@ -17,7 +17,7 @@ Similarity and prediction for indicators observed on geo-entities at several lev
 ## Installation
 
 ```
-pip install -e ".[dev]"          # core, tests, REST service and Dash app
+pip install -e ".[dev]"          # core, tests, REST service (FastAPI, uvicorn) and Dash app
 pytest                           # unit tests; acceptance tests need a built store
 ```
 
