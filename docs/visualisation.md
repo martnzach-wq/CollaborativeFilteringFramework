@@ -1,6 +1,6 @@
 # Visualisation catalogue
 
-Each view below is rendered from the feasibility prototype (Eurostat, 25 indicators, NUTS-0/2/3, 2018–2022 means, hierarchical MF with aggregation constraints, rank 12). Values are illustrative of the method, not results to be quoted.
+`regsim report CONFIG` renders all views below from a run configuration (`runs/report-<hash>/figures`, PNG and interactive HTML; settings in the `report` section of the config); `regsim app CONFIG` is the interactive version with linked map and embedding (decision D7). The images on this page are rendered from the feasibility prototype (Eurostat, 25 indicators, NUTS-0/2/3, 2018–2022 means, hierarchical MF with aggregation constraints, rank 12). Values are illustrative of the method, not results to be quoted.
 
 Principles that apply to all views:
 

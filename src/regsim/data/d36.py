@@ -237,7 +237,9 @@ def _transform(r) -> Transform:
         return Transform.CLR
     if r.data_type == "ordinal":
         return Transform.RANK
-    return Transform.LOG1P if r.log_transform else Transform.IDENTITY
+    # counts of days per year are right-skewed with many small values
+    skewed = (r.units or "").strip() == "days/year"
+    return Transform.LOG1P if r.log_transform or skewed else Transform.IDENTITY
 
 
 def _aggregation(indicator_id: str, dtype: DType) -> Aggregation:
@@ -245,8 +247,8 @@ def _aggregation(indicator_id: str, dtype: DType) -> Aggregation:
         return Aggregation.NONE
     if indicator_id == "total_area":
         return Aggregation.SUM
-    if indicator_id == "electricity_total_demand_mean":
-        return Aggregation.SUM
+    # electricity_total_demand_mean is an area-weighted mean despite its name: NUTS-3 value = area-weighted mean
+    # of the LAU values (median ratio 1.001)
     if indicator_id == "population_density":
         return Aggregation.RATIO
     if "_max" in indicator_id or "_min" in indicator_id or indicator_id.endswith("majority"):

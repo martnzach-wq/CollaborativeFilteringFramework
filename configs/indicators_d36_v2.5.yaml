@@ -238,6 +238,7 @@ indicators:
 - indicator_id: d36_heat_days_1990_2020_mean
   label: Heat Days (number of days with Tmax > 30°C)
   dtype: continuous
+  transform: log1p
   aggregation: wmean_area
   native_levels:
   - 0
@@ -255,6 +256,7 @@ indicators:
 - indicator_id: d36_tropical_nights_1990_2020_mean
   label: Tropical Nights (number of days with Tmin ≥ 20°C)
   dtype: continuous
+  transform: log1p
   aggregation: wmean_area
   native_levels:
   - 0
@@ -272,6 +274,7 @@ indicators:
 - indicator_id: d36_desert_days_1990_2020_mean
   label: Desert Days (number of days with Tmax ≥ 35°C)
   dtype: continuous
+  transform: log1p
   aggregation: wmean_area
   native_levels:
   - 0
@@ -289,6 +292,7 @@ indicators:
 - indicator_id: d36_ice_days_1990_2020_mean
   label: Ice Days (number of days with Tmax < 0°C)
   dtype: continuous
+  transform: log1p
   aggregation: wmean_area
   native_levels:
   - 0
@@ -751,7 +755,7 @@ indicators:
   label: Total Electricity Demand
   dtype: continuous
   transform: log1p
-  aggregation: sum
+  aggregation: wmean_area
   native_levels:
   - 0
   - 1

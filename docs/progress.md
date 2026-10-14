@@ -1,5 +1,44 @@
 # Progress
 
+## M6 Interfaces, views, extensions (2026-10-14)
+
+**Done**
+- Decision D7 (front end): Dash, recorded in `docs/decisions.md`.
+- Prediction tasks P1–P7 (`regsim.predict.tasks`) on the original scale with intervals and observed flags: gap filling, new entity (fold-in), new indicator, vision entity (base entity as prior, targets as observations), analogues, next indicator to measure (Sherman–Morrison update of the Laplace posterior), level transfer.
+- Views V1–V8 and further views (`regsim.viz.views`): matplotlib and plotly versions; 2D views state explained variance or trustworthiness; maps from the GISCO geometry without geopandas. `regsim report CONFIG` renders all figures of `docs/visualisation.md` (PNG and HTML, statistics in `stats.json`; settings in the config's `report` section).
+- CLI: `fit` (calibrated model cached per configuration and registry content), `predict`, `report`, `serve`, `app`; `similar` and `predict` accept geo ids with or without scheme prefix.
+- REST service (`regsim.api.service`, FastAPI): health, entities, indicators, predict, similar, entity, vision, next-indicator, level-transfer, typology; pydantic response models are the contract (OpenAPI at `/docs`).
+- Dash explorer (`regsim.app.dash_app`): lens, level, number of types, colouring and embedding (PCA or UMAP) as controls; lasso selection on the map highlights the regions in the embedding and vice versa; clicking a region makes it the reference and shows its nearest regions and the difference profile (V6).
+- Geo-time entities (two windows with random-walk penalty, since M3) are used by V7.
+- LAU extension: `configs/lau.yaml` (store `data/store_lau`): 98,461 LAUs with the D3.6 indicators enter the model below NUTS-3 (100,130 rows, one fit about 11 minutes); `level_transfer_benchmark` for scheme M4 at a fine level.
+
+**Fixes found in this milestone**
+- D3.6 values were stored under the scenario `baseline` and dropped by the model matrix (scenario `observed`); they now enter as observed values. This affected runs with `configs/example.yaml` (CLI demonstrations, the NUTS-2 typology statement of M5); the acceptance benchmarks of M2–M5 use the Eurostat registry only.
+- D3.6 registry: `electricity_total_demand_mean` is an area-weighted mean (NUTS-3 value = area-weighted mean of its LAUs, median ratio 1.001), not a sum; the four "days per year" indicators are right-skewed and now use `log1p`.
+- `prepare` keeps LAU rows with a population from the LAU list (they have no Eurostat population series).
+
+**Results**
+- LAU M4 benchmark (each indicator hidden at all LAUs, predicted from NUTS-3 and the other LAU indicators; RMSE on the robust-scaled model scale; skill = 1 − MSE / MSE of carrying the NUTS-3 value down):
+
+| Indicator | LAU cells | Carry-down | LevelMean | SoftImpute | HierTypedMF | Skill HierTypedMF |
+|---|---|---|---|---|---|---|
+| Elevation (mean) | 96,678 | 0.668 | 1.115 | 0.665 | **0.563** | 0.29 |
+| Road density | 97,099 | 0.906 | 1.104 | 0.855 | **0.824** | 0.17 |
+| Electricity demand | 96,969 | 0.851 | 1.142 | 0.874 | **0.814** | 0.09 |
+| Population density | 97,097 | 1.639 | 1.958 | 1.722 | **1.570** | 0.08 |
+| Heat days | 96,869 | 0.489 | 0.973 | 0.525 | **0.473** | 0.06 |
+| Tropical nights | 96,869 | **0.557** | 1.047 | 0.615 | 0.562 | −0.02 |
+
+  Before the registry fix, electricity demand had skill −4.4 (the sum constraint forced LAU values to 1/46 of the NUTS-3 value) and tropical nights −0.27.
+- `regsim report configs/example.yaml` (65 indicators): V1 PC 1 + PC 2 48 % of variance, led by temperature and heating degree days; V3 trustworthiness PCA 0.68, UMAP 0.93; V4 typology on the 9 indicators observed at NUTS-3 more stable (ARI 0.67) than on all indicators (0.46); nearest NUTS-3 regions to Vienna: Karlsruhe, Bonn, Wrocław, Brussels, Nuremberg.
+- NUTS-2 typology with the D3.6 data: bootstrap stability ≤ 0.55 for k = 3–12 (M5 statement without D3.6: ≤ 0.62); the regions remain a continuum.
+
+**Tests**: 119 unit tests pass (including REST contract tests and the Dash callbacks through their HTTP interfaces); M0–M6 acceptance pass.
+
+**Open**
+- The D3.6 Köppen adjacency for zone pairs not covered by the demonstrators and the categorical scoring rules (to ask the D3.6 authors).
+- KNN baselines at LAU scale (quadratic cost) are not part of the LAU benchmark.
+
 ## M5 Typology, uncertainty, applicability domain, rules (2026-10-13)
 
 **Done**
@@ -21,7 +60,7 @@
 
   Over more seeds (M1 0–5, M2 100–107) the conformal coverage is 0.919 / 0.914 / 0.900 (M1) and 0.913 (M2, ensemble variant 0.912). Calibrating once without pooling gave 0.885–0.934 between seeds; refitting on all cells after calibration over-covered cold start (0.936).
 - Applicability domain on M2 cold start: RMSE 0.291 (`in_domain`), 0.297 (`edge`), 0.425 (`outside`); standardised RMS error 0.88 / 0.85 / 1.18, so `outside` flags entities whose intervals are too narrow before calibration.
-- Typology of the NUTS-2 regions (`configs/example.yaml`, GMM): bootstrap stability 0.62 for k = 3 and 0.36–0.44 for k = 4–12, while BIC decreases up to k ≈ 7–12. The regions form a continuum rather than well-separated types; typologies are reported with their stability for this reason.
+- Typology of the NUTS-2 regions (`configs/example.yaml`, GMM; computed before the D3.6 scenario fix of M6, i.e. without D3.6 indicators): bootstrap stability 0.62 for k = 3 and 0.36–0.44 for k = 4–12, while BIC decreases up to k ≈ 7–12. The regions form a continuum rather than well-separated types; typologies are reported with their stability for this reason.
 
 **Tests**: 106 unit tests pass; M0–M5 acceptance pass.
 

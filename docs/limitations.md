@@ -38,3 +38,11 @@
 - **Conformal intervals.** Calibration assumes that held-out cells resemble the calibration cells (random cells or cold-start entities); other hold-out patterns (country blocks, level transfer) are not calibrated. Predictions come from a model fitted without the calibration cells; the mean of the calibration models predicts better (M1 RMSE 0.337 vs 0.377 at NUTS 3) but over-covers (0.943 at NUTS 0). At NUTS 0, with about 80 hold-out cells per seed, the coverage of a single split varies between 0.85 and 0.97.
 - **Applicability domain.** Percentile thresholds are relative to each level, so a level always has about 5 % of its well-observed entities at `edge` or beyond.
 - **Typologies.** NUTS-2 regions show low cluster stability (ARI ≤ 0.62); the number of clusters is then chosen by stability alone. Consensus matrices are dense (n × n) and limit runs to a few thousand entities.
+
+## Interfaces and LAU extension (M6)
+
+- **LAU scale.** One HierTypedMF fit on the LAU matrix (100,130 rows) takes about 11 minutes and 2.6 GB; the LAU benchmark covers six indicators. Calibration, typologies with bootstrap consensus (dense n × n matrices) and KNN baselines are not run at LAU scale.
+- **LAU indicators.** Below NUTS-3 only the D3.6 indicators and the LAU-list population are observed; Eurostat indicators at LAU are predictions from the hierarchy.
+- **Maps.** Polygons are simplified to 1 km and drawn without holes; overseas regions lie outside the default extent.
+- **Explorer.** Typology runs in the app use 10 bootstrap resamples to stay interactive; the app holds the model in memory for a single user.
+- **Report figures.** The images in `docs/visualisation.md` are those of the prototype; `regsim report` writes the current ones to the run folder.

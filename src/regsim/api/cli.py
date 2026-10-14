@@ -86,25 +86,16 @@ def similar(
             scores.drop(index=geo_id, errors="ignore").nlargest(k, "composite_score")[cols].to_string()
         )
         return
-    from regsim.models.hier_mf import HierTypedMF
-    from regsim.prep.matrix import prepare
-    from regsim.registry import IndicatorRegistry
+    from regsim.api.runtime import fit as run_fit
+    from regsim.api.runtime import resolve_id
     from regsim.schema import Lens
     from regsim.similarity.entities import nearest, s_profile
-    from regsim.store.store import ObservationStore
 
-    registry = IndicatorRegistry.from_yaml(*cfg.data.registries)
-    window = period or cfg.data.periods[-1]
-    data = prepare(ObservationStore(cfg.data.store), registry, window, levels=cfg.data.levels)
-    mc = cfg.model
-    model = HierTypedMF(
-        rank=mc.rank, lam_u=mc.lam_u, lam_v=mc.lam_v, lam_agg=mc.lam_agg, coupling=mc.coupling, seed=mc.seed
-    ).fit(data)
+    f = run_fit(cfg, period or None)
     chosen = Lens() if lens == "all" else Lens(indicators=tuple(x.strip() for x in lens.split(",")))
-    space = s_profile(model, data, chosen)
-    typer.echo(
-        nearest(space, geo_id, k=k, samples=model.predict_dist(100, noise=False)).to_string(index=False)
-    )
+    space = s_profile(f.model, f.data, chosen)
+    samples = f.base.predict_dist(100, noise=False)
+    typer.echo(nearest(space, resolve_id(f.data, geo_id), k=k, samples=samples).to_string(index=False))
 
 
 @app.command()

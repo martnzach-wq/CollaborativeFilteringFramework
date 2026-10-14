@@ -54,13 +54,23 @@ def prepare_data(cfg: RunConfig, period: str | list[str] | None = None) -> Model
         )
 
 
+def fit_key(cfg: RunConfig) -> str:
+    """Hash of the run configuration and the content of its indicator registries (cache key of fitted models)."""
+    import hashlib
+
+    h = hashlib.sha256(cfg.config_hash().encode())
+    for path in cfg.data.registries:
+        h.update(Path(path).read_bytes())
+    return h.hexdigest()[:12]
+
+
 def fit(cfg: RunConfig, period: str | None = None, refresh: bool = False) -> Fitted:
     """Calibrated ``HierTypedMF`` (split-conformal, M5) for ``period`` (default: the last window); loaded from
     ``<output_dir>/fit-<hash>-<period>/model.pkl`` when present."""
     from regsim.uncertainty.conformal import Conformalised
 
     period = period or cfg.data.periods[-1]
-    folder = Path(cfg.output_dir) / f"fit-{cfg.config_hash()}-{period.replace('/', '_')}"
+    folder = Path(cfg.output_dir) / f"fit-{fit_key(cfg)}-{period.replace('/', '_')}"
     path = folder / "model.pkl"
     if path.exists() and not refresh:
         with path.open("rb") as f:

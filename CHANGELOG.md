@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0 (M6)
+- Prediction tasks P1–P7; views V1–V8 and diagnostic views (matplotlib and plotly); `regsim report`, `fit`, `predict`, `serve`, `app`.
+- REST service (FastAPI) with pydantic response models; Dash explorer with linked map and embedding (decision D7).
+- LAU extension (`configs/lau.yaml`) and `level_transfer_benchmark`.
+- Fixes: D3.6 baseline values stored as observed; D3.6 electricity demand aggregated as area-weighted mean; "days per year" indicators log-transformed; LAU rows kept by their LAU-list population; model cache keyed by registry content.
+
 ## 0.6.0 (M5)
 - Rule engine with `configs/rules_d36.yaml` (G001–G010, Table 10 and published severities, derived Köppen adjacency); gates in the D3.6 mode and in `regsim similar --mode d36`; per-tier coverage in `D36Scorer`; `load_values`, `published_gates`, `apply_gates`.
 - `Conformalised` (Mondrian split-conformal intervals), `applicability` (applicability domain).
