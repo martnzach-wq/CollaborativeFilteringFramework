@@ -212,3 +212,7 @@ def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool
     path = Path(cfg.data.raw_dir) / "gisco" / f"NUTS_RG_01M_{cfg.data.nuts_version}_3035.parquet"
     geometry = load_geometry(path) if path.exists() else None
     create_dash(run_fit(cfg), geometry).run(host=host, port=port, debug=debug)
+
+
+if __name__ == "__main__":
+    app()
