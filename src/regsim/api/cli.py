@@ -207,13 +207,23 @@ def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool
     from regsim.api.runtime import fit_panel
     from regsim.app.dash_app import create_dash
     from regsim.config import RunConfig
+    from regsim.registry import IndicatorRegistry
+    from regsim.store.store import ObservationStore
     from regsim.viz.views import load_geometry
 
     cfg = RunConfig.from_yaml(config)
     path = Path(cfg.data.raw_dir) / "gisco" / f"NUTS_RG_01M_{cfg.data.nuts_version}_3035.parquet"
     geometry = load_geometry(path) if path.exists() else None
     panel = (lambda: fit_panel(cfg)) if len(cfg.data.periods) > 1 else None
-    create_dash(run_fit(cfg), geometry, panel=panel).run(host=host, port=port, debug=debug)
+    units = ObservationStore(cfg.data.store).units()
+    registry = IndicatorRegistry.from_yaml(*cfg.data.registries)
+    create_dash(
+        run_fit(cfg),
+        geometry,
+        panel=panel,
+        region_names=dict(zip(units.geo_id, units.name, strict=True)),
+        indicator_labels={k: e.label for k, e in registry.entries.items() if e.label},
+    ).run(host=host, port=port, debug=debug)
 
 
 if __name__ == "__main__":

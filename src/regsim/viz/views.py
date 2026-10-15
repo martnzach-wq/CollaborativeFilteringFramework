@@ -64,6 +64,10 @@ def _colours(labels) -> list:
     return [GREY if lab < 0 else CATEGORICAL[int(lab) % len(CATEGORICAL)] for lab in labels]
 
 
+def _fmt(v) -> str:
+    return f"{v:.2f}" if isinstance(v, float) else str(v)
+
+
 def _short(geo_id: str) -> str:
     return geo_id.split(":", 1)[-1]
 
@@ -345,12 +349,13 @@ def maps(
     flags: pd.Series | None = None,
     ncols: int = 2,
     interactive=False,
+    names: dict | None = None,
 ):
     """V4: choropleth panels {title: values by geo id}; integer or string series are drawn as categories,
     floats as a continuous scale. ``flags`` (geo id -> 'edge' / 'outside') outlines regions outside the
-    applicability domain."""
+    applicability domain; ``names`` (geo id -> region name) labels the hover texts of the interactive map."""
     if interactive:
-        return _maps_plotly(panels, geometry)
+        return _maps_plotly(panels, geometry, names)
     n = len(panels)
     nrows = int(np.ceil(n / ncols))
     fig, axes = plt.subplots(nrows, ncols, figsize=(7 * ncols, 6 * nrows), squeeze=False)
@@ -392,7 +397,7 @@ def maps(
     return fig
 
 
-def _maps_plotly(panels: dict[str, pd.Series], geometry: dict):
+def _maps_plotly(panels: dict[str, pd.Series], geometry: dict, names: dict | None = None):
     """Plotly maps: outlines filled per class (one trace per class) and selectable centroid markers."""
     from plotly.subplots import make_subplots
 
@@ -435,7 +440,10 @@ def _maps_plotly(panels: dict[str, pd.Series], geometry: dict):
                 mode="markers",
                 marker={"size": 3, "opacity": 0.01},
                 customdata=ids,
-                text=[f"{g}: {s[g]}" for g in ids],
+                text=[
+                    f"{names[g]} ({g}): {_fmt(s[g])}" if names and g in names else f"{g}: {_fmt(s[g])}"
+                    for g in ids
+                ],
                 hovertemplate="%{text}<extra></extra>",
                 showlegend=False,
             ),

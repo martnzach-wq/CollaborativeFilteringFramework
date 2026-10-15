@@ -68,7 +68,12 @@ def app(tmp_path_factory):
         for i, g in enumerate(d.geo_ids)
     }
     fitted = Fitted(model, d, tmp_path_factory.mktemp("fit"))
-    return create_dash(fitted, geometry, panel=lambda: _panel(d), n_arrows=4), d
+    names = {g: f"Region {i}" for i, g in enumerate(d.geo_ids)}
+    labels = {c: f"Indicator {c}" for c in d.column_ids}
+    app = create_dash(
+        fitted, geometry, panel=lambda: _panel(d), region_names=names, indicator_labels=labels, n_arrows=4
+    )
+    return app, d
 
 
 def _call(client, outputs, inputs, state=(), changed=None):
@@ -91,7 +96,7 @@ def _call(client, outputs, inputs, state=(), changed=None):
 def _compute(client, level, cols=(), method="pca", arrows=()):
     return _call(
         client,
-        [("state", "data"), ("summary", "children")],
+        [("state", "data"), ("summary", "children"), ("reference", "options")],
         [
             ("level", "value", level),
             ("lens", "value", list(cols)),
@@ -102,19 +107,47 @@ def _compute(client, level, cols=(), method="pca", arrows=()):
     )
 
 
-def test_layout_and_linked_callbacks(app):
+def _figures(client, state, ref=None, selection=()):
+    return _call(
+        client,
+        [("map", "figure"), ("embedding", "figure")],
+        [
+            ("state", "data", state),
+            ("colour", "value", "type"),
+            ("reference", "value", ref),
+            ("selection", "data", list(selection)),
+        ],
+    )
+
+
+def test_layout_names_and_linked_selection(app):
     dash_app, d = app
     client = dash_app.server.test_client()
     assert client.get("/").status_code == 200
     layout = repr(dash_app.layout)
-    for cid in ("map", "embedding", "neighbours", "difference", "lens", "level", "arrows", "trajectories"):
+    for cid in (
+        "map",
+        "embedding",
+        "neighbours",
+        "difference",
+        "lens",
+        "level",
+        "arrows",
+        "trajectories",
+        "reference",
+        "selection-info",
+        "clear",
+    ):
         assert f"id='{cid}'" in layout
+    assert "Indicator ind_0 (ind_0)" in layout  # readable lens options
     out = _compute(client, 2)
     state = out["state"]["data"]
     assert (
         len(state["ids"]) == int((d.levels() == 2).sum()) and "trustworthiness" in out["summary"]["children"]
     )
     assert state["directions"] == []
+    options = out["reference"]["options"]
+    assert len(options) == len(state["ids"]) and options[0]["label"].startswith("Region ")
     ids = state["ids"][:3]
     sel = _call(
         client,
@@ -122,52 +155,82 @@ def test_layout_and_linked_callbacks(app):
         [
             ("map", "selectedData", None),
             ("embedding", "selectedData", {"points": [{"customdata": g} for g in ids]}),
+            ("clear", "n_clicks", 0),
         ],
         changed="embedding.selectedData",
     )["selection"]["data"]
     assert sel == sorted(ids)
-    figs = _call(
+    info = _call(client, [("selection-info", "children")], [("selection", "data", sel)])
+    assert info["selection-info"]["children"].startswith("3: Region ")
+    cleared = _call(
         client,
-        [("map", "figure"), ("embedding", "figure")],
-        [
-            ("state", "data", state),
-            ("colour", "value", "type"),
-            ("reference", "data", None),
-            ("selection", "data", sel),
-        ],
+        [("selection", "data")],
+        [("map", "selectedData", None), ("embedding", "selectedData", None), ("clear", "n_clicks", 1)],
+        changed="clear.n_clicks",
     )
+    assert cleared["selection"]["data"] == []
+    figs = _figures(client, state, ref=ids[0], selection=sel)
     centroids = [t for t in figs["map"]["figure"]["data"] if t.get("customdata")]
     assert sorted(centroids[0]["selectedpoints"]) == sorted(centroids[0]["customdata"].index(g) for g in ids)
-    det = _call(
-        client,
-        [("neighbours", "data"), ("neighbours", "columns"), ("difference", "figure")],
-        [("reference", "data", ids[0]), ("state", "data", state)],
-        state=[("lens", "value", [])],
-    )
-    assert len(det["neighbours"]["data"]) == 10 and det["difference"]["figure"]["data"]
+    assert any(
+        "Region " in str(t.get("text")) for t in figs["embedding"]["figure"]["data"]
+    )  # reference label
 
 
-def test_indicator_directions(app):
+def test_neighbours_and_difference(app):
     dash_app, d = app
     client = dash_app.server.test_client()
-    strongest = _compute(client, 2, arrows=["show"])
-    assert len(strongest["state"]["data"]["directions"]) == 4  # n_arrows
-    assert "biplot" in strongest["summary"]["children"]
+    state = _compute(client, 2)["state"]["data"]
+    ref = state["ids"][0]
+    nb = _call(
+        client,
+        [("neighbours", "data"), ("neighbours", "columns"), ("neighbours", "selected_rows")],
+        [("reference", "value", ref), ("state", "data", state)],
+        state=[("lens", "value", [])],
+    )
+    rows = nb["neighbours"]["data"]
+    assert len(rows) == 10 and rows[0]["region"].startswith("Region ")
+    assert "geo_id" not in [c["id"] for c in nb["neighbours"]["columns"]]
+    diff = _call(
+        client,
+        [("difference", "figure")],
+        [("neighbours", "data", rows), ("neighbours", "selected_rows", [2])],
+        state=[("reference", "value", ref), ("lens", "value", [])],
+    )["difference"]["figure"]
+    assert rows[2]["region"] in diff["layout"]["title"]["text"] and diff["data"]
+
+
+def test_shared_coordinate_system_and_directions(app):
+    dash_app, d = app
+    client = dash_app.server.test_client()
+    out = _compute(client, 2, arrows=["show"])
+    state = out["state"]["data"]
+    assert "both period windows" in out["summary"]["children"]
+    assert len(state["directions"]) == 4  # n_arrows
     lens = d.column_ids[:3]
     own = _compute(client, 2, cols=lens, arrows=["show", "lens"])["state"]["data"]["directions"]
     assert [a["name"] for a in own] == lens
-    figs = _call(
-        client,
-        [("map", "figure"), ("embedding", "figure")],
-        [
-            ("state", "data", strongest["state"]["data"]),
-            ("colour", "value", "type"),
-            ("reference", "data", None),
-            ("selection", "data", []),
-        ],
-    )
+    figs = _figures(client, state)
     labels = [a["text"] for a in figs["embedding"]["figure"]["layout"]["annotations"] if a.get("text")]
     assert len(labels) == 4  # one arrow and one label per indicator
+    traj = _call(
+        client,
+        [("trajectories", "figure")],
+        [
+            ("tabs", "value", "traj"),
+            ("traj-opts", "value", ["arrows"]),
+            ("selection", "data", []),
+            ("level", "value", 2),
+            ("lens", "value", []),
+        ],
+        state=[("arrows", "value", ["show"])],
+    )["trajectories"]["figure"]
+    heads = {
+        a["text"]: (round(a["x"], 6), round(a["y"], 6))
+        for a in traj["layout"]["annotations"]
+        if a.get("text") in {x["name"] for x in state["directions"]}
+    }
+    assert heads == {a["name"]: (round(a["x"], 6), round(a["y"], 6)) for a in state["directions"]}
 
 
 def test_trajectories_tab(app):
@@ -175,7 +238,7 @@ def test_trajectories_tab(app):
     client = dash_app.server.test_client()
     ids = [g for g, v in zip(d.geo_ids, d.levels(), strict=True) if v == 2][:5]
 
-    def traj(opts, selection):
+    def traj(opts, selection, lens=()):
         return _call(
             client,
             [("trajectories", "figure")],
@@ -184,15 +247,16 @@ def test_trajectories_tab(app):
                 ("traj-opts", "value", opts),
                 ("selection", "data", selection),
                 ("level", "value", 2),
+                ("lens", "value", list(lens)),
             ],
+            state=[("arrows", "value", [])],
         )["trajectories"]["figure"]
 
     followed = traj(["follow"], ids)
-    assert (
-        len([a for a in followed["layout"]["annotations"] if a.get("text")]) == 5
-        and "5 selected regions" in followed["layout"]["title"]["text"]
-    )
+    texts = [a["text"] for a in followed["layout"]["annotations"] if a.get("text")]
+    assert len(texts) == 5 and all(x.startswith("Region ") for x in texts)
+    assert "5 selected regions" in followed["layout"]["title"]["text"]
     assert "select regions" in traj(["follow"], [])["layout"]["title"]["text"]
-    relative = traj(["follow", "relative"], ids)
-    assert "relative to mean drift" in relative["layout"]["title"]["text"]
+    assert "relative to mean drift" in traj(["follow", "relative"], ids)["layout"]["title"]["text"]
     assert "capital regions" in traj([], ids)["layout"]["title"]["text"]
+    assert traj(["follow"], ids, lens=d.column_ids[:3])["data"]  # lens-specific basis

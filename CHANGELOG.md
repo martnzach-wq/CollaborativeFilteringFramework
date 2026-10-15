@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.2
+- Explorer: embedding (with indicator directions) and trajectories share one coordinate system, a PCA of both period windows for the current lens and level; indicator arrows switchable in both; trajectories follow the lens.
+- Explorer usability: region names with codes everywhere (hover, table, labels, selection list), readable indicator labels in the lens field, reference region searchable by name, list of selected regions with a clear button, neighbour row selects the partner of the difference profile, short descriptions under plots and controls, loading indicators.
+
 ## 0.7.1
 - Explorer: indicator directions (V1 biplot) and trajectories tab (V7), each switchable by checkbox; arrow labels at the arrow tips in all plotly views.
 - `python -m regsim`; uvicorn in the dev extra; clear messages for missing extras and an unbuilt store.
