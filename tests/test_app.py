@@ -128,7 +128,7 @@ def _select(
 def _compute(client, level, cols=(), method="pca", arrows=()):
     return _call(
         client,
-        [("state", "data"), ("summary", "children"), ("reference", "options")],
+        [("state", "data"), ("summary", "children"), ("reference", "options"), ("partner", "options")],
         [
             ("level", "value", level),
             ("lens", "value", list(cols)),
@@ -139,7 +139,7 @@ def _compute(client, level, cols=(), method="pca", arrows=()):
     )
 
 
-def _figures(client, state, ref=None, selection=()):
+def _figures(client, state, ref=None, selection=(), partner=None):
     return _call(
         client,
         [("map", "figure"), ("embedding", "figure")],
@@ -147,6 +147,7 @@ def _figures(client, state, ref=None, selection=()):
             ("state", "data", state),
             ("colour", "value", "type"),
             ("reference", "value", ref),
+            ("partner", "value", partner),
             ("selection", "data", list(selection)),
         ],
     )
@@ -186,10 +187,17 @@ def test_layout_names_and_linked_selection(app):
     sel = select(sel_emb={"points": [{"customdata": g} for g in ids]}, changed="embedding.selectedData")
     assert sel == sorted(ids)
     info = _call(
-        client, [("selection-info", "children")], [("selection", "data", sel), ("reference", "value", ids[0])]
+        client,
+        [("selection-info", "children")],
+        [("selection", "data", sel), ("reference", "value", ids[0]), ("partner", "value", ids[1])],
     )
     text = json.dumps(info["selection-info"]["children"])
-    assert "Reference: " in text and "Selected regions: " in text and "3: Region " in text
+    assert (
+        "Reference" in text
+        and "compared with" in text
+        and "Selected regions: " in text
+        and "3: Region " in text
+    )
     # empty events (figure redrawn, click in lasso mode) keep the selection; a click adds; clear empties
     assert select(sel_emb=None, current=sel, changed="embedding.selectedData") is None
     assert select(sel_map={"points": []}, current=sel, changed="map.selectedData") is None
@@ -218,20 +226,94 @@ def test_neighbours_and_difference(app):
     ref = state["ids"][0]
     nb = _call(
         client,
-        [("neighbours", "data"), ("neighbours", "columns"), ("neighbours", "selected_rows")],
+        [("neighbours", "data"), ("neighbours", "columns")],
         [("reference", "value", ref), ("state", "data", state)],
         state=[("lens", "value", [])],
     )
     rows = nb["neighbours"]["data"]
     assert len(rows) == 10 and rows[0]["region"].startswith("Region ")
-    assert "geo_id" not in [c["id"] for c in nb["neighbours"]["columns"]]
+    assert "id" not in [c["id"] for c in nb["neighbours"]["columns"]]
     diff = _call(
         client,
         [("difference", "figure")],
-        [("neighbours", "data", rows), ("neighbours", "selected_rows", [2])],
-        state=[("reference", "value", ref), ("lens", "value", [])],
+        [("reference", "value", ref), ("partner", "value", rows[2]["id"])],
+        state=[("lens", "value", [])],
     )["difference"]["figure"]
-    assert rows[2]["region"] in diff["layout"]["title"]["text"] and diff["data"]
+    title = diff["layout"]["title"]["text"]
+    assert rows[2]["region"] in title and "rank 3 of " in title and diff["data"]
+    far = state["ids"][-1]  # any region of the level, not only the nearest ones
+    diff = _call(
+        client,
+        [("difference", "figure")],
+        [("reference", "value", ref), ("partner", "value", far)],
+        state=[("lens", "value", [])],
+    )["difference"]["figure"]
+    assert "Region " in diff["layout"]["title"]["text"] and "rank " in diff["layout"]["title"]["text"]
+    marked = _call(
+        client,
+        [("neighbours", "style_data_conditional")],
+        [("partner", "value", rows[2]["id"]), ("neighbours", "data", rows)],
+    )["neighbours"]["style_data_conditional"]
+    assert [m["if"]["row_index"] for m in marked] == [2]
+
+
+def _pick(client, changed, ref=None, partner=None, next_click="reference", map_click=None, cell=None):
+    """Click/table/search callback; returns (reference, partner, next click), None where unchanged."""
+    payload = {
+        "output": "..reference.value...partner.value...click-next.data..",
+        "outputs": [
+            {"id": "reference", "property": "value"},
+            {"id": "partner", "property": "value"},
+            {"id": "click-next", "property": "data"},
+        ],
+        "inputs": [
+            {"id": "map", "property": "clickData", "value": map_click},
+            {"id": "embedding", "property": "clickData", "value": None},
+            {"id": "neighbours", "property": "active_cell", "value": cell},
+            {"id": "reference", "property": "value", "value": ref},
+            {"id": "partner", "property": "value", "value": partner},
+        ],
+        "state": [
+            {"id": "click-next", "property": "data", "value": next_click},
+            {"id": "lens", "property": "value", "value": []},
+        ],
+        "changedPropIds": [changed],
+    }
+    r = client.post("/_dash-update-component", data=json.dumps(payload), content_type="application/json")
+    if r.status_code == 204:
+        return None, None, None
+    assert r.status_code == 200, r.data[:500]
+    out = r.get_json()["response"]
+    return (
+        out.get("reference", {}).get("value"),
+        out.get("partner", {}).get("value"),
+        out.get("click-next", {}).get("data"),
+    )
+
+
+def test_clicks_alternate_between_reference_and_comparison(app):
+    dash_app, d = app
+    client = dash_app.server.test_client()
+    a, b, c = [g for g, v in zip(d.geo_ids, d.levels(), strict=True) if v == 2][:3]
+
+    def click(g):
+        return {"points": [{"customdata": g}]}
+
+    ref, nearest_a, after = _pick(client, "map.clickData", map_click=click(a))
+    assert (ref, after) == (a, "partner") and nearest_a in d.geo_ids and nearest_a != a  # nearest by default
+    assert _pick(client, "map.clickData", ref=a, next_click="partner", map_click=click(b)) == (
+        None,
+        b,
+        "reference",
+    )
+    assert _pick(client, "map.clickData", ref=a, partner=b, map_click=click(c))[::2] == (c, "partner")
+    cell = {"row": 1, "column": 0, "column_id": "region", "row_id": c}
+    assert _pick(client, "neighbours.active_cell", ref=a, cell=cell) == (None, c, "reference")
+    assert _pick(client, "reference.value", ref=a) == (None, nearest_a, "partner")  # typed reference
+    hint = _call(
+        client, [("click-hint", "children")], [("click-next", "data", "partner"), ("reference", "value", a)]
+    )
+    assert "comparison region" in json.dumps(hint)
 
 
 def test_shared_coordinate_system_and_directions(app):
@@ -321,7 +403,7 @@ def test_sources_and_short_labels(app):
     state = _compute(client, 2)["state"]["data"]
     rows = _call(
         client,
-        [("neighbours", "data"), ("neighbours", "columns"), ("neighbours", "selected_rows")],
+        [("neighbours", "data"), ("neighbours", "columns")],
         [("reference", "value", state["ids"][0]), ("state", "data", state)],
         state=[("lens", "value", [])],
     )["neighbours"]["data"]
@@ -329,7 +411,7 @@ def test_sources_and_short_labels(app):
     diff = _call(
         client,
         [("difference", "figure")],
-        [("neighbours", "data", rows), ("neighbours", "selected_rows", [0])],
-        state=[("reference", "value", state["ids"][0]), ("lens", "value", [])],
+        [("reference", "value", state["ids"][0]), ("partner", "value", rows[0]["id"])],
+        state=[("lens", "value", [])],
     )["difference"]["figure"]
     assert all(y.startswith("Indicator ") for y in diff["data"][0]["y"])

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.5
+- Explorer: compare any two regions. A "Compare with" field (searchable by name) sets the comparison region of the difference profile; by default it is the nearest region, and a click on a table row sets it as well. Clicks on the map or in the embedding alternate between the reference (✕) and the comparison region (◆); a highlighted line above the plots says what the next click does. The difference profile states the overall similarity of the pair (percentile score, distance, rank among all regions of the level); the comparison region is marked on the map, in the embedding and in the table.
+
 ## 0.7.4
 - Explorer selection fixed: a lasso or box selection on the map or in the embedding no longer disappears when the figures are redrawn (empty selection events are ignored; zoom and pan persist), a click adds the region to the selection and makes it the reference, the selection bar shows the reference and the selected regions, selected regions are outlined in red on the map, and a change of level or lens keeps the selected regions still shown.
 

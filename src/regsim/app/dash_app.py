@@ -2,9 +2,9 @@
 
 Selecting regions (lasso or box) on the map highlights them in the embedding and vice versa; a lasso or box
 replaces the selection, a click adds the region. The selection is listed by name and can be cleared. A click also
-makes the region the reference (also found by searching its name); the reference shows its nearest regions and,
-for a chosen neighbour, the difference profile (V6). Lens, level, number of
-types and colouring are controls. Distances and types are computed in the full space.
+alternates between setting the reference and the comparison region (both also found by searching their names); the
+reference shows its nearest regions, and the difference profile (V6) compares it with the comparison region (by
+default its nearest region). Lens, level, number of types and colouring are controls. Distances and types are computed in the full space.
 
 Embedding and trajectories share one coordinate system when indicator directions are shown: a PCA of the
 standardised completed profiles of both period windows (model of all windows, ``panel``) for the current lens
@@ -29,6 +29,7 @@ from regsim.config import CAPITAL_REGIONS
 
 CAPTION = {"fontSize": "12px", "color": "#555", "margin": "2px 0 8px 0"}
 SOURCES = {"eurostat": "Eurostat", "d36": "KNOWING D3.6", "ardeco": "JRC ARDECO"}
+PARTNER_COLOUR = "#c92a2a"
 SOURCE_COLOURS = {"eurostat": "#1f5fa8", "d36": "#2e8b3a", "ardeco": "#8e44ad"}
 SHORTEN = {"Transport Infrastructure – ": "Transport: ", "Climate Zone Classification": "Climate zone"}
 HELP = {
@@ -41,15 +42,18 @@ HELP = {
     "types": "Number of types of the typology (auto = chosen by bootstrap stability and BIC).",
     "colour": "Colour of map and embedding: type, similarity to the reference (percentile) or share of observed "
     "indicators.",
-    "map": "Map: regions of the chosen level. Click a region to make it the reference and add it to the selection; "
-    "a lasso or box (toolbar top right) replaces the selection.",
+    "map": "Map: regions of the chosen level. Clicks alternate: the first sets the reference (✕), the second the "
+    "comparison region (◆), the third a new reference, and so on; the bar above says what the next click does. "
+    "Clicked regions are also added to the selection; a lasso or box (toolbar top right) replaces the selection.",
     "embedding": "Embedding: regions placed by profile similarity (nearby = similar). Orientation only; distances "
     "and types are computed in the full space. With indicator directions, an arrow points to where regions "
     "with high values of the indicator lie; the angle between two arrows approximates their correlation.",
     "neighbours": "Nearest regions to the reference under the current lens. Score = percentile among all pairs "
-    "(100 = most similar); select a row for the difference profile.",
-    "difference": "Difference profile: reference minus the selected neighbour per indicator (robust-scaled); "
+    "(100 = most similar); click a row to compare it with the reference.",
+    "difference": "Difference profile: reference minus the comparison region per indicator (robust-scaled); "
     "filled = both observed, open = at least one predicted, bars = 90 % intervals.",
+    "compare": "Region compared with the reference in the difference profile: the nearest region by default, a "
+    "clicked table row, a region clicked on the map or in the embedding, or any region typed here.",
     "trajectories": "Movement of each region from the first to the last period window, in the same coordinate "
     "system as the embedding with indicator directions. Relative to the mean drift removes the common "
     "movement of all regions. The model of both windows is fitted on first use (1–2 minutes).",
@@ -238,6 +242,13 @@ def create_dash(
             ),
             html.Div(
                 [
+                    html.Label("Compare with", title=HELP["compare"]),
+                    dcc.Dropdown([], None, id="partner", placeholder="nearest region, click or type a name"),
+                ],
+                style={"flex": 1, "minWidth": "260px"},
+            ),
+            html.Div(
+                [
                     html.Label("Colour", title=HELP["colour"]),
                     dcc.RadioItems(
                         ["type", "similarity", "observed share"], "type", id="colour", inline=True
@@ -268,8 +279,19 @@ def create_dash(
         ],
         style={"margin": "6px 0"},
     )
+
+    def hint(next_click, ref):
+        """What the next click on the map or in the embedding does."""
+        badge = {"background": "#fff3bf", "padding": "1px 6px", "borderRadius": "3px"}
+        if next_click == "partner" and ref:
+            what = [html.B("comparison region ◆"), f" (compared with the reference {name(ref)})"]
+        else:
+            what = [html.B("reference region ✕"), " (then the next click sets the comparison region)"]
+        return html.Span(["Next click on the map or in the embedding sets the ", *what], style=badge)
+
     selection_box = html.Div(
         [
+            html.Div(hint("reference", None), id="click-hint", style={"marginBottom": "2px"}),
             html.Span(id="selection-info"),
             html.Button("clear selection", id="clear", n_clicks=0, style={"marginLeft": "10px"}),
         ],
@@ -283,8 +305,7 @@ def create_dash(
                     dash_table.DataTable(
                         id="neighbours",
                         page_size=10,
-                        row_selectable="single",
-                        selected_rows=[0],
+                        cell_selectable=True,
                         style_table={"width": "660px"},
                         style_cell_conditional=[{"if": {"column_id": "region"}, "minWidth": "200px"}],
                         style_cell={
@@ -365,6 +386,7 @@ def create_dash(
             ),
             dcc.Store(id="state"),
             dcc.Store(id="selection"),
+            dcc.Store(id="click-next", data="reference"),
         ],
         style={"fontFamily": "sans-serif", "margin": "12px"},
     )
@@ -423,6 +445,7 @@ def create_dash(
         Output("state", "data"),
         Output("summary", "children"),
         Output("reference", "options"),
+        Output("partner", "options"),
         Input("level", "value"),
         Input("lens", "value"),
         Input("k", "value"),
@@ -480,19 +503,53 @@ def create_dash(
             f"embedding: {note}"
         )
         options = sorted(({"label": name(g), "value": g} for g in ids), key=lambda o: o["label"].lower())
-        return state, summary, options
+        return state, summary, options, options
 
     @app.callback(
         Output("reference", "value"),
+        Output("partner", "value"),
+        Output("click-next", "data"),
         Input("map", "clickData"),
         Input("embedding", "clickData"),
-        State("reference", "value"),
+        Input("neighbours", "active_cell"),
+        Input("reference", "value"),
+        Input("partner", "value"),
+        State("click-next", "data"),
+        State("lens", "value"),
     )
-    def pick(map_click, emb_click, current):
-        click = map_click if ctx.triggered_id == "map" else emb_click
-        if not click:
-            return current
-        return click["points"][0].get("customdata", current)
+    def pick(map_click, emb_click, cell, ref, partner, next_click, cols):
+        """Clicks on the map or in the embedding alternate between the reference and the comparison region; a
+        new reference starts with its nearest region as comparison region."""
+        fired = set(ctx.triggered_prop_ids)
+        for prop, click in (("map.clickData", map_click), ("embedding.clickData", emb_click)):
+            g = ((click or {}).get("points") or [{}])[0].get("customdata")
+            if prop in fired and g:
+                if next_click == "partner" and ref and g != ref:
+                    return no_update, g, "reference"
+                return g, _nearest(g, cols), "partner"
+        if "neighbours.active_cell" in fired and cell and cell.get("row_id"):
+            return no_update, cell["row_id"], "reference"
+        if "reference.value" in fired:  # typed reference: the next click picks the comparison region
+            return no_update, _nearest(ref, cols), "partner" if ref else "reference"
+        if "partner.value" in fired:
+            return no_update, no_update, "reference"
+        return no_update, no_update, no_update
+
+    def _nearest(ref, cols) -> str | None:
+        """Nearest region to ``ref`` under the lens (default comparison region)."""
+        if not ref or ref not in data.geo_ids:
+            return None
+        level = int(data.levels()[data.geo_ids.index(ref)])
+        nb = nearest(s_profile(model, data, _lens(level, cols)), ref, k=1, n_contrib=0)
+        return nb.geo_id.iloc[0] if len(nb) else None
+
+    @app.callback(
+        Output("click-hint", "children"),
+        Input("click-next", "data"),
+        Input("reference", "value"),
+    )
+    def click_hint(next_click, ref):
+        return hint(next_click, ref)
 
     @app.callback(
         Output("selection", "data"),
@@ -528,9 +585,17 @@ def create_dash(
         Output("selection-info", "children"),
         Input("selection", "data"),
         Input("reference", "value"),
+        Input("partner", "value"),
     )
-    def selection_info(selection, ref):
-        lead = [html.B("Reference: "), name(ref) if ref else "none", html.Br(), html.B("Selected regions: ")]
+    def selection_info(selection, ref, partner):
+        lead = [
+            html.B("Reference ✕: "),
+            name(ref) if ref else "none",
+            html.B(" · compared with ◆: "),
+            name(partner) if partner else "none",
+            html.Br(),
+            html.B("Selected regions: "),
+        ]
         if not selection:
             return [*lead, "none (click regions, or draw a lasso or box on the map or in the embedding)"]
         shown = ", ".join(name(g) for g in selection[:25])
@@ -570,9 +635,10 @@ def create_dash(
         Input("state", "data"),
         Input("colour", "value"),
         Input("reference", "value"),
+        Input("partner", "value"),
         Input("selection", "data"),
     )
-    def figures(state, colour, ref, selection):
+    def figures(state, colour, ref, partner, selection):
         if not state:
             return go.Figure(), go.Figure()
         values = _values(state, colour, ref)
@@ -610,19 +676,22 @@ def create_dash(
                 unselected={"marker": {"opacity": 0.25}},
             )
         )
-        if ref in ids:
-            i = ids.index(ref)
-            emb.add_trace(
-                go.Scatter(
-                    x=[state["x"][i]],
-                    y=[state["y"][i]],
-                    mode="markers+text",
-                    text=[short_name(ref)],
-                    textposition="top center",
-                    marker={"size": 14, "symbol": "x", "color": "black"},
-                    hoverinfo="skip",
+        marks = [(ref, "x", "black"), (partner if partner != ref else None, "diamond", PARTNER_COLOUR)]
+        for g, symbol, colour_ in marks:
+            if g in ids:
+                i = ids.index(g)
+                emb.add_trace(
+                    go.Scatter(
+                        x=[state["x"][i]],
+                        y=[state["y"][i]],
+                        mode="markers+text",
+                        text=[short_name(g)],
+                        textposition="top center",
+                        textfont={"color": colour_},
+                        marker={"size": 14, "symbol": symbol, "color": colour_},
+                        hoverinfo="skip",
+                    )
                 )
-            )
         _draw_arrows(emb, state.get("directions", []))
         emb.update_layout(
             dragmode="lasso",
@@ -653,20 +722,22 @@ def create_dash(
                         showlegend=False,
                     )
                 )
-            if ref and short_id(ref) in geometry:
-                x, y = geometry[short_id(ref)].representative_point().coords[0]
-                mp.add_trace(
-                    go.Scatter(
-                        x=[x],
-                        y=[y],
-                        mode="markers+text",
-                        text=[short_name(ref)],
-                        textposition="top center",
-                        marker={"size": 12, "symbol": "x", "color": "black"},
-                        hoverinfo="skip",
-                        showlegend=False,
+            for g, symbol, colour_ in marks:
+                if g and short_id(g) in geometry:
+                    x, y = geometry[short_id(g)].representative_point().coords[0]
+                    mp.add_trace(
+                        go.Scatter(
+                            x=[x],
+                            y=[y],
+                            mode="markers+text",
+                            text=[short_name(g)],
+                            textposition="top center",
+                            textfont={"color": colour_},
+                            marker={"size": 12, "symbol": symbol, "color": colour_},
+                            hoverinfo="skip",
+                            showlegend=False,
+                        )
                     )
-                )
             mp.update_layout(title="Map", dragmode="lasso", uirevision=rev)
         else:
             mp = go.Figure().update_layout(title="no geometry configured")
@@ -675,14 +746,13 @@ def create_dash(
     @app.callback(
         Output("neighbours", "data"),
         Output("neighbours", "columns"),
-        Output("neighbours", "selected_rows"),
         Input("reference", "value"),
         Input("state", "data"),
         State("lens", "value"),
     )
     def neighbours(ref, state, cols):
         if not ref or not state or ref not in data.geo_ids:
-            return [], [], [0]
+            return [], []
         level = int(data.levels()[data.geo_ids.index(ref)])
         nb = nearest(s_profile(model, data, _lens(level, cols)), ref, k=10)
         table = pd.DataFrame(
@@ -692,23 +762,49 @@ def create_dash(
                 "distance": nb.distance.round(2),
                 "observed share": nb.observed_share.round(2),
                 "differs most in": [relabel(x) for x in nb.top_contributors],
-                "geo_id": nb.geo_id,
+                "id": nb.geo_id,
             }
         )
-        columns = [{"name": c, "id": c} for c in table.columns if c != "geo_id"]
-        return table.to_dict("records"), columns, [0]
+        columns = [{"name": c, "id": c} for c in table.columns if c != "id"]
+        return table.to_dict("records"), columns
+
+    @app.callback(
+        Output("neighbours", "style_data_conditional"),
+        Input("partner", "value"),
+        Input("neighbours", "data"),
+    )
+    def mark_partner(partner, rows):
+        return [
+            {"if": {"row_index": i}, "backgroundColor": "#fde2e2", "fontWeight": "bold"}
+            for i, r in enumerate(rows or [])
+            if r["id"] == partner
+        ]
+
+    def _pair(ref: str, partner: str, cols) -> str:
+        """Overall similarity of the pair under the lens: percentile score, distance and rank of ``partner``
+        among all regions of the reference's level."""
+        g, h = data.geo_ids.index(ref), data.geo_ids.index(partner)
+        level = int(data.levels()[g])
+        space = s_profile(model, data, _lens(level, cols))
+        rows = space.lens.rows
+        rows = rows[(space.level[rows] == level) & (rows != g)]
+        d = space.distances(g, rows)
+        d_pair = float(space.distances(g, np.array([h]))[0])
+        score = float(percentile_score(np.array([d_pair]), space.pair_distribution(level))[0])
+        rank = f"rank {int((d < d_pair).sum()) + 1} of {rows.size}" if h in rows else "other level"
+        return f"score {score:.0f} (percentile, 100 = most similar) · distance {d_pair:.2f} · {rank}"
 
     @app.callback(
         Output("difference", "figure"),
-        Input("neighbours", "data"),
-        Input("neighbours", "selected_rows"),
-        State("reference", "value"),
+        Input("reference", "value"),
+        Input("partner", "value"),
         State("lens", "value"),
     )
-    def difference(rows, selected, ref, cols):
-        if not rows or not ref:
-            return go.Figure().update_layout(title="choose a reference region (click or search) to compare")
-        partner = rows[(selected or [0])[0]]["geo_id"]
+    def difference(ref, partner, cols):
+        if not ref or not partner or ref == partner or {ref, partner} - set(data.geo_ids):
+            return go.Figure().update_layout(
+                title="choose a reference and a comparison region (click, table or search) to compare"
+            )
         fig = V.difference_profile(
             model,
             data,
@@ -721,8 +817,13 @@ def create_dash(
         )
         sub = fig.layout.title.text.split("<br>", 1)
         fig.update_layout(
-            title=f"Difference profile: {name(ref)} − {name(partner)}"
-            + (f"<br>{sub[1]}" if len(sub) > 1 else "")
+            title={
+                "text": f"Difference profile: {name(ref)} − {name(partner)}<br><sup>{_pair(ref, partner, cols)}"
+                + (f"<br>{sub[1]}" if len(sub) > 1 else "")
+                + "</sup>",
+                "font": {"size": 14},
+            },
+            margin={"t": 90},
         )
         return fig
 
