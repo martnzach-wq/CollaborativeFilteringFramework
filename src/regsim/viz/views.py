@@ -68,6 +68,34 @@ def _short(geo_id: str) -> str:
     return geo_id.split(":", 1)[-1]
 
 
+def add_arrow(fig, x0: float, y0: float, x1: float, y1: float, label: str, colour: str = "#444") -> None:
+    """Plotly arrow from (x0, y0) to (x1, y1) with its label at the tip (plotly puts annotation text at the tail)."""
+    fig.add_annotation(
+        x=x1,
+        y=y1,
+        ax=x0,
+        ay=y0,
+        xref="x",
+        yref="y",
+        axref="x",
+        ayref="y",
+        text="",
+        showarrow=True,
+        arrowhead=2,
+        arrowcolor=colour,
+    )
+    dx, dy = x1 - x0, y1 - y0
+    fig.add_annotation(
+        x=x1,
+        y=y1,
+        text=label,
+        showarrow=False,
+        font={"size": 10},
+        xanchor="left" if dx >= 0 else "right",
+        yanchor="bottom" if dy >= 0 else "top",
+    )
+
+
 def _plotly():
     import plotly.graph_objects as go
 
@@ -81,6 +109,16 @@ def _hex(c) -> str:
 
 
 # ---------------------------------------------------------------------------------------------------- V1
+def biplot_coords(model, data: ModelData, lens=None, level: int = 3):
+    """Rows, scores, loadings (scaled into the score range), indicator names and explained variance of the PCA of
+    the standardised completed profiles (V1, row-principal scaling)."""
+    rows, cols, X = _standardised(model, data, lens, level)
+    scores, loadings, ev = _pca(X)
+    names = [data.column_ids[j] for j in cols]
+    scale = 0.9 * min(np.abs(scores[:, d]).max() / max(np.abs(loadings[:, d]).max(), 1e-12) for d in (0, 1))
+    return rows, scores, loadings * scale, names, ev
+
+
 def biplot(
     model, data: ModelData, lens=None, level: int = 3, colour_by=None, n_arrows: int = 12, interactive=False
 ):
@@ -116,20 +154,7 @@ def biplot(
         )
         for i in top:
             x, y = loadings[i] * scale
-            fig.add_annotation(
-                x=x,
-                y=y,
-                ax=0,
-                ay=0,
-                xref="x",
-                yref="y",
-                axref="x",
-                ayref="y",
-                text=names[i],
-                showarrow=True,
-                arrowhead=2,
-                arrowcolor="#444",
-            )
+            add_arrow(fig, 0.0, 0.0, x, y, names[i])
         fig.update_layout(title=title, xaxis_title=xl, yaxis_title=yl, meta=stats, dragmode="lasso")
         return fig
     fig, ax = plt.subplots(figsize=(8, 7))
@@ -567,19 +592,7 @@ def trajectories(
         )
         for g in sel:
             p0, p1 = pos[(g, first)], pos[(g, first)] + disp[g] - drift
-            fig.add_annotation(
-                x=p1[0],
-                y=p1[1],
-                ax=p0[0],
-                ay=p0[1],
-                xref="x",
-                yref="y",
-                axref="x",
-                ayref="y",
-                text=_short(g),
-                showarrow=True,
-                arrowhead=2,
-            )
+            add_arrow(fig, p0[0], p0[1], p1[0], p1[1], _short(g), colour="#08519c")
         fig.update_layout(
             title=title,
             xaxis_title=f"PC 1 ({100 * ev[0]:.0f} %)",

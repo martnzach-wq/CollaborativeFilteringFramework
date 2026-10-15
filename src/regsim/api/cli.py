@@ -204,6 +204,7 @@ def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool
         raise SystemExit('regsim app needs Dash: pip install -e ".[app]"') from e
 
     from regsim.api.runtime import fit as run_fit
+    from regsim.api.runtime import fit_panel
     from regsim.app.dash_app import create_dash
     from regsim.config import RunConfig
     from regsim.viz.views import load_geometry
@@ -211,7 +212,8 @@ def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool
     cfg = RunConfig.from_yaml(config)
     path = Path(cfg.data.raw_dir) / "gisco" / f"NUTS_RG_01M_{cfg.data.nuts_version}_3035.parquet"
     geometry = load_geometry(path) if path.exists() else None
-    create_dash(run_fit(cfg), geometry).run(host=host, port=port, debug=debug)
+    panel = (lambda: fit_panel(cfg)) if len(cfg.data.periods) > 1 else None
+    create_dash(run_fit(cfg), geometry, panel=panel).run(host=host, port=port, debug=debug)
 
 
 if __name__ == "__main__":

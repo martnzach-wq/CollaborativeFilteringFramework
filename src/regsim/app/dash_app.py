@@ -3,17 +3,23 @@
 Selecting regions (lasso or box) on the map highlights them in the embedding and vice versa; clicking a region
 makes it the reference, which shows its nearest regions and the difference profile (V6). Lens, level, number of
 types and colouring are controls. Distances and types are computed in the full space; the embedding states its
-explained variance (PCA) or trustworthiness (UMAP).
+explained variance (PCA) or trustworthiness (UMAP). With "show indicator directions" the PCA embedding becomes the
+biplot of V1 (standardised profiles, arrows for the 12 strongest or the lens indicators). The tab "Trajectories"
+shows V7 for the selected regions or for the capital regions, from a model fitted on all period windows.
 
 Run with ``regsim app CONFIG`` or ``create_dash(fitted, geometry).run()``.
 """
 
 from __future__ import annotations
 
+from collections.abc import Callable
+from functools import lru_cache
+
 import numpy as np
 import pandas as pd
 
 from regsim.api.runtime import Fitted, short_id
+from regsim.config import CAPITAL_REGIONS
 
 
 def _embedding(Y: np.ndarray, method: str, seed: int = 0) -> tuple[np.ndarray, str]:
@@ -34,11 +40,19 @@ def _embedding(Y: np.ndarray, method: str, seed: int = 0) -> tuple[np.ndarray, s
     return E, note
 
 
-def create_dash(fitted: Fitted, geometry: dict | None = None, title: str = "regsim explorer"):
+def create_dash(
+    fitted: Fitted,
+    geometry: dict | None = None,
+    title: str = "regsim explorer",
+    panel: Callable[[], Fitted] | None = None,
+    n_arrows: int = 12,
+    max_trajectories: int = 60,
+):
     """Dash app around a fitted (calibrated) model. ``geometry`` maps short geo codes to shapely polygons
-    (:func:`regsim.viz.views.load_geometry`); without it only the embedding is linked."""
+    (:func:`regsim.viz.views.load_geometry`); without it only the embedding is linked. ``panel`` returns the model
+    fitted on all period windows (geo-time entities) for the trajectories; it is called on first use."""
     import plotly.graph_objects as go
-    from dash import Dash, Input, Output, State, dash_table, dcc, html
+    from dash import Dash, Input, Output, State, dash_table, dcc, html, no_update
 
     from regsim.schema import Lens
     from regsim.similarity.entities import nearest, s_profile
@@ -52,41 +66,91 @@ def create_dash(fitted: Fitted, geometry: dict | None = None, title: str = "regs
     domain = applicability(model, data).domain
     app = Dash(__name__, title=title)
 
+    controls = html.Div(
+        [
+            html.Label("Level"),
+            dcc.Dropdown(levels, levels[-1], id="level", clearable=False, style={"width": "90px"}),
+            html.Label("Lens"),
+            dcc.Dropdown(
+                data.column_ids,
+                [],
+                id="lens",
+                multi=True,
+                placeholder="all indicators",
+                style={"minWidth": "320px"},
+            ),
+            html.Label("Types"),
+            dcc.Dropdown(
+                [{"label": "auto", "value": 0}] + [{"label": str(k), "value": k} for k in range(2, 13)],
+                0,
+                id="k",
+                clearable=False,
+                style={"width": "90px"},
+            ),
+            html.Label("Colour"),
+            dcc.RadioItems(["type", "similarity", "observed share"], "type", id="colour", inline=True),
+            html.Label("Embedding"),
+            dcc.RadioItems(["pca", "umap"], "pca", id="method", inline=True),
+        ],
+        style={"display": "flex", "gap": "12px", "alignItems": "center", "flexWrap": "wrap"},
+    )
+    options = html.Div(
+        [
+            html.Div(id="summary", style={"fontSize": "13px"}),
+            dcc.Checklist(
+                [
+                    {"label": " show indicator directions (PCA)", "value": "show"},
+                    {"label": f" only lens indicators (else the {n_arrows} strongest)", "value": "lens"},
+                ],
+                [],
+                id="arrows",
+                inline=True,
+                inputStyle={"marginLeft": "12px"},
+            ),
+        ],
+        style={"display": "flex", "gap": "12px", "alignItems": "center", "margin": "6px 0"},
+    )
+    similar_tab = html.Div(
+        [
+            dash_table.DataTable(
+                id="neighbours",
+                page_size=10,
+                style_table={"width": "560px"},
+                style_cell={
+                    "fontSize": "12px",
+                    "textAlign": "left",
+                    "whiteSpace": "normal",
+                    "height": "auto",
+                },
+            ),
+            dcc.Graph(id="difference", style={"flex": 1, "height": "600px"}),
+        ],
+        style={"display": "flex", "gap": "12px"},
+    )
+    traj_tab = html.Div(
+        [
+            dcc.Checklist(
+                [
+                    {
+                        "label": " follow map/embedding selection (else the capital regions)",
+                        "value": "follow",
+                    },
+                    {"label": " relative to the mean drift of all regions", "value": "relative"},
+                ],
+                [],
+                id="traj-opts",
+                inline=True,
+                inputStyle={"marginLeft": "12px"},
+                style={"margin": "8px 0"},
+            ),
+            dcc.Loading(dcc.Graph(id="trajectories", style={"height": "640px"})),
+        ]
+    )
     app.layout = html.Div(
         [
             html.H3(title),
-            html.Div(
-                [
-                    html.Label("Level"),
-                    dcc.Dropdown(levels, levels[-1], id="level", clearable=False, style={"width": "90px"}),
-                    html.Label("Lens"),
-                    dcc.Dropdown(
-                        data.column_ids,
-                        [],
-                        id="lens",
-                        multi=True,
-                        placeholder="all indicators",
-                        style={"minWidth": "320px"},
-                    ),
-                    html.Label("Types"),
-                    dcc.Dropdown(
-                        [{"label": "auto", "value": 0}]
-                        + [{"label": str(k), "value": k} for k in range(2, 13)],
-                        0,
-                        id="k",
-                        clearable=False,
-                        style={"width": "90px"},
-                    ),
-                    html.Label("Colour"),
-                    dcc.RadioItems(
-                        ["type", "similarity", "observed share"], "type", id="colour", inline=True
-                    ),
-                    html.Label("Embedding"),
-                    dcc.RadioItems(["pca", "umap"], "pca", id="method", inline=True),
-                ],
-                style={"display": "flex", "gap": "12px", "alignItems": "center", "flexWrap": "wrap"},
-            ),
-            html.Div(id="summary", style={"margin": "6px 0", "fontSize": "13px"}),
+            controls,
+            options,
             html.Div(
                 [
                     dcc.Graph(id="map", style={"flex": 1, "height": "560px"}),
@@ -94,25 +158,17 @@ def create_dash(fitted: Fitted, geometry: dict | None = None, title: str = "regs
                 ],
                 style={"display": "flex"},
             ),
-            html.Div(
-                [
-                    dash_table.DataTable(
-                        id="neighbours",
-                        page_size=10,
-                        style_table={"width": "560px"},
-                        style_cell={
-                            "fontSize": "12px",
-                            "textAlign": "left",
-                            "whiteSpace": "normal",
-                            "height": "auto",
-                        },
-                    ),
-                    dcc.Graph(id="difference", style={"flex": 1, "height": "600px"}),
+            dcc.Tabs(
+                id="tabs",
+                value="similar",
+                children=[
+                    dcc.Tab(label="Nearest regions", value="similar", children=[similar_tab]),
+                    dcc.Tab(label="Trajectories", value="traj", children=[traj_tab]),
                 ],
-                style={"display": "flex", "gap": "12px"},
             ),
             dcc.Store(id="state"),
             dcc.Store(id="reference"),
+            dcc.Store(id="selection"),
         ],
         style={"fontFamily": "sans-serif", "margin": "12px"},
     )
@@ -127,14 +183,33 @@ def create_dash(fitted: Fitted, geometry: dict | None = None, title: str = "regs
         Input("lens", "value"),
         Input("k", "value"),
         Input("method", "value"),
+        Input("arrows", "value"),
     )
-    def compute(level, cols, k, method):
+    def compute(level, cols, k, method, arrows):
         lens = _lens(level, cols)
         space = s_profile(model, data, lens)
         rows = space.lens.rows
         ty = run_typology(base, data, TypologyRun(lens=lens, k=k or None, k_range=(2, 10), n_boot=10))
-        E, note = _embedding(space.Y[rows], method)
+        directions = []
+        if "show" in (arrows or []) and method == "pca":
+            # biplot (V1): PCA of the standardised profiles, whose loadings are indicator directions
+            brows, E, loadings, names, ev = V.biplot_coords(model, data, lens, level)
+            assert list(brows) == list(rows)
+            if "lens" in arrows and cols:
+                pick = [names.index(c) for c in cols if c in names]
+            else:
+                pick = list(np.argsort(-np.hypot(loadings[:, 0], loadings[:, 1]))[:n_arrows])
+            directions = [
+                {"name": names[i], "x": float(loadings[i, 0]), "y": float(loadings[i, 1])} for i in pick
+            ]
+            note = (
+                f"PCA biplot of the standardised profiles: PC 1 {100 * ev[0]:.0f} %, PC 2 {100 * ev[1]:.0f} % "
+                f"of variance; arrows show indicator directions (angle ≈ correlation)"
+            )
+        else:
+            E, note = _embedding(space.Y[rows], method)
         state = {
+            "directions": directions,
             "ids": [data.geo_ids[i] for i in rows],
             "x": E[:, 0].tolist(),
             "y": E[:, 1].tolist(),
@@ -162,6 +237,17 @@ def create_dash(fitted: Fitted, geometry: dict | None = None, title: str = "regs
             return current
         return click["points"][0].get("customdata", current)
 
+    @app.callback(
+        Output("selection", "data"),
+        Input("map", "selectedData"),
+        Input("embedding", "selectedData"),
+    )
+    def select(sel_map, sel_emb):
+        from dash import ctx
+
+        sel = sel_map if ctx.triggered_id == "map" else sel_emb
+        return sorted({p.get("customdata") for p in (sel or {}).get("points", []) if p.get("customdata")})
+
     def _values(state, colour, ref):
         if colour == "type":
             return pd.Series(state["type"], index=state["ids"])
@@ -183,17 +269,13 @@ def create_dash(fitted: Fitted, geometry: dict | None = None, title: str = "regs
         Input("state", "data"),
         Input("colour", "value"),
         Input("reference", "data"),
-        Input("map", "selectedData"),
-        Input("embedding", "selectedData"),
+        Input("selection", "data"),
     )
-    def figures(state, colour, ref, sel_map, sel_emb):
-        from dash import ctx
-
+    def figures(state, colour, ref, selection):
         if not state:
             return go.Figure(), go.Figure()
         values = _values(state, colour, ref)
-        sel = sel_map if ctx.triggered_id == "map" else sel_emb if ctx.triggered_id == "embedding" else None
-        chosen = {p.get("customdata") for p in (sel or {}).get("points", [])}
+        chosen = set(selection or [])
         ids = state["ids"]
         idx = [i for i, g in enumerate(ids) if g in chosen] or None
         if colour == "type":
@@ -229,6 +311,8 @@ def create_dash(fitted: Fitted, geometry: dict | None = None, title: str = "regs
                     hoverinfo="skip",
                 )
             )
+        for a in state.get("directions", []):
+            V.add_arrow(emb, 0.0, 0.0, a["x"], a["y"], a["name"])
         emb.update_layout(
             dragmode="lasso",
             showlegend=False,
@@ -270,5 +354,44 @@ def create_dash(fitted: Fitted, geometry: dict | None = None, title: str = "regs
             model, data, ref, partner, lens=Lens(indicators=lens.indicators), interactive=True
         )
         return nb.to_dict("records"), [{"name": c, "id": c} for c in nb.columns], fig
+
+    load_panel = lru_cache(maxsize=1)(panel) if panel else None
+
+    @app.callback(
+        Output("trajectories", "figure"),
+        Input("tabs", "value"),
+        Input("traj-opts", "value"),
+        Input("selection", "data"),
+        Input("level", "value"),
+    )
+    def trajectories(tab, opts, selection, level):
+        if tab != "traj":
+            return no_update
+        if load_panel is None:
+            return go.Figure().update_layout(
+                title="trajectories need at least two period windows in the config"
+            )
+        pf = load_panel()
+        lv = pf.data.levels()
+        bases = {g.split("@")[0] for g, v in zip(pf.data.geo_ids, lv, strict=True) if v == level}
+        opts = opts or []
+        if "follow" in opts:
+            chosen = [g for g in (selection or []) if g in bases]
+            if not chosen:
+                return go.Figure().update_layout(
+                    title="select regions on the map or in the embedding (lasso)"
+                )
+            note = f"{len(chosen)} selected regions"
+        else:
+            chosen = sorted(g for g in bases if any(short_id(g).startswith(c) for c in CAPITAL_REGIONS))
+            note = "capital regions"
+        if len(chosen) > max_trajectories:
+            note += f" (first {max_trajectories} of {len(chosen)})"
+            chosen = chosen[:max_trajectories]
+        fig = V.trajectories(
+            pf.model, pf.data, chosen, level=level, relative="relative" in opts, interactive=True
+        )
+        fig.update_layout(title=f"{fig.layout.title.text}<br><sub>{note}</sub>")
+        return fig
 
     return app

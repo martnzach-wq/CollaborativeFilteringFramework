@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.1
+- Explorer: indicator directions (V1 biplot) and trajectories tab (V7), each switchable by checkbox; arrow labels at the arrow tips in all plotly views.
+- `python -m regsim`; uvicorn in the dev extra; clear messages for missing extras and an unbuilt store.
+
 ## 0.7.0 (M6)
 - Prediction tasks P1–P7; views V1–V8 and diagnostic views (matplotlib and plotly); `regsim report`, `fit`, `predict`, `serve`, `app`.
 - REST service (FastAPI) with pydantic response models; Dash explorer with linked map and embedding (decision D7).

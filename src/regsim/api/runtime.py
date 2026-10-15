@@ -109,3 +109,25 @@ def resolve_id(data: ModelData, code: str) -> str:
 def short_id(geo_id: str) -> str:
     """Geo id without scheme prefix and period suffix."""
     return geo_id.split(":", 1)[-1].split("@")[0]
+
+
+def fit_panel(cfg: RunConfig, refresh: bool = False) -> Fitted:
+    """``HierTypedMF`` on all period windows of ``cfg`` as geo-time entities (``geo_id@window``, random-walk
+    penalty between windows), for trajectories (V7); cached in ``<output_dir>/fit-<hash>-panel``."""
+    if len(cfg.data.periods) < 2:
+        raise ValueError("trajectories need at least two period windows in data.periods")
+    folder = Path(cfg.output_dir) / f"fit-{fit_key(cfg)}-panel"
+    path = folder / "model.pkl"
+    if path.exists() and not refresh:
+        with path.open("rb") as f:
+            model, data = pickle.load(f)
+        return Fitted(model, data, folder)
+    data = prepare_data(cfg, list(cfg.data.periods))
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        model = model_factory(cfg)().fit(data)
+    folder.mkdir(parents=True, exist_ok=True)
+    cfg.write_resolved(folder)
+    with path.open("wb") as f:
+        pickle.dump((model, data), f)
+    return Fitted(model, data, folder)

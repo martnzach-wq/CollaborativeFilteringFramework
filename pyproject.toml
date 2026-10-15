@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "regsim"
-version = "0.7.0"
+version = "0.7.1"
 description = "Similarity and prediction for multi-level regional indicators"
 requires-python = ">=3.12"
 license = "Apache-2.0"
