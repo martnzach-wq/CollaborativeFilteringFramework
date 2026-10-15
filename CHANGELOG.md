@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.4
+- Explorer selection fixed: a lasso or box selection on the map or in the embedding no longer disappears when the figures are redrawn (empty selection events are ignored; zoom and pan persist), a click adds the region to the selection and makes it the reference, the selection bar shows the reference and the selected regions, selected regions are outlined in red on the map, and a change of level or lens keeps the selected regions still shown.
+
 ## 0.7.3
 - Explorer: readable short indicator labels (full name, code and source on hover) in arrows, difference profile, neighbour table and type labels; indicators grouped by source ([Eurostat], [KNOWING D3.6]) in the lens field, buttons to set the lens to all indicators of one source, arrows coloured by source, source counts in the summary.
 

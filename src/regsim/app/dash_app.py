@@ -1,8 +1,9 @@
 """Interactive explorer (decision D7: Dash) with a linked map and embedding.
 
-Selecting regions (lasso or box) on the map highlights them in the embedding and vice versa; the selection is
-listed by name and can be cleared. The reference region is chosen by clicking a region or by searching its name;
-it shows its nearest regions and, for a chosen neighbour, the difference profile (V6). Lens, level, number of
+Selecting regions (lasso or box) on the map highlights them in the embedding and vice versa; a lasso or box
+replaces the selection, a click adds the region. The selection is listed by name and can be cleared. A click also
+makes the region the reference (also found by searching its name); the reference shows its nearest regions and,
+for a chosen neighbour, the difference profile (V6). Lens, level, number of
 types and colouring are controls. Distances and types are computed in the full space.
 
 Embedding and trajectories share one coordinate system when indicator directions are shown: a PCA of the
@@ -40,8 +41,8 @@ HELP = {
     "types": "Number of types of the typology (auto = chosen by bootstrap stability and BIC).",
     "colour": "Colour of map and embedding: type, similarity to the reference (percentile) or share of observed "
     "indicators.",
-    "map": "Map: regions of the chosen level. Click a region to make it the reference; draw a lasso or box "
-    "(toolbar top right) to select regions.",
+    "map": "Map: regions of the chosen level. Click a region to make it the reference and add it to the selection; "
+    "a lasso or box (toolbar top right) replaces the selection.",
     "embedding": "Embedding: regions placed by profile similarity (nearby = similar). Orientation only; distances "
     "and types are computed in the full space. With indicator directions, an arrow points to where regions "
     "with high values of the indicator lie; the angle between two arrows approximates their correlation.",
@@ -269,8 +270,7 @@ def create_dash(
     )
     selection_box = html.Div(
         [
-            html.Span("Selected regions: ", style={"fontWeight": "bold"}),
-            html.Span("none (draw a lasso or box on the map or in the embedding)", id="selection-info"),
+            html.Span(id="selection-info"),
             html.Button("clear selection", id="clear", n_clicks=0, style={"marginLeft": "10px"}),
         ],
         style={"fontSize": "13px", "margin": "4px 0", "padding": "4px 8px", "background": "#f4f6f8"},
@@ -498,21 +498,44 @@ def create_dash(
         Output("selection", "data"),
         Input("map", "selectedData"),
         Input("embedding", "selectedData"),
+        Input("map", "clickData"),
+        Input("embedding", "clickData"),
         Input("clear", "n_clicks"),
+        Input("state", "data"),
+        State("selection", "data"),
     )
-    def select(sel_map, sel_emb, _clear):
-        if ctx.triggered_id == "clear":
+    def select(sel_map, sel_emb, click_map, click_emb, _clear, state, current):
+        """A lasso or box replaces the selection, a click adds the region, the button empties it. Empty
+        selection events (sent by Plotly when a figure is redrawn or a click lands in lasso mode) are ignored."""
+        fired = set(ctx.triggered_prop_ids)
+        current = list(current or [])
+        if "clear.n_clicks" in fired:
             return []
-        sel = sel_map if ctx.triggered_id == "map" else sel_emb
-        return sorted({p.get("customdata") for p in (sel or {}).get("points", []) if p.get("customdata")})
+        for prop, sel in (("map.selectedData", sel_map), ("embedding.selectedData", sel_emb)):
+            picked = {p.get("customdata") for p in (sel or {}).get("points", []) if p.get("customdata")}
+            if prop in fired and picked:
+                return sorted(picked)
+        for prop, click in (("map.clickData", click_map), ("embedding.clickData", click_emb)):
+            g = ((click or {}).get("points") or [{}])[0].get("customdata")
+            if prop in fired and g:
+                return sorted({*current, g})
+        if "state.data" in fired:  # new level or lens: keep the regions still shown
+            shown = set((state or {}).get("ids", []))
+            return [g for g in current if g in shown]
+        return no_update
 
-    @app.callback(Output("selection-info", "children"), Input("selection", "data"))
-    def selection_info(selection):
+    @app.callback(
+        Output("selection-info", "children"),
+        Input("selection", "data"),
+        Input("reference", "value"),
+    )
+    def selection_info(selection, ref):
+        lead = [html.B("Reference: "), name(ref) if ref else "none", html.Br(), html.B("Selected regions: ")]
         if not selection:
-            return "none (draw a lasso or box on the map or in the embedding)"
+            return [*lead, "none (click regions, or draw a lasso or box on the map or in the embedding)"]
         shown = ", ".join(name(g) for g in selection[:25])
         more = f" … and {len(selection) - 25} more" if len(selection) > 25 else ""
-        return f"{len(selection)}: {shown}{more}"
+        return [*lead, f"{len(selection)}: {shown}{more}"]
 
     def _values(state, colour, ref):
         if colour == "type":
@@ -526,6 +549,20 @@ def create_dash(
         rows = np.array([data.geo_ids.index(g) for g in state["ids"]])
         d = space.distances(data.geo_ids.index(ref), rows)
         return pd.Series(percentile_score(d, space.pair_distribution(level)), index=state["ids"], dtype=float)
+
+    def _outline(codes) -> tuple[list, list]:
+        """Boundary lines of the regions ``codes`` (None-separated, one trace for all)."""
+        xs: list = []
+        ys: list = []
+        for c in codes:
+            geom = geometry.get(c)
+            for poly in getattr(geom, "geoms", [geom] if geom is not None else []):
+                if not hasattr(poly, "exterior"):
+                    continue
+                x, y = poly.exterior.xy
+                xs += [*x, None]
+                ys += [*y, None]
+        return xs, ys
 
     @app.callback(
         Output("map", "figure"),
@@ -542,6 +579,9 @@ def create_dash(
         chosen = set(selection or [])
         ids = state["ids"]
         idx = [i for i, g in enumerate(ids) if g in chosen] or None
+        rev = (
+            f"{len(ids)}:{ids[0]}:{state['x'][0]:.6g}"  # keeps zoom and pan while the embedding is unchanged
+        )
         if colour == "type":
             marker = {"size": 6, "color": [V._hex(c) for c in V._colours(values.to_numpy())]}
         else:
@@ -586,6 +626,7 @@ def create_dash(
         _draw_arrows(emb, state.get("directions", []))
         emb.update_layout(
             dragmode="lasso",
+            uirevision=rev,
             showlegend=False,
             margin={"l": 10, "r": 10, "t": 30, "b": 10},
             title="Embedding" + (" with indicator directions" if state.get("directions") else ""),
@@ -600,6 +641,18 @@ def create_dash(
                     if chosen:
                         tr.selectedpoints = [j for j, c in enumerate(tr.customdata) if c in chosen]
                         tr.selected = {"marker": {"color": "red", "size": 7, "opacity": 1}}
+            outline = _outline(short_id(g) for g in chosen)
+            if outline[0]:
+                mp.add_trace(
+                    go.Scatter(
+                        x=outline[0],
+                        y=outline[1],
+                        mode="lines",
+                        line={"color": "red", "width": 1},
+                        hoverinfo="skip",
+                        showlegend=False,
+                    )
+                )
             if ref and short_id(ref) in geometry:
                 x, y = geometry[short_id(ref)].representative_point().coords[0]
                 mp.add_trace(
@@ -614,7 +667,7 @@ def create_dash(
                         showlegend=False,
                     )
                 )
-            mp.update_layout(title="Map", dragmode="lasso")
+            mp.update_layout(title="Map", dragmode="lasso", uirevision=rev)
         else:
             mp = go.Figure().update_layout(title="no geometry configured")
         return mp, emb

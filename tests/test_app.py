@@ -100,6 +100,31 @@ def _call(client, outputs, inputs, state=(), changed=None):
     return r.get_json()["response"]
 
 
+def _select(
+    client, state, sel_map=None, sel_emb=None, click_map=None, click_emb=None, current=(), changed=""
+):
+    """Selection callback; None when it leaves the selection unchanged."""
+    payload = {
+        "output": "selection.data",
+        "outputs": {"id": "selection", "property": "data"},
+        "inputs": [
+            {"id": "map", "property": "selectedData", "value": sel_map},
+            {"id": "embedding", "property": "selectedData", "value": sel_emb},
+            {"id": "map", "property": "clickData", "value": click_map},
+            {"id": "embedding", "property": "clickData", "value": click_emb},
+            {"id": "clear", "property": "n_clicks", "value": 1},
+            {"id": "state", "property": "data", "value": state},
+        ],
+        "state": [{"id": "selection", "property": "data", "value": list(current)}],
+        "changedPropIds": [changed],
+    }
+    r = client.post("/_dash-update-component", data=json.dumps(payload), content_type="application/json")
+    if r.status_code == 204:  # no_update
+        return None
+    assert r.status_code == 200, r.data[:500]
+    return r.get_json()["response"].get("selection", {}).get("data")
+
+
 def _compute(client, level, cols=(), method="pca", arrows=()):
     return _call(
         client,
@@ -157,29 +182,30 @@ def test_layout_names_and_linked_selection(app):
     options = out["reference"]["options"]
     assert len(options) == len(state["ids"]) and options[0]["label"].startswith("Region ")
     ids = state["ids"][:3]
-    sel = _call(
-        client,
-        [("selection", "data")],
-        [
-            ("map", "selectedData", None),
-            ("embedding", "selectedData", {"points": [{"customdata": g} for g in ids]}),
-            ("clear", "n_clicks", 0),
-        ],
-        changed="embedding.selectedData",
-    )["selection"]["data"]
+    select = partial(_select, client, state)
+    sel = select(sel_emb={"points": [{"customdata": g} for g in ids]}, changed="embedding.selectedData")
     assert sel == sorted(ids)
-    info = _call(client, [("selection-info", "children")], [("selection", "data", sel)])
-    assert info["selection-info"]["children"].startswith("3: Region ")
-    cleared = _call(
-        client,
-        [("selection", "data")],
-        [("map", "selectedData", None), ("embedding", "selectedData", None), ("clear", "n_clicks", 1)],
-        changed="clear.n_clicks",
+    info = _call(
+        client, [("selection-info", "children")], [("selection", "data", sel), ("reference", "value", ids[0])]
     )
-    assert cleared["selection"]["data"] == []
+    text = json.dumps(info["selection-info"]["children"])
+    assert "Reference: " in text and "Selected regions: " in text and "3: Region " in text
+    # empty events (figure redrawn, click in lasso mode) keep the selection; a click adds; clear empties
+    assert select(sel_emb=None, current=sel, changed="embedding.selectedData") is None
+    assert select(sel_map={"points": []}, current=sel, changed="map.selectedData") is None
+    other = state["ids"][5]
+    added = select(click_map={"points": [{"customdata": other}]}, current=sel, changed="map.clickData")
+    assert added == sorted([*ids, other])
+    assert select(current=sel, changed="clear.n_clicks") == []
+    assert select(current=[*sel, "elsewhere"], changed="state.data") == sel
     figs = _figures(client, state, ref=ids[0], selection=sel)
     centroids = [t for t in figs["map"]["figure"]["data"] if t.get("customdata")]
     assert sorted(centroids[0]["selectedpoints"]) == sorted(centroids[0]["customdata"].index(g) for g in ids)
+    outline = [t for t in figs["map"]["figure"]["data"] if t.get("line", {}).get("color") == "red"]
+    assert len(outline) == 1 and outline[0]["x"].count(None) == 3  # one ring per selected box
+    assert (
+        figs["map"]["figure"]["layout"]["uirevision"] == figs["embedding"]["figure"]["layout"]["uirevision"]
+    )
     assert any(
         "Region " in str(t.get("text")) for t in figs["embedding"]["figure"]["data"]
     )  # reference label
