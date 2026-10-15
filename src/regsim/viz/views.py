@@ -72,8 +72,18 @@ def _short(geo_id: str) -> str:
     return geo_id.split(":", 1)[-1]
 
 
-def add_arrow(fig, x0: float, y0: float, x1: float, y1: float, label: str, colour: str = "#444") -> None:
-    """Plotly arrow from (x0, y0) to (x1, y1) with its label at the tip (plotly puts annotation text at the tail)."""
+def add_arrow(
+    fig,
+    x0: float,
+    y0: float,
+    x1: float,
+    y1: float,
+    label: str,
+    colour: str = "#444",
+    hover: str | None = None,
+) -> None:
+    """Plotly arrow from (x0, y0) to (x1, y1) with its label at the tip (plotly puts annotation text at the tail);
+    ``hover`` is shown when pointing at the label."""
     fig.add_annotation(
         x=x1,
         y=y1,
@@ -93,8 +103,9 @@ def add_arrow(fig, x0: float, y0: float, x1: float, y1: float, label: str, colou
         x=x1,
         y=y1,
         text=label,
+        hovertext=hover,
         showarrow=False,
-        font={"size": 10},
+        font={"size": 10, "color": colour if colour not in ("#444", "#999") else "#333"},
         xanchor="left" if dx >= 0 else "right",
         yanchor="bottom" if dy >= 0 else "top",
     )
@@ -493,11 +504,22 @@ def type_profiles(typology, interactive=False):
 
 # ---------------------------------------------------------------------------------------------------- V6
 def difference_profile(
-    model, data: ModelData, geo_a: str, geo_b: str, lens=None, alpha: float = 0.1, interactive=False
+    model,
+    data: ModelData,
+    geo_a: str,
+    geo_b: str,
+    lens=None,
+    alpha: float = 0.1,
+    interactive=False,
+    labels: dict | None = None,
+    hover: dict | None = None,
 ):
     """V6: per-indicator difference of two entities on the model scale, sorted; filled markers where both values
     are observed, open where at least one is predicted; bars are calibrated (1 - alpha) intervals of the
-    difference (``model.predict_std``)."""
+    difference (``model.predict_std``). ``labels`` (indicator id -> short label) and ``hover`` (id -> full name)
+    replace the indicator ids in the display."""
+    labels = labels or {}
+    hover = hover or {}
     a, b = data.geo_ids.index(geo_a), data.geo_ids.index(geo_b)
     lens_cols = resolve_lens(data, lens).cols
     discrete = {"categorical", "ordinal"}
@@ -505,7 +527,7 @@ def difference_profile(
     P = model.predict()
     cat = [j for j in lens_cols if str(data.column_meta[j].dtype) in discrete]
     differ = [
-        data.column_ids[j]
+        labels.get(data.column_ids[j], data.column_ids[j])
         for j in cat
         if round(float(P[a, j] if not data.mask[a, j] else data.Z[a, j]))
         != round(float(P[b, j] if not data.mask[b, j] else data.Z[b, j]))
@@ -519,7 +541,8 @@ def difference_profile(
     err = norm.ppf(1 - alpha / 2) * np.sqrt(sa**2 + sb**2)
     both = (data.mask[a] & data.mask[b])[cols]
     order = np.argsort(diff)
-    names = [data.column_ids[j] for j in cols]
+    ids = [data.column_ids[j] for j in cols]
+    names = [labels.get(c, c) for c in ids]
     title = f"V6 difference profile {_short(geo_a)} − {_short(geo_b)} ({lens_label(data, lens)})"
     if cat:
         title += f"\ncategorical: {len(cat) - len(differ)} of {len(cat)} equal" + (
@@ -534,9 +557,20 @@ def difference_profile(
                 mode="markers",
                 error_x={"type": "data", "array": np.nan_to_num(err[order])},
                 marker={"symbol": ["circle" if both[i] else "circle-open" for i in order], "size": 9},
+                text=[
+                    f"{hover.get(ids[i], ids[i])} ({ids[i]})<br>difference {diff[i]:.2f} ± {err[i]:.2f}"
+                    f"<br>{'both observed' if both[i] else 'at least one predicted'}"
+                    for i in order
+                ],
+                hoverinfo="text",
             )
         )
-        fig.update_layout(title=title.replace("\n", "<br>"), xaxis_title="difference (robust-scaled)")
+        fig.update_layout(
+            title=title.replace("\n", "<br>"),
+            xaxis_title="difference (robust-scaled)",
+            height=max(400, 18 * len(order) + 160),
+            yaxis={"dtick": 1, "automargin": True},
+        )
         return fig
     fig, ax = plt.subplots(figsize=(8, 0.25 * len(cols) + 2))
     y = np.arange(len(cols))

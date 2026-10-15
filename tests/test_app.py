@@ -70,8 +70,15 @@ def app(tmp_path_factory):
     fitted = Fitted(model, d, tmp_path_factory.mktemp("fit"))
     names = {g: f"Region {i}" for i, g in enumerate(d.geo_ids)}
     labels = {c: f"Indicator {c}" for c in d.column_ids}
+    sources = {c: ("d36" if i % 2 else "eurostat") for i, c in enumerate(d.column_ids)}
     app = create_dash(
-        fitted, geometry, panel=lambda: _panel(d), region_names=names, indicator_labels=labels, n_arrows=4
+        fitted,
+        geometry,
+        panel=lambda: _panel(d),
+        region_names=names,
+        indicator_labels=labels,
+        indicator_sources=sources,
+        n_arrows=4,
     )
     return app, d
 
@@ -139,7 +146,8 @@ def test_layout_names_and_linked_selection(app):
         "clear",
     ):
         assert f"id='{cid}'" in layout
-    assert "Indicator ind_0 (ind_0)" in layout  # readable lens options
+    assert "[Eurostat] Indicator ind_0 (ind_0)" in layout  # readable lens options with source
+    assert "KNOWING D3.6 only (4)" in layout
     out = _compute(client, 2)
     state = out["state"]["data"]
     assert (
@@ -226,9 +234,9 @@ def test_shared_coordinate_system_and_directions(app):
         state=[("arrows", "value", ["show"])],
     )["trajectories"]["figure"]
     heads = {
-        a["text"]: (round(a["x"], 6), round(a["y"], 6))
+        a["hovertext"].split("(")[1].split(")")[0]: (round(a["x"], 6), round(a["y"], 6))
         for a in traj["layout"]["annotations"]
-        if a.get("text") in {x["name"] for x in state["directions"]}
+        if a.get("hovertext") and "Indicator" in a["hovertext"]
     }
     assert heads == {a["name"]: (round(a["x"], 6), round(a["y"], 6)) for a in state["directions"]}
 
@@ -260,3 +268,42 @@ def test_trajectories_tab(app):
     assert "relative to mean drift" in traj(["follow", "relative"], ids)["layout"]["title"]["text"]
     assert "capital regions" in traj([], ids)["layout"]["title"]["text"]
     assert traj(["follow"], ids, lens=d.column_ids[:3])["data"]  # lens-specific basis
+
+
+def test_sources_and_short_labels(app):
+    dash_app, d = app
+    client = dash_app.server.test_client()
+    d36 = _call(
+        client,
+        [("lens", "value")],
+        [("src-all", "n_clicks", 0), ("src-eurostat", "n_clicks", 0), ("src-d36", "n_clicks", 1)],
+        changed="src-d36.n_clicks",
+    )["lens"]["value"]
+    assert d36 == [c for i, c in enumerate(d.column_ids) if i % 2]
+    everything = _call(
+        client,
+        [("lens", "value")],
+        [("src-all", "n_clicks", 1), ("src-eurostat", "n_clicks", 0), ("src-d36", "n_clicks", 1)],
+        changed="src-all.n_clicks",
+    )["lens"]["value"]
+    assert everything == []
+    out = _compute(client, 2, cols=d36, arrows=["show", "lens"])
+    assert "KNOWING D3.6 4" in out["summary"]["children"]
+    figs = _figures(client, out["state"]["data"])
+    notes = [a for a in figs["embedding"]["figure"]["layout"]["annotations"] if a.get("text")]
+    assert all(a["text"].startswith("Indicator ") and "KNOWING D3.6" in a["hovertext"] for a in notes)
+    state = _compute(client, 2)["state"]["data"]
+    rows = _call(
+        client,
+        [("neighbours", "data"), ("neighbours", "columns"), ("neighbours", "selected_rows")],
+        [("reference", "value", state["ids"][0]), ("state", "data", state)],
+        state=[("lens", "value", [])],
+    )["neighbours"]["data"]
+    assert "Indicator ind_" in rows[0]["differs most in"]
+    diff = _call(
+        client,
+        [("difference", "figure")],
+        [("neighbours", "data", rows), ("neighbours", "selected_rows", [0])],
+        state=[("reference", "value", state["ids"][0]), ("lens", "value", [])],
+    )["difference"]["figure"]
+    assert all(y.startswith("Indicator ") for y in diff["data"][0]["y"])

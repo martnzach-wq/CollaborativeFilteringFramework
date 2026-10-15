@@ -16,6 +16,7 @@ Run with ``regsim app CONFIG`` or ``create_dash(fitted, geometry, ...).run()``.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 from functools import lru_cache
 
@@ -26,10 +27,16 @@ from regsim.api.runtime import Fitted, short_id
 from regsim.config import CAPITAL_REGIONS
 
 CAPTION = {"fontSize": "12px", "color": "#555", "margin": "2px 0 8px 0"}
+SOURCES = {"eurostat": "Eurostat", "d36": "KNOWING D3.6", "ardeco": "JRC ARDECO"}
+SOURCE_COLOURS = {"eurostat": "#1f5fa8", "d36": "#2e8b3a", "ardeco": "#8e44ad"}
+SHORTEN = {"Transport Infrastructure – ": "Transport: ", "Climate Zone Classification": "Climate zone"}
 HELP = {
     "intro": "Explore how similar regions are, which types they form and how they moved between the two period "
     "windows. Values come from the fitted model; unobserved values are predictions with intervals.",
-    "lens": "Indicators that define similarity, types and the embedding (empty = all).",
+    "lens": "Indicators that define similarity, types and the embedding (empty = all). [source] shows where an "
+    "indicator comes from; the buttons select all indicators of one source.",
+    "sources": "Source of an indicator: the primary source of its values; copies from other sources (e.g. "
+    "JRC ARDECO for Eurostat indicators) fill gaps.",
     "types": "Number of types of the typology (auto = chosen by bootstrap stability and BIC).",
     "colour": "Colour of map and embedding: type, similarity to the reference (percentile) or share of observed "
     "indicators.",
@@ -94,6 +101,7 @@ def create_dash(
     panel: Callable[[], Fitted] | None = None,
     region_names: dict[str, str] | None = None,
     indicator_labels: dict[str, str] | None = None,
+    indicator_sources: dict[str, str] | None = None,
     n_arrows: int = 12,
     max_trajectories: int = 60,
 ):
@@ -110,6 +118,8 @@ def create_dash(
         indicator directions).
     region_names, indicator_labels : dict, optional
         Geo id -> region name and indicator id -> label for display.
+    indicator_sources : dict, optional
+        Indicator id -> source connector (``eurostat``, ``d36``, ``ardeco``) for grouping and colours.
     """
     import plotly.graph_objects as go
     from dash import Dash, Input, Output, State, ctx, dash_table, dcc, html, no_update
@@ -126,6 +136,8 @@ def create_dash(
     domain = applicability(model, data).domain
     names = {g: str(n).strip() for g, n in (region_names or {}).items() if n and str(n).strip()}
     labels = indicator_labels or {}
+    sources = {c: (indicator_sources or {}).get(c, "other") for c in data.column_ids}
+    present = [s for s in SOURCES if s in set(sources.values())]
     load_panel = lru_cache(maxsize=1)(panel) if panel else None
     app = Dash(__name__, title=title)
 
@@ -141,11 +153,55 @@ def create_dash(
     def caption(key):
         return html.Div(HELP[key], style=CAPTION)
 
+    def short_label(c: str, n: int = 30) -> str:
+        """Short readable indicator label, e.g. 'Transport: Road Density'."""
+        lab = re.sub(r"\s*\([^)]{6,}\)", "", labels.get(c, c))  # long explanations stay in the hover text
+        for a, b in SHORTEN.items():
+            lab = lab.replace(a, b)
+        lab = lab[:1].upper() + lab[1:]
+        return lab if len(lab) <= n else lab[: n - 1] + "…"
+
+    def full_label(c: str) -> str:
+        return f"{labels.get(c, c)} ({c}) · {SOURCES.get(sources[c], sources[c])}"
+
+    def relabel(text: str) -> str:
+        """Replace indicator ids in a text (type labels, contributor lists) by short labels."""
+        for c in sorted(data.column_ids, key=len, reverse=True):
+            text = text.replace(c, short_label(c, 26))
+        return text
+
+    def legend():
+        return html.Span(
+            [html.Span("Arrow colours: ")]
+            + [
+                html.Span(f"■ {SOURCES[s]}  ", style={"color": SOURCE_COLOURS[s], "marginRight": "6px"})
+                for s in present
+            ],
+            style=CAPTION,
+        )
+
     level_options = [{"label": f"NUTS-{lv}" if lv < 4 else "LAU", "value": lv} for lv in levels]
-    lens_options = [
-        {"label": f"{labels[c]} ({c})" if c in labels and labels[c] != c else c, "value": c}
-        for c in data.column_ids
-    ]
+    lens_options = sorted(
+        (
+            {"label": f"[{SOURCES.get(sources[c], sources[c])}] {labels.get(c, c)} ({c})", "value": c}
+            for c in data.column_ids
+        ),
+        key=lambda o: o["label"].lower(),
+    )
+    source_buttons = html.Div(
+        [html.Span("Lens by source: ", title=HELP["sources"], style={"fontSize": "13px"})]
+        + [html.Button("all indicators", id="src-all", n_clicks=0, style={"marginRight": "6px"})]
+        + [
+            html.Button(
+                f"{SOURCES[s]} only ({sum(v == s for v in sources.values())})",
+                id=f"src-{s}",
+                n_clicks=0,
+                style={"marginRight": "6px", "borderColor": SOURCE_COLOURS[s]},
+            )
+            for s in present
+        ],
+        style={"margin": "6px 0"},
+    )
     controls = html.Div(
         [
             html.Div(
@@ -241,7 +297,7 @@ def create_dash(
                 ]
             ),
             html.Div(
-                [caption("difference"), dcc.Loading(dcc.Graph(id="difference", style={"height": "620px"}))],
+                [caption("difference"), dcc.Loading(dcc.Graph(id="difference"))],
                 style={"flex": 1},
             ),
         ],
@@ -266,6 +322,7 @@ def create_dash(
                 style={"margin": "4px 0 8px 0"},
             ),
             dcc.Loading(dcc.Graph(id="trajectories", style={"height": "660px"})),
+            legend(),
         ],
         style={"marginTop": "8px"},
     )
@@ -274,6 +331,7 @@ def create_dash(
             html.H3(title, style={"marginBottom": "2px"}),
             html.Div(HELP["intro"], style={**CAPTION, "fontSize": "13px"}),
             controls,
+            source_buttons,
             options,
             dcc.Loading(html.Div(id="summary", style={"fontSize": "13px", "margin": "4px 0"})),
             selection_box,
@@ -283,7 +341,11 @@ def create_dash(
                         [dcc.Graph(id="map", style={"height": "560px"}), caption("map")], style={"flex": 1}
                     ),
                     html.Div(
-                        [dcc.Graph(id="embedding", style={"height": "560px"}), caption("embedding")],
+                        [
+                            dcc.Graph(id="embedding", style={"height": "560px"}),
+                            caption("embedding"),
+                            legend(),
+                        ],
                         style={"flex": 1},
                     ),
                 ],
@@ -330,6 +392,32 @@ def create_dash(
             L = b["loadings"]
             pick = list(np.argsort(-np.hypot(L[:, 0], L[:, 1]))[:n_arrows])
         return arrows(b, scores, b["names"], pick)
+
+    def _draw_arrows(fig, directions):
+        for a in directions:
+            c = a["name"]
+            V.add_arrow(
+                fig,
+                0.0,
+                0.0,
+                a["x"],
+                a["y"],
+                short_label(c),
+                colour=SOURCE_COLOURS.get(sources[c], "#444"),
+                hover=full_label(c),
+            )
+
+    if present:
+
+        @app.callback(
+            Output("lens", "value"),
+            Input("src-all", "n_clicks"),
+            *[Input(f"src-{s}", "n_clicks") for s in present],
+            prevent_initial_call=True,
+        )
+        def lens_by_source(*_clicks):
+            src = (ctx.triggered_id or "src-all").removeprefix("src-")
+            return [] if src == "all" else [c for c in data.column_ids if sources[c] == src]
 
     @app.callback(
         Output("state", "data"),
@@ -381,8 +469,14 @@ def create_dash(
             "share": data.mask[rows][:, space.lens.cols].mean(axis=1).tolist(),
             "labels": ty.cluster_table.label.to_dict(),
         }
+        in_lens = cols or data.column_ids
+        by_source = ", ".join(
+            f"{SOURCES[s]} {sum(sources[c] == s for c in in_lens)}"
+            for s in present
+            if any(sources[c] == s for c in in_lens)
+        )
         summary = (
-            f"{V.lens_label(data, lens, level)} · {ty.k} types (bootstrap stability ARI {ty.stability:.2f}) · "
+            f"{V.lens_label(data, lens, level)} ({by_source}) · {ty.k} types (bootstrap stability ARI {ty.stability:.2f}) · "
             f"embedding: {note}"
         )
         options = sorted(({"label": name(g), "value": g} for g in ids), key=lambda o: o["label"].lower())
@@ -460,7 +554,7 @@ def create_dash(
                 "colorbar": {"title": bar},
             }
         hover = [
-            f"{name(g)}<br>type {t}: {state['labels'].get(str(t), '')}<br>applicability: {domain.get(g, '')}"
+            f"{name(g)}<br>type {t}: {relabel(state['labels'].get(str(t), ''))}<br>applicability: {domain.get(g, '')}"
             for g, t in zip(ids, state["type"], strict=True)
         ]
         emb = go.Figure(
@@ -489,8 +583,7 @@ def create_dash(
                     hoverinfo="skip",
                 )
             )
-        for a in state.get("directions", []):
-            V.add_arrow(emb, 0.0, 0.0, a["x"], a["y"], a["name"])
+        _draw_arrows(emb, state.get("directions", []))
         emb.update_layout(
             dragmode="lasso",
             showlegend=False,
@@ -545,7 +638,7 @@ def create_dash(
                 "score": nb.score.round(1),
                 "distance": nb.distance.round(2),
                 "observed share": nb.observed_share.round(2),
-                "differs most in": nb.top_contributors,
+                "differs most in": [relabel(x) for x in nb.top_contributors],
                 "geo_id": nb.geo_id,
             }
         )
@@ -564,7 +657,14 @@ def create_dash(
             return go.Figure().update_layout(title="choose a reference region (click or search) to compare")
         partner = rows[(selected or [0])[0]]["geo_id"]
         fig = V.difference_profile(
-            model, data, ref, partner, lens=Lens(indicators=tuple(cols) if cols else None), interactive=True
+            model,
+            data,
+            ref,
+            partner,
+            lens=Lens(indicators=tuple(cols) if cols else None),
+            interactive=True,
+            labels={c: short_label(c, 40) for c in data.column_ids},
+            hover={c: full_label(c) for c in data.column_ids},
         )
         sub = fig.layout.title.text.split("<br>", 1)
         fig.update_layout(
@@ -647,8 +747,7 @@ def create_dash(
             )
             V.add_arrow(fig, p0[0], p0[1], p1[0], p1[1], short_name(g), colour="#08519c")
         if "arrows" in opts:
-            for a in _pick(b, scores, cols, choice):
-                V.add_arrow(fig, 0.0, 0.0, a["x"], a["y"], a["name"], colour="#999")
+            _draw_arrows(fig, _pick(b, scores, cols, choice))
         fig.update_layout(
             title=(
                 f"Trajectories {first} → {last} ({note}; median displacement {med:.2f}"

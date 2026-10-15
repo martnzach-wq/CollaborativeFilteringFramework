@@ -223,6 +223,7 @@ def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool
         panel=panel,
         region_names=dict(zip(units.geo_id, units.name, strict=True)),
         indicator_labels={k: e.label for k, e in registry.entries.items() if e.label},
+        indicator_sources={k: e.source.connector for k, e in registry.entries.items() if e.source},
     ).run(host=host, port=port, debug=debug)
 
 

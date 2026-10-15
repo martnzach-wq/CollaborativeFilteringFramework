@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.3
+- Explorer: readable short indicator labels (full name, code and source on hover) in arrows, difference profile, neighbour table and type labels; indicators grouped by source ([Eurostat], [KNOWING D3.6]) in the lens field, buttons to set the lens to all indicators of one source, arrows coloured by source, source counts in the summary.
+
 ## 0.7.2
 - Explorer: embedding (with indicator directions) and trajectories share one coordinate system, a PCA of both period windows for the current lens and level; indicator arrows switchable in both; trajectories follow the lens.
 - Explorer usability: region names with codes everywhere (hover, table, labels, selection list), readable indicator labels in the lens field, reference region searchable by name, list of selected regions with a clear button, neighbour row selects the partner of the difference profile, short descriptions under plots and controls, loading indicators.
