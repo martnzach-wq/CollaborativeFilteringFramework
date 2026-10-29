@@ -179,6 +179,26 @@ def report(config: str, out: str = "", only: str = ""):
     typer.echo(f"figures: {folder / 'figures'}")
 
 
+@app.command(name="export-lau")
+def export_lau(
+    config: str,
+    out: str,
+    country: str = "AT",
+    indicators: str = "statat_population,statat_share_age_65plus",
+    period: str = "",
+):
+    """Write the LAUs of COUNTRY with INDICATORS (comma-separated) and D3.6 geometries to the GeoPackage OUT."""
+    from regsim.config import RunConfig
+    from regsim.export import export_lau as run_export
+
+    path, prov = run_export(
+        RunConfig.from_yaml(config), out, country, [x.strip() for x in indicators.split(",")], period or None
+    )
+    typer.echo(f"{path}: {prov['n_units']} units")
+    for k, v in prov["indicators"].items():
+        typer.echo(f"  {k}: period {v['period']}, missing {v['missing']}, {', '.join(v['source_version'])}")
+
+
 @app.command()
 def serve(config: str, host: str = "127.0.0.1", port: int = 8000):
     """REST service for the config (FastAPI; extra `api`)."""

@@ -1,0 +1,13 @@
+# Austrian LAU store for heatimpact: NUTS 0-3 with Eurostat population, LAU 2024 with Statistik Austria
+# population and age shares. Export: regsim export-lau configs/lau_at.yaml <out.gpkg> --country AT
+data:
+  indicator_registry:
+    - configs/indicators_statat_v1.yaml
+  geo_scheme: NUTS2024
+  levels: [0, 2, 3, 4]
+  periods: ["2013/2017", "2018/2022"]   # population weights for NUTS; same span as the main store's cache
+  store: data/store_lau_at
+  sources: [eurostat, statat]
+  d36_gpkg: data/raw/d36/knowing-transferability-export-v2.5.gpkg
+  lau: true
+output_dir: runs

@@ -1,4 +1,8 @@
 # Progress
+## LAU demographic indicators and export for heatimpact (2026-10-29)
+- `regsim.data.statat.StatAtConnector`: OGD population table by municipality and single year of age; 2,116 municipality codes in the 2026 table (23 Vienna districts, code 0 with 0 persons, Fürstenfeld 62280 created 2025 from LAU 2024 62252 Söchau and 62267 Fürstenfeld). After mapping, the 2,093 Austrian LAU 2024 codes are covered.
+- Build step for source `statat`, `configs/lau_at.yaml`, `regsim export-lau`.
+- Tests: `tests/test_statat.py` (connector on recorded-format tables, build step, export to GeoPackage).
 
 ## M6 Interfaces, views, extensions (2026-10-14)
 

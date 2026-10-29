@@ -185,6 +185,9 @@ def build(
         report.per_indicator.append({"indicator_id": entry.indicator_id, **counts})
         log.info("%s: %s", entry.indicator_id, counts)
 
+    if "statat" in d.sources:
+        frames += _statat(registry, connectors, lau if d.lau else None, raw, report)
+
     if "d36" in d.sources:
         from regsim.data.d36 import fetch_d36, read_d36
 
@@ -223,6 +226,47 @@ def build(
         encoding="utf-8",
     )
     return report
+
+
+def _statat(
+    registry: IndicatorRegistry, connectors: dict, lau, raw: Path, report: BuildReport
+) -> list[pd.DataFrame]:
+    """LAU observations from Statistik Austria (``source: statat``); needs the LAU level."""
+    from regsim.data.statat import COUNTRY, StatAtConnector
+
+    if lau is None:
+        raise ValueError("source 'statat' provides LAU values; set data.lau: true")
+    table = lau.table[lau.table.country == COUNTRY]
+    codes = set(table.lau_code.astype(str))
+    connector = connectors.get("statat") or StatAtConnector(
+        cache_dir=str(raw / "statat"),
+        lau_population=dict(zip(table.lau_code.astype(str), table.population.astype(float), strict=True)),
+    )
+    frames = []
+    for entry in registry:
+        if entry.source.connector != "statat":
+            continue
+        spec = {
+            "indicator_id": entry.indicator_id,
+            "dataset": entry.source.dataset,
+            **(entry.source.model_extra or {}),
+        }
+        obs = connector.fetch(spec)
+        known = obs.geo_code.isin(codes)
+        kept = obs[known].copy()
+        kept["geo_id"] = [lau.geo_id(c, g) for c, g in zip(kept.country, kept.geo_code, strict=True)]
+        frames.append(kept.drop(columns=["geo_code", "country"]))
+        report.per_indicator.append(
+            {
+                "indicator_id": entry.indicator_id,
+                "native": int((kept["flags"] == "").sum()),
+                "recoded": int((kept["flags"] != "").sum()),
+                "dropped": int((~known).sum()),
+                "dropped_codes": sorted(obs.geo_code[~known])[:20],
+            }
+        )
+        log.info("%s: %d LAU values", entry.indicator_id, len(kept))
+    return frames
 
 
 def registry_frame(registry: IndicatorRegistry) -> pd.DataFrame:

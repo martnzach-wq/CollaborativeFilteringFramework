@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased (planned 0.8.0; version in `pyproject.toml` and `regsim/__init__.py` still 0.7.5)
+- Statistik Austria connector (`regsim.data.statat`, source `statat`): residents per LAU on 1 January and age shares from the OGD table `OGD_bevstandjbab2002_BevStand_<year>` (CC BY 4.0). Vienna districts are summed to LAU 90001; municipalities created after LAU 2024 are mapped to their predecessors through `successors` in the registry (shares copied, counts split by LAU-list population, both flagged).
+- Registry `configs/indicators_statat_v1.yaml`: `statat_population`, `statat_share_age_65plus` (1 January 2026).
+- Build: source `statat` (needs `data.lau: true`); `configs/lau_at.yaml` builds an Austrian LAU store (`data/store_lau_at`); `configs/lau.yaml` includes the new source.
+- `regsim export-lau CONFIG OUT --country AT`: GeoPackage (layer `lau`) of one country's LAUs with chosen indicators and KNOWING D3.6 geometries, plus `<OUT>.provenance.json` (periods, source versions, store build hash). Used by heatimpact.
+
 ## 0.7.5
 - Explorer: compare any two regions. A "Compare with" field (searchable by name) sets the comparison region of the difference profile; by default it is the nearest region, and a click on a table row sets it as well. Clicks on the map or in the embedding alternate between the reference (✕) and the comparison region (◆); a highlighted line above the plots says what the next click does. The difference profile states the overall similarity of the pair (percentile score, distance, rank among all regions of the level); the comparison region is marked on the map, in the embedding and in the table.
 

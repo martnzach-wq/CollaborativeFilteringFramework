@@ -1,0 +1,35 @@
+# Statistik Austria open data: residents per municipality (LAU) on 1 January, by single year of age.
+# Table OGD_bevstandjbab2002_BevStand_<year>, CC BY 4.0. The tables use the current municipal boundaries;
+# `successors` maps municipalities created after LAU 2024 back to their LAU 2024 predecessors.
+registry_version: statat_v1
+source_precedence: [eurostat, ardeco, d36, statat]
+indicators:
+  - indicator_id: statat_population
+    label: residents on 1 January (Statistik Austria)
+    dtype: count
+    transform: log
+    aggregation: sum
+    native_levels: [4]
+    unit: persons
+    tags: [demography]
+    source:
+      connector: statat
+      dataset: OGD_bevstandjbab2002_BevStand
+      year: 2026
+      measure: population
+      successors: {"62280": ["62252", "62267"]}   # Fürstenfeld 2025 = Söchau + Fürstenfeld (LAU 2024)
+  - indicator_id: statat_share_age_65plus
+    label: share of residents aged 65 and over (Statistik Austria)
+    dtype: share
+    transform: logit
+    aggregation: wmean_pop
+    native_levels: [4]
+    unit: "1"
+    tags: [demography, vulnerability]
+    source:
+      connector: statat
+      dataset: OGD_bevstandjbab2002_BevStand
+      year: 2026
+      measure: share_age
+      min_age: 65
+      successors: {"62280": ["62252", "62267"]}

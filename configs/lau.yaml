@@ -3,11 +3,12 @@ data:
   indicator_registry:
     - configs/indicators_eurostat_v1.yaml
     - configs/indicators_d36_v2.5.yaml
+    - configs/indicators_statat_v1.yaml
   geo_scheme: NUTS2024        # decision D1 (LAU 2024)
   levels: [0, 2, 3, 4]        # 4 = LAU
   periods: ["2018/2022"]
   store: data/store_lau
-  sources: [eurostat, d36]
+  sources: [eurostat, d36, statat]
   lau: true
 model:
   estimator: HierTypedMF

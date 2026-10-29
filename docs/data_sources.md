@@ -32,3 +32,7 @@
 ## Prototype indicator set
 
 `configs/indicators_eurostat_v1.yaml` lists the 25 indicators of the prototype with dataset codes, filters, native level, transform and aggregation rule.
+
+## Statistik Austria (source `statat`)
+- Table `OGD_bevstandjbab2002_BevStand_<year>` on data.statistik.gv.at: residents on 1 January by sex, municipality (current boundaries) and single year of age; code lists `_C-GRGEMAKT-0` and `_C-GALTEJ112-0`. Licence CC BY 4.0.
+- Vienna is published by district (901xx–923xx) and summed to LAU 90001. Mergers after LAU 2024 are listed under `successors` in `configs/indicators_statat_v1.yaml`.
