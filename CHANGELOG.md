@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (planned 0.8.0; version in `pyproject.toml` and `regsim/__init__.py` still 0.7.5)
+## 0.8.0
 - Statistik Austria connector (`regsim.data.statat`, source `statat`): residents per LAU on 1 January and age shares from the OGD table `OGD_bevstandjbab2002_BevStand_<year>` (CC BY 4.0). Vienna districts are summed to LAU 90001; municipalities created after LAU 2024 are mapped to their predecessors through `successors` in the registry (shares copied, counts split by LAU-list population, both flagged).
 - Registry `configs/indicators_statat_v1.yaml`: `statat_population`, `statat_share_age_65plus` (1 January 2026).
 - Build: source `statat` (needs `data.lau: true`); `configs/lau_at.yaml` builds an Austrian LAU store (`data/store_lau_at`); `configs/lau.yaml` includes the new source.
