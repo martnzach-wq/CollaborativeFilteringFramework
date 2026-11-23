@@ -19,6 +19,8 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D13 | 2026-11-23 | Panel estimator for short panels: **fixed effects with bias correction** (Nickell bias of the lagged dependent variable) as default; **Arellano–Bond GMM** as an option. | M. Zach |
 | D14 | 2026-11-23 | Region groups for partial pooling and moderators: **typology classes** from `regsim.typology`; **macro-regions** from the config as fallback. | M. Zach |
 | D19 | 2026-11-23 | Practical-equivalence threshold δ for effect similarity: **0.1 SD** of the standardised effect by default, **user-set per link**. | M. Zach |
+| D14a | 2026-11-23 | Region groups as moderators of the effect-similarity model (M7.6): **macro-regions** (`causal.effect_groups: macro`), an exception to D14. With typology classes GDP → unemployment fails the validation gate; the macro-regions reproduce the M7 analysis. Partial pooling of panel effects keeps the typology classes (D14). | M. Zach |
+| D15 | 2026-11-23 | LLM in the literature module: a **configurable callable** (prompt → text); tests use recorded responses and a stub. | M. Zach |
 
 ## Consequences
 

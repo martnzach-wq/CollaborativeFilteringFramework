@@ -23,12 +23,12 @@
 
 - Moderators of GDP → life expectancy (change of the standardised effect): North +0.16, South −0.12, East −0.02 against West, density +0.06 (M7 analysis: North +0.10, South −0.07, less negative in dense regions).
 - Estonia (EE00) vs Catalonia (ES51), P(practical equivalence): GDP → cars 1.00, GDP → unemployment 0.19, GDP → life expectancy 0.05 (M7 analysis 1.00, 0.33, 0.14); the pooled links are reported as "no transferable difference". Effect distance 0.19.
-- With typology classes as region-group moderators (decision D14 default) GDP → unemployment fails the gate (relative error 1.00); the other six decisions are the same. `causal.effect_groups` is set to `macro` pending a decision.
+- With typology classes as region-group moderators GDP → unemployment fails the gate (relative error 1.00); the other six decisions are the same. Decision D14a: the effect model uses the macro-regions (`causal.effect_groups: macro`).
 
 **Tests**: 5 unit tests (`tests/test_effect_similarity.py`), app test of the Effects tab; M7.6 acceptance (2 tests).
 
 **Open**
-- Moderator groups of the effect model: macro-regions (reproduces the M7 analysis) or typology classes (decision D14).
+- Next: M7.2 (literature module), decision D15 taken.
 
 ## M7.3 Panel module, direction test, causal queries, causal-lens similarity (2026-11-23)
 
