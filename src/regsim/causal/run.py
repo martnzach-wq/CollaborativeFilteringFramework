@@ -100,7 +100,8 @@ def run_fit(
     if write_registry:
         pooled = effects[effects.group == "all"].rename(columns={"ci95_lo_std": "lo", "ci95_hi_std": "hi"})
         pooled = pooled.assign(
-            ci95_std=list(zip(pooled.lo, pooled.hi, strict=True)), level=f"level {c.level}"
+            ci95_std=list(zip(pooled.lo, pooled.hi, strict=True)),
+            level=f"{cfg.data.geo_scheme} level {c.level}",
         )
         edges.update_evidence(pooled, tier="E2", test=f"{EFFECTS_TEST} ({c.estimator}, {c.bias_correction})")
         for r in rows:

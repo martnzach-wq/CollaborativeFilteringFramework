@@ -26,7 +26,7 @@
 **Tests**: 11 unit tests (`tests/test_causal_queries.py`) on synthetic panels; M7.1 and M7.3 acceptance (12 tests) pass; the M7.2, M7.4–M7.6 tests stay skipped.
 
 **Open**
-- The registry still holds the E2 items and `temporal_precedence` of the M7 analysis; `regsim causal fit --write-registry` would replace them with the jackknife estimates of this store.
+- Registry updated with `regsim causal fit --write-registry` (2026-11-23): E2 items (jackknife estimates; between-region and within-country correlations kept) and `temporal_precedence` for the 54 observed edges. Status changes (16): supported E011, E014, E045, E046, E051, E060 (GDP → unemployment, Okun), E061, E066, E075; contested E002 (tertiary attainment → GDP), E039, E047, E056, E057, E072, E076. Temporal precedence at Bonferroni over 108 tests: 5 forward, 1 reverse, 1 both, 47 undecided; six edges that the M7 analysis listed as forward or reverse are now undecided.
 - `classify_mechanism` does not describe age-structure composition (e.g. old-age dependency and median age) or the national-accounts link between GDP and household income; such pairs pass the screen as causal.
 - Next: M7.6 (effect similarity), decision D19 first.
 

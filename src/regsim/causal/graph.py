@@ -143,6 +143,7 @@ class EdgeRegistry(BaseModel):
         tier: Tier = "E2",
         t_crit: float = 1.96,
         test: str = "within_region_panel",
+        digits: int = 3,
     ) -> list[str]:
         """Write panel estimates into `data_evidence` and update `status`.
 
@@ -180,12 +181,15 @@ class EdgeRegistry(BaseModel):
                     verdict = "supported"
                 else:
                     verdict = "contradicted"
+                old = e.data_evidence  # region-level correlations (C1) stay with the new estimate
                 e.data_evidence = DataEvidence(
                     test=test,
                     level=str(r.get("level", "")),
-                    within_region_beta_std=beta,
-                    within_region_t=t,
-                    ci95=[float(x) for x in ci] if ci is not None else None,
+                    between_r=old.between_r if old is not None else None,
+                    within_country_r=old.within_country_r if old is not None else None,
+                    within_region_beta_std=round(beta, digits),
+                    within_region_t=round(t, digits),
+                    ci95=[round(float(x), digits) for x in ci] if ci is not None else None,
                     status=f"{verdict} ({tier})",
                     tier=tier,
                 )

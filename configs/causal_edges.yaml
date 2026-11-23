@@ -38,23 +38,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.669
     within_country_r: 0.782
-    within_region_beta_std: 0.106
-    within_region_t: 1.979
+    within_region_beta_std: 0.067
+    within_region_t: 1.095
     ci95:
-    - 0.001
-    - 0.211
-    status: supported
+    - -0.053
+    - 0.188
+    status: undecided (E2)
     tier: E2
   status: supported
   temporal_precedence:
-    result: reverse
-    p_forward: 0.2701
-    p_reverse: 0.0008
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    result: undecided
+    p_forward: 0.087419
+    p_reverse: 0.012556
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E002
   cause: tertiary_attainment
   effect: gdp_pps_hab
@@ -77,23 +77,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.648
     within_country_r: 0.656
-    within_region_beta_std: -0.015
-    within_region_t: -0.639
+    within_region_beta_std: -0.048
+    within_region_t: -2.057
     ci95:
-    - -0.06
-    - 0.031
-    status: undecided
-    tier: E0
-  status: prior
+    - -0.094
+    - -0.002
+    status: contradicted (E2)
+    tier: E2
+  status: contested
   temporal_precedence:
     result: undecided
-    p_forward: 0.519
-    p_reverse: 0.3698
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.595589
+    p_reverse: 0.515051
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E003
   cause: lifelong_learning
   effect: employment_rate
@@ -114,23 +114,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.629
     within_country_r: 0.426
-    within_region_beta_std: 0.097
-    within_region_t: 2.55
+    within_region_beta_std: 0.072
+    within_region_t: 1.701
     ci95:
-    - 0.022
-    - 0.171
-    status: supported
+    - -0.011
+    - 0.156
+    status: undecided (E2)
     tier: E2
   status: supported
   temporal_precedence:
     result: undecided
-    p_forward: 0.8204
-    p_reverse: 0.4925
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.728048
+    p_reverse: 0.688968
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E004
   cause: rd_expenditure_gdp
   effect: gdp_pps_hab
@@ -160,16 +160,16 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.697
     within_country_r: 0.486
-    within_region_beta_std: -0.138
-    within_region_t: -2.962
+    within_region_beta_std: -0.133
+    within_region_t: -2.848
     ci95:
-    - -0.229
-    - -0.047
-    status: contradicted
+    - -0.224
+    - -0.041
+    status: contradicted (E2)
     tier: E2
   status: contested
   literature_r2:
@@ -186,9 +186,9 @@ edges:
     strict_measure_check: true
   temporal_precedence:
     result: undecided
-    p_forward: 0.1614
-    p_reverse: 0.1093
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.161487
+    p_reverse: 0.109686
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
   resolution: Panel contradiction attributed to the R&D/GDP ratio definition.
 - id: E005
   cause: hh_income_pps
@@ -212,23 +212,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.382
     within_country_r: -0.758
-    within_region_beta_std: 0.083
-    within_region_t: 1.391
+    within_region_beta_std: 0.09
+    within_region_t: 1.541
     ci95:
-    - -0.034
-    - 0.201
-    status: undecided
-    tier: E0
+    - -0.025
+    - 0.205
+    status: undecided (E2)
+    tier: E2
   status: prior
   temporal_precedence:
     result: undecided
-    p_forward: 0.1844
-    p_reverse: 0.5261
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.155348
+    p_reverse: 0.617031
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E006
   cause: gini
   effect: poverty_exclusion_risk
@@ -296,16 +296,16 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.588
     within_country_r: 0.538
-    within_region_beta_std: -0.105
-    within_region_t: -4.107
+    within_region_beta_std: -0.12
+    within_region_t: -4.711
     ci95:
-    - -0.156
-    - -0.055
-    status: contradicted
+    - -0.17
+    - -0.07
+    status: contradicted (E2)
     tier: E2
   status: contested
   literature_r2:
@@ -327,9 +327,9 @@ edges:
   note: ' Short-run and long-run evidence have opposite signs.'
   temporal_precedence:
     result: forward
-    p_forward: 0.0003
-    p_reverse: 0.2241
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.000388
+    p_reverse: 0.244727
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
   resolution: 'Contradiction resolved by horizon: short-run literature negative (procyclical mortality), matching
     the within-region panel; long-run literature positive.'
 - id: E008
@@ -353,23 +353,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.256
     within_country_r: -0.55
-    within_region_beta_std: -0.002
-    within_region_t: -0.037
+    within_region_beta_std: -0.01
+    within_region_t: -0.182
     ci95:
-    - -0.113
-    - 0.109
-    status: undecided
-    tier: E0
+    - -0.121
+    - 0.101
+    status: undecided (E2)
+    tier: E2
   status: prior
   temporal_precedence:
     result: undecided
-    p_forward: 0.4922
-    p_reverse: 0.8052
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.510577
+    p_reverse: 0.698728
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E009
   cause: hospital_beds
   effect: life_expectancy
@@ -392,20 +392,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.31
     within_country_r: 0.14
-    within_region_beta_std: 0.134
-    within_region_t: 0.91
+    within_region_beta_std: 0.169
+    within_region_t: 1.146
     ci95:
-    - -0.155
-    - 0.423
-    status: undecided
-    tier: E0
+    - -0.12
+    - 0.458
+    status: undecided (E2)
+    tier: E2
   status: prior
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.786871
+    p_reverse: .nan
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E010
   cause: life_expectancy
   effect: old_age_dependency
@@ -426,23 +429,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.3
     within_country_r: 0.063
-    within_region_beta_std: 0.069
-    within_region_t: 1.67
+    within_region_beta_std: 0.055
+    within_region_t: 1.421
     ci95:
-    - -0.012
-    - 0.151
-    status: undecided
-    tier: E0
+    - -0.021
+    - 0.131
+    status: undecided (E2)
+    tier: E2
   status: prior
   temporal_precedence:
     result: forward
-    p_forward: 0.0
-    p_reverse: 0.7937
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.000259
+    p_reverse: 0.488522
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E011
   cause: fertility_rate
   effect: share_age_0_14
@@ -462,15 +465,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.715
     within_country_r: 0.741
-    status: consistent
-    tier: E1
-  status: prior
+    status: supported (E2)
+    tier: E2
+    within_region_beta_std: 0.234
+    within_region_t: 3.693
+    ci95:
+    - 0.11
+    - 0.358
+  status: supported
   temporal_precedence:
-    result: not tested
+    result: forward
+    p_forward: 0.0
+    p_reverse: 0.772135
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E012
   cause: fertility_rate
   effect: pop_growth_rate
@@ -490,23 +501,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.379
     within_country_r: 0.15
-    within_region_beta_std: 0.042
-    within_region_t: 1.197
+    within_region_beta_std: 0.04
+    within_region_t: 1.086
     ci95:
-    - -0.027
-    - 0.11
-    status: undecided
-    tier: E0
+    - -0.032
+    - 0.111
+    status: undecided (E2)
+    tier: E2
   status: prior
   temporal_precedence:
     result: undecided
-    p_forward: 0.1549
-    p_reverse: 0.0541
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.053347
+    p_reverse: 0.022737
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E013
   cause: net_migration_rate
   effect: pop_growth_rate
@@ -527,23 +538,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.723
     within_country_r: 0.704
-    within_region_beta_std: 1.38
-    within_region_t: 15.311
+    within_region_beta_std: 1.343
+    within_region_t: 14.538
     ci95:
-    - 1.204
-    - 1.557
-    status: supported
+    - 1.162
+    - 1.524
+    status: supported (E2)
     tier: E2
   status: supported
   temporal_precedence:
-    result: both
-    p_forward: 0.0364
-    p_reverse: 0.0046
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    result: undecided
+    p_forward: 0.033026
+    p_reverse: 0.004267
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E014
   cause: median_age
   effect: old_age_dependency
@@ -563,15 +574,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.912
     within_country_r: 0.912
-    status: consistent
-    tier: E1
-  status: prior
+    status: supported (E2)
+    tier: E2
+    within_region_beta_std: 0.269
+    within_region_t: 3.65
+    ci95:
+    - 0.125
+    - 0.414
+  status: supported
   temporal_precedence:
-    result: not tested
+    result: reverse
+    p_forward: 0.001699
+    p_reverse: 0.0
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E015
   cause: employment_rate
   effect: fertility_rate
@@ -598,16 +617,16 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.092
     within_country_r: -0.106
-    within_region_beta_std: 0.08
-    within_region_t: 2.295
+    within_region_beta_std: 0.111
+    within_region_t: 3.021
     ci95:
-    - 0.012
-    - 0.149
-    status: contradicted
+    - 0.039
+    - 0.183
+    status: contradicted (E2)
     tier: E2
   status: contested
   literature_r2:
@@ -624,9 +643,9 @@ edges:
     strict_measure_check: true
   temporal_precedence:
     result: undecided
-    p_forward: 0.0732
-    p_reverse: 0.1127
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.024224
+    p_reverse: 0.077505
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
   resolution: 'Contradiction resolved by horizon: short-run literature positive (procyclical fertility, grade A),
     matching the panel.'
 - id: E016
@@ -651,23 +670,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.41
     within_country_r: -0.462
-    within_region_beta_std: -0.052
-    within_region_t: -1.629
+    within_region_beta_std: -0.057
+    within_region_t: -1.675
     ci95:
-    - -0.115
-    - 0.011
-    status: undecided
-    tier: E0
+    - -0.123
+    - 0.01
+    status: undecided (E2)
+    tier: E2
   status: prior
   temporal_precedence:
     result: undecided
-    p_forward: 0.3369
-    p_reverse: 0.359
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.174396
+    p_reverse: 0.744784
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E017
   cause: gdp_pps_hab
   effect: net_migration_rate
@@ -691,23 +710,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.629
     within_country_r: 0.561
-    within_region_beta_std: 0.096
-    within_region_t: 2.19
+    within_region_beta_std: 0.102
+    within_region_t: 2.326
     ci95:
-    - 0.01
-    - 0.183
-    status: supported
+    - 0.016
+    - 0.188
+    status: supported (E2)
     tier: E2
   status: supported
   temporal_precedence:
-    result: forward
-    p_forward: 0.0435
-    p_reverse: 0.1484
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    result: undecided
+    p_forward: 0.044302
+    p_reverse: 0.152955
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E018
   cause: gdp_pps_hab
   effect: cars_per_1000
@@ -735,23 +754,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.536
     within_country_r: 0.308
-    within_region_beta_std: 0.099
-    within_region_t: 3.689
+    within_region_beta_std: 0.066
+    within_region_t: 2.449
     ci95:
-    - 0.046
-    - 0.152
-    status: supported
+    - 0.013
+    - 0.119
+    status: supported (E2)
     tier: E2
   status: supported
   temporal_precedence:
-    result: reverse
-    p_forward: 0.7339
-    p_reverse: 0.0035
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    result: undecided
+    p_forward: 0.720691
+    p_reverse: 0.003418
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E019
   cause: hh_income_pps
   effect: cars_per_1000
@@ -781,23 +800,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.552
     within_country_r: 0.4
-    within_region_beta_std: 0.033
-    within_region_t: 0.9
+    within_region_beta_std: 0.026
+    within_region_t: 0.717
     ci95:
-    - -0.039
-    - 0.105
-    status: undecided
-    tier: E0
+    - -0.046
+    - 0.099
+    status: undecided (E2)
+    tier: E2
   status: prior
   temporal_precedence:
-    result: reverse
-    p_forward: 0.7324
-    p_reverse: 0.014
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    result: undecided
+    p_forward: 0.759956
+    p_reverse: 0.015353
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E020
   cause: pop_density
   effect: cars_per_1000
@@ -821,23 +840,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.141
     within_country_r: -0.089
-    within_region_beta_std: -0.058
-    within_region_t: -2.044
+    within_region_beta_std: -0.07
+    within_region_t: -2.165
     ci95:
-    - -0.113
-    - -0.002
-    status: supported
+    - -0.133
+    - -0.007
+    status: supported (E2)
     tier: E2
   status: supported
   temporal_precedence:
-    result: reverse
-    p_forward: 0.216
-    p_reverse: 0.0045
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    result: undecided
+    p_forward: 0.008603
+    p_reverse: 0.002032
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E021
   cause: d36_transport_infrastructure_road_density_mean
   effect: cars_per_1000
@@ -1205,23 +1224,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.199
     within_country_r: -0.174
-    within_region_beta_std: 0.021
-    within_region_t: 1.076
+    within_region_beta_std: 0.003
+    within_region_t: 0.161
     ci95:
-    - -0.017
-    - 0.059
-    status: undecided
-    tier: E0
+    - -0.035
+    - 0.041
+    status: undecided (E2)
+    tier: E2
   status: prior
   temporal_precedence:
-    result: forward
-    p_forward: 0.0111
-    p_reverse: 0.1381
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    result: undecided
+    p_forward: 0.006845
+    p_reverse: 0.264573
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E033
   cause: pop_density
   effect: d36_electricity_total_demand_mean
@@ -1420,18 +1439,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.64
     within_country_r: -0.756
-    within_region_beta_std: -0.038
-    within_region_t: -1.86
+    within_region_beta_std: 0.078
+    within_region_t: 5.284
     ci95:
-    - -0.078
-    - 0.002
-    status: undecided
-    tier: E0
-  status: prior
+    - 0.049
+    - 0.107
+    status: contradicted (E2)
+    tier: E2
+  status: contested
   literature_r2:
     target_id: R06
     grade: C
@@ -1442,9 +1461,9 @@ edges:
     strict_measure_check: true
   temporal_precedence:
     result: undecided
-    p_forward: 0.122
-    p_reverse: 0.1222
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.973083
+    p_reverse: 0.032318
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E040
   cause: gdp_pps_hab
   effect: ghg_per_capita
@@ -1497,23 +1516,23 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.659
     within_country_r: -0.307
-    within_region_beta_std: 0.065
-    within_region_t: 1.745
+    within_region_beta_std: 0.066
+    within_region_t: 1.767
     ci95:
-    - -0.008
-    - 0.139
-    status: undecided
-    tier: E0
+    - -0.007
+    - 0.138
+    status: undecided (E2)
+    tier: E2
   status: prior
   temporal_precedence:
     result: undecided
-    p_forward: 0.1062
-    p_reverse: 0.0863
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.084047
+    p_reverse: 0.080386
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E042
   cause: gdp_pps_hab
   effect: employment_rate
@@ -1536,16 +1555,16 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.71
     within_country_r: 0.605
-    within_region_beta_std: 0.109
-    within_region_t: 2.989
+    within_region_beta_std: 0.085
+    within_region_t: 2.358
     ci95:
-    - 0.038
-    - 0.181
-    status: contradicted
+    - 0.014
+    - 0.156
+    status: supported (E2)
     tier: E2
   status: supported
   literature_r2:
@@ -1558,9 +1577,9 @@ edges:
     strict_measure_check: true
   temporal_precedence:
     result: undecided
-    p_forward: 0.1341
-    p_reverse: 0.785
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.244723
+    p_reverse: 0.802392
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
   resolution: LLM prior sign (-) wrong; Okun literature implies +; merged with GDP -> unemployment (grade A).
 - id: E043
   cause: employment_rate
@@ -1584,16 +1603,16 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.71
     within_country_r: 0.605
-    within_region_beta_std: 0.094
-    within_region_t: 2.238
+    within_region_beta_std: 0.084
+    within_region_t: 2.007
     ci95:
-    - 0.012
-    - 0.176
-    status: supported
+    - 0.002
+    - 0.165
+    status: supported (E2)
     tier: E2
   status: supported
   literature_r2:
@@ -1610,9 +1629,9 @@ edges:
     strict_measure_check: true
   temporal_precedence:
     result: undecided
-    p_forward: 0.785
-    p_reverse: 0.1341
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.802392
+    p_reverse: 0.244723
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E044
   cause: unemployment_rate
   effect: gini
@@ -1688,18 +1707,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.582
     within_country_r: 0.756
-    within_region_beta_std: 0.196
-    within_region_t: 4.991
+    within_region_beta_std: 0.233
+    within_region_t: 5.908
     ci95:
-    - 0.119
-    - 0.273
-    status: 'no'
-    tier: E0
-  status: prior
+    - 0.156
+    - 0.31
+    status: supported (E2)
+    tier: E2
+  status: supported
   literature_r2:
     target_id: C04
     grade: C
@@ -1713,7 +1732,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.056631
+    p_reverse: 0.321074
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E046
   cause: tertiary_attainment
   effect: employment_rate
@@ -1736,18 +1758,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.588
     within_country_r: 0.465
-    within_region_beta_std: 0.183
-    within_region_t: 4.195
+    within_region_beta_std: 0.182
+    within_region_t: 3.843
     ci95:
-    - 0.098
-    - 0.269
-    status: 'no'
-    tier: E0
-  status: prior
+    - 0.089
+    - 0.275
+    status: supported (E2)
+    tier: E2
+  status: supported
   literature_r2:
     target_id: C05
     grade: C
@@ -1765,7 +1787,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.302652
+    p_reverse: 0.688248
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E047
   cause: gdp_pps_hab
   effect: rd_expenditure_gdp
@@ -1788,18 +1813,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.697
     within_country_r: 0.486
-    within_region_beta_std: -0.151
-    within_region_t: -3.947
+    within_region_beta_std: -0.088
+    within_region_t: -2.295
     ci95:
-    - -0.225
-    - -0.076
-    status: 'no'
-    tier: E0
-  status: prior
+    - -0.162
+    - -0.013
+    status: contradicted (E2)
+    tier: E2
+  status: contested
   literature_r2:
     target_id: C09
     grade: C
@@ -1813,7 +1838,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.109686
+    p_reverse: 0.161487
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E048
   cause: unemployment_rate
   effect: life_expectancy
@@ -1836,17 +1864,17 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.101
     within_country_r: -0.532
-    within_region_beta_std: 0.049
-    within_region_t: 1.599
+    within_region_beta_std: 0.058
+    within_region_t: 1.803
     ci95:
-    - -0.011
-    - 0.11
-    status: 'no'
-    tier: E0
+    - -0.005
+    - 0.12
+    status: undecided (E2)
+    tier: E2
   status: prior
   literature_r2:
     target_id: C13
@@ -1861,7 +1889,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.045376
+    p_reverse: 0.34384
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E049
   cause: gdp_pps_hab
   effect: fertility_rate
@@ -1884,17 +1915,17 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.081
     within_country_r: -0.314
-    within_region_beta_std: 0.014
-    within_region_t: 0.526
+    within_region_beta_std: 0.004
+    within_region_t: 0.143
     ci95:
-    - -0.038
-    - 0.066
-    status: undecided
-    tier: E0
+    - -0.048
+    - 0.056
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   literature_r2:
     target_id: C22
@@ -1905,10 +1936,10 @@ edges:
     by_horizon: null
     strict_measure_check: true
   temporal_precedence:
-    result: forward
-    p_forward: 0.0023
-    p_reverse: 0.1061
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    result: undecided
+    p_forward: 0.018696
+    p_reverse: 0.102107
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E050
   cause: net_migration_rate
   effect: unemployment_rate
@@ -1931,17 +1962,17 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.41
     within_country_r: -0.462
-    within_region_beta_std: -0.041
-    within_region_t: -0.897
+    within_region_beta_std: -0.053
+    within_region_t: -1.061
     ci95:
-    - -0.131
-    - 0.049
-    status: undecided
-    tier: E0
+    - -0.152
+    - 0.045
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   literature_r2:
     target_id: C24
@@ -1962,9 +1993,9 @@ edges:
   note: ' Short-run and long-run evidence have opposite signs.'
   temporal_precedence:
     result: undecided
-    p_forward: 0.359
-    p_reverse: 0.3369
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    p_forward: 0.744784
+    p_reverse: 0.174396
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E051
   cause: cars_per_1000
   effect: road_deaths_pmh
@@ -1987,18 +2018,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.204
     within_country_r: 0.197
-    within_region_beta_std: 0.033
-    within_region_t: 1.577
+    within_region_beta_std: 0.039
+    within_region_t: 2.225
     ci95:
-    - -0.008
+    - 0.005
     - 0.074
-    status: undecided
-    tier: E0
-  status: hypothesis
+    status: supported (E2)
+    tier: E2
+  status: supported
   literature_r2:
     target_id: C33
     grade: D
@@ -2012,10 +2043,10 @@ edges:
         n_claims: 2
     strict_measure_check: true
   temporal_precedence:
-    result: forward
-    p_forward: 0.0032
-    p_reverse: 0.4761
-    test: lagged within-region test, NUTS-2 annual, lags 1-2
+    result: undecided
+    p_forward: 0.004049
+    p_reverse: 0.275736
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E052
   cause: hh_electricity_kwh_cap
   effect: ghg_per_capita
@@ -2181,18 +2212,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.669
     within_country_r: 0.782
-    within_region_beta_std: -0.065
-    within_region_t: -1.161
+    within_region_beta_std: -0.121
+    within_region_t: -2.052
     ci95:
-    - -0.175
-    - 0.045
-    status: 'no'
-    tier: E0
-  status: prior
+    - -0.236
+    - -0.005
+    status: contradicted (E2)
+    tier: E2
+  status: contested
   literature_r2:
     target_id: C50
     grade: C
@@ -2206,7 +2237,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.012556
+    p_reverse: 0.087419
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E057
   cause: pop_density
   effect: hospital_beds
@@ -2229,18 +2263,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.048
     within_country_r: -0.059
-    within_region_beta_std: -0.194
-    within_region_t: -3.266
+    within_region_beta_std: -0.239
+    within_region_t: -4.032
     ci95:
-    - -0.31
-    - -0.078
-    status: 'no'
-    tier: E0
-  status: prior
+    - -0.356
+    - -0.123
+    status: contradicted (E2)
+    tier: E2
+  status: contested
   literature_r2:
     target_id: C52
     grade: C
@@ -2254,7 +2288,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: .nan
+    p_reverse: 0.822138
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E058
   cause: gdp_pps_hab
   effect: hospital_beds
@@ -2277,17 +2314,17 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_2008_2024
-    level: NUTS2
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.01
     within_country_r: 0.269
-    within_region_beta_std: -0.158
-    within_region_t: -1.246
+    within_region_beta_std: -0.105
+    within_region_t: -0.826
     ci95:
-    - -0.406
-    - 0.09
-    status: 'no'
-    tier: E0
+    - -0.353
+    - 0.144
+    status: undecided (E2)
+    tier: E2
   status: prior
   literature_r2:
     target_id: C53
@@ -2298,7 +2335,10 @@ edges:
     by_horizon: null
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: .nan
+    p_reverse: 0.917728
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E059
   cause: pop_density
   effect: hh_electricity_kwh_cap
@@ -2354,13 +2394,16 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_screen_2008_2024
-    level: NUTS2
-    within_region_beta_std: -0.131
-    within_region_t: -3.936
-    status: discovered
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: -0.136
+    within_region_t: -4.101
+    status: supported (E2)
     tier: E2
-  status: prior
+    ci95:
+    - -0.201
+    - -0.071
+  status: supported
   note: Okun-type relation flagged by data screen; send to literature module.
   literature_r2:
     target_id: N_gdp_pp_unempl
@@ -2379,7 +2422,10 @@ edges:
         n_claims: 2
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.054024
+    p_reverse: 0.263535
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E061
   cause: unemployment_rate
   effect: gdp_pps_hab
@@ -2402,13 +2448,16 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_screen_2008_2024
-    level: NUTS2
-    within_region_beta_std: -0.117
-    within_region_t: -4.216
-    status: discovered
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: -0.129
+    within_region_t: -4.546
+    status: supported (E2)
     tier: E2
-  status: prior
+    ci95:
+    - -0.185
+    - -0.073
+  status: supported
   note: Okun-type relation flagged by data screen; send to literature module.
   literature_r2:
     target_id: N_unempl_gdp_pp
@@ -2423,7 +2472,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.263535
+    p_reverse: 0.054024
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E062
   cause: hh_income_pps
   effect: unemployment_rate
@@ -2445,12 +2497,15 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: annual_panel_screen_2008_2024
-    level: NUTS2
-    within_region_beta_std: -0.185
-    within_region_t: -4.915
-    status: discovered
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: -0.187
+    within_region_t: -4.987
+    status: undecided (E2)
     tier: E2
+    ci95:
+    - -0.26
+    - -0.113
   status: hypothesis
   note: Okun-type relation flagged by data screen; send to literature module.
   literature_r2:
@@ -2462,7 +2517,10 @@ edges:
     by_horizon: null
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.052878
+    p_reverse: 0.304898
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E063
   cause: fuel_car_cost
   effect: active_mode_km_cap
@@ -2566,13 +2624,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.599
     within_country_r: 0.761
-    status: consistent
-    tier: E1
-  status: prior
+    status: supported (E2)
+    tier: E2
+    within_region_beta_std: 0.202
+    within_region_t: 4.264
+    ci95:
+    - 0.109
+    - 0.295
+  status: supported
   literature_r2:
     target_id: N_hh_inc_employ
     grade: C
@@ -2586,7 +2649,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.321074
+    p_reverse: 0.056631
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E067
   cause: cars_per_1000
   effect: gdp_pps_hab
@@ -2605,7 +2671,16 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: 0.114
+    within_region_t: 3.688
+    ci95:
+    - 0.054
+    - 0.175
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   literature_r2:
     target_id: N_cars_p_gdp_pp
@@ -2616,7 +2691,10 @@ edges:
     by_horizon: null
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.003418
+    p_reverse: 0.720691
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E068
   cause: net_migration_rate
   effect: median_age
@@ -2636,12 +2714,17 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.026
     within_country_r: -0.003
-    status: contradicting
-    tier: E1
+    status: undecided (E2)
+    tier: E2
+    within_region_beta_std: 0.024
+    within_region_t: 0.626
+    ci95:
+    - -0.051
+    - 0.099
   status: prior
   literature_r2:
     target_id: C20
@@ -2656,7 +2739,10 @@ edges:
         n_claims: 2
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: forward
+    p_forward: 4.6e-05
+    p_reverse: 0.004228
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E069
   cause: pop_density
   effect: broadband_households
@@ -2675,7 +2761,16 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: 0.018
+    within_region_t: 0.615
+    ci95:
+    - -0.039
+    - 0.076
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   literature_r2:
     target_id: C27
@@ -2686,7 +2781,10 @@ edges:
     by_horizon: null
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.700522
+    p_reverse: 0.445921
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E070
   cause: gdp_pps_hab
   effect: broadband_households
@@ -2705,7 +2803,16 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: -0.036
+    within_region_t: -0.938
+    ci95:
+    - -0.111
+    - 0.039
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   literature_r2:
     target_id: C28
@@ -2716,7 +2823,10 @@ edges:
     by_horizon: null
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.551179
+    p_reverse: 0.321158
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E071
   cause: d36_transport_infrastructure_road_density_mean
   effect: road_deaths_pmh
@@ -2770,13 +2880,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.164
     within_country_r: -0.124
-    status: contradicting
-    tier: E1
-  status: prior
+    status: contradicted (E2)
+    tier: E2
+    within_region_beta_std: 0.123
+    within_region_t: 3.37
+    ci95:
+    - 0.052
+    - 0.195
+  status: contested
   literature_r2:
     target_id: R00
     grade: C
@@ -2790,7 +2905,10 @@ edges:
         n_claims: 5
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.571024
+    p_reverse: 0.378565
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E073
   cause: broadband_households
   effect: gdp_pps_hab
@@ -2810,12 +2928,17 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.696
     within_country_r: 0.677
-    status: consistent
-    tier: E1
+    status: undecided (E2)
+    tier: E2
+    within_region_beta_std: -0.095
+    within_region_t: -1.663
+    ci95:
+    - -0.207
+    - 0.017
   status: prior
   literature_r2:
     target_id: R02
@@ -2830,7 +2953,10 @@ edges:
         n_claims: 2
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.321158
+    p_reverse: 0.551179
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E074
   cause: broadband_households
   effect: employment_rate
@@ -2850,12 +2976,17 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.673
     within_country_r: 0.585
-    status: consistent
-    tier: E1
+    status: undecided (E2)
+    tier: E2
+    within_region_beta_std: -0.11
+    within_region_t: -1.448
+    ci95:
+    - -0.26
+    - 0.039
   status: prior
   literature_r2:
     target_id: R03
@@ -2874,7 +3005,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.675213
+    p_reverse: 0.096809
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E075
   cause: gdp_pps_hab
   effect: road_deaths_pmh
@@ -2894,13 +3028,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: -0.651
     within_country_r: -0.301
-    status: contradicting
-    tier: E1
-  status: prior
+    status: supported (E2)
+    tier: E2
+    within_region_beta_std: 0.043
+    within_region_t: 2.501
+    ci95:
+    - 0.009
+    - 0.078
+  status: supported
   literature_r2:
     target_id: R04
     grade: B
@@ -2919,7 +3058,10 @@ edges:
     strict_measure_check: true
   note: ' Short-run and long-run evidence have opposite signs.'
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.080386
+    p_reverse: 0.084047
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E076
   cause: unemployment_rate
   effect: road_deaths_pmh
@@ -2939,13 +3081,18 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.217
     within_country_r: -0.114
-    status: consistent
-    tier: E1
-  status: prior
+    status: contradicted (E2)
+    tier: E2
+    within_region_beta_std: -0.048
+    within_region_t: -2.203
+    ci95:
+    - -0.091
+    - -0.005
+  status: contested
   literature_r2:
     target_id: R05
     grade: C
@@ -2959,7 +3106,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.825063
+    p_reverse: 0.483559
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E077
   cause: net_migration_rate
   effect: share_age_0_14
@@ -2978,7 +3128,16 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: -0.208
+    within_region_t: -4.813
+    ci95:
+    - -0.293
+    - -0.123
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   literature_r2:
     target_id: R07
@@ -2989,7 +3148,10 @@ edges:
     by_horizon: null
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.004302
+    p_reverse: 0.089105
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E078
   cause: pop_growth_rate
   effect: gdp_pps_hab
@@ -3008,7 +3170,16 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: 0.053
+    within_region_t: 0.631
+    ci95:
+    - -0.113
+    - 0.22
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   literature_r2:
     target_id: R08
@@ -3023,7 +3194,10 @@ edges:
         n_claims: 3
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.093524
+    p_reverse: 0.055923
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E079
   cause: old_age_dependency
   effect: pop_growth_rate
@@ -3042,7 +3216,16 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: 0.189
+    within_region_t: 5.112
+    ci95:
+    - 0.117
+    - 0.261
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   literature_r2:
     target_id: R09
@@ -3053,7 +3236,10 @@ edges:
     by_horizon: null
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: both
+    p_forward: 0.0
+    p_reverse: 0.0
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E080
   cause: broadband_households
   effect: net_migration_rate
@@ -3073,12 +3259,17 @@ edges:
     - NUTS2
     regions: Europe
   data_evidence:
-    test: c1_region_means
-    level: regional
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
     between_r: 0.452
     within_country_r: 0.527
-    status: consistent
-    tier: E1
+    status: undecided (E2)
+    tier: E2
+    within_region_beta_std: 0.019
+    within_region_t: 0.305
+    ci95:
+    - -0.104
+    - 0.142
   status: prior
   literature_r2:
     target_id: R10
@@ -3093,7 +3284,10 @@ edges:
         n_claims: 1
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.232713
+    p_reverse: 0.018739
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E081
   cause: median_age
   effect: fertility_rate
@@ -3112,7 +3306,16 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: -0.06
+    within_region_t: -1.353
+    ci95:
+    - -0.147
+    - 0.027
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   literature_r2:
     target_id: R11
@@ -3123,7 +3326,10 @@ edges:
     by_horizon: null
     strict_measure_check: true
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.58905
+    p_reverse: 0.020124
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E082
   cause: cars_per_1000
   effect: ghg_transport_cap
@@ -3382,7 +3588,16 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: -0.056
+    within_region_t: -1.006
+    ci95:
+    - -0.164
+    - 0.053
+    status: undecided (E2)
+    tier: E2
   status: hypothesis
   data_evidence_regional:
   - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
@@ -3392,7 +3607,10 @@ edges:
     status: undecided
     flags: []
   temporal_precedence:
-    result: not tested
+    result: undecided
+    p_forward: 0.478271
+    p_reverse: 0.101641
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 - id: E091
   cause: s80_s20
   effect: poverty_exclusion_risk
@@ -3411,7 +3629,16 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: panel_c2 (fe, jackknife)
+    level: NUTS2024 level 2
+    within_region_beta_std: 0.517
+    within_region_t: 5.614
+    ci95:
+    - 0.337
+    - 0.698
+    status: undecided (E2)
+    tier: E2
   status: supported
   data_evidence_regional:
   - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
@@ -3421,7 +3648,10 @@ edges:
     status: supported
     flags: []
   temporal_precedence:
-    result: not tested
+    result: forward
+    p_forward: 0.0
+    p_reverse: 0.18707
+    test: lagged within-region test, lags 1-2, Bonferroni over 108 tests
 new_fields:
 - literature_r2 (strict measure check, by_horizon)
 - temporal_precedence
