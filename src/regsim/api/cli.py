@@ -92,6 +92,20 @@ def causal_compare(geo_a: str, geo_b: str, config: str = typer.Option(..., "--co
     typer.echo(f"effect distance: {out.attrs['effect_distance']:.3f}")
 
 
+@causal_app.command("literature")
+def causal_literature(
+    edges: Annotated[list[str], typer.Argument(help="registry edge ids, e.g. E018")],
+    config: str = typer.Option(..., "--config"),
+):
+    """M7.2: search, extract, verify, strict measure check and grade for registry edges (LLM from causal.llm)."""
+    from regsim.causal.run import run_literature
+    from regsim.config import RunConfig
+
+    graded, folder = run_literature(RunConfig.from_yaml(config), edges)
+    typer.echo(graded.to_string(index=False))
+    typer.echo(f"written to {folder}")
+
+
 @causal_app.command("direction")
 def causal_direction(
     a: str,

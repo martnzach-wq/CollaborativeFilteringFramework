@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.4 (M7.2)
+- Literature module: propose, search (OpenAlex, Crossref), extract, verify, strict measure check, grade overall and per horizon; LLM as a configurable callable (decision D15); `regsim causal literature`.
+- Grading reproduces the round-1 and round-2 grades of the M7 analysis; offline fixture for C30.
+- Decision D14a: macro-regions as moderators of the effect-similarity model.
+
 ## 0.8.3 (M7.6)
 - Effect similarity: varying-coefficient panel model with leave-one-country-out validation gate, region effects as derived indicators (scenario `effect`), `s_effect` with practical-equivalence threshold 0.1 SD per link (decision D19).
 - `regsim causal effects`, `regsim causal compare`; Explorer tab "Effects" (`regsim app --effects`).

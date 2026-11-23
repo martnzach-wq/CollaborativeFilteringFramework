@@ -1,0 +1,188 @@
+{
+ "Are the rich reaching saturation: Income and fuel price elasticities of car ownership and use": {
+  "extract": {
+   "relevant": true,
+   "direction_matches": true,
+   "sign": "+",
+   "horizon": "not stated",
+   "magnitude": "Long-run income elasticity of private VKT of 0.45; roughly two-thirds of this effect comes from the income elasticity of car ownership",
+   "elasticity": 0.45,
+   "spatial_level": "national",
+   "geography": "Sweden",
+   "identification": "panel with fixed effects / GMM",
+   "europe_relevant": true,
+   "measure_note": ""
+  },
+  "verify": {
+   "v_direction": "cause to effect",
+   "v_sign": "+",
+   "v_horizon": "not stated",
+   "v_identification": "panel with fixed effects / GMM",
+   "v_claim_strength": "causal claim",
+   "v_quantity_match": "distant proxy",
+   "v_elasticity": 0.45,
+   "v_reason": "The study estimates income elasticity of VKT and car ownership using panel data with correlated random effects, implying a causal positive relationship, but 'cars per 1,000' is not directly measured—car ownership (household-level) is used instead."
+  },
+  "measure_check": {
+   "m_cause_measured": "acceptable proxy",
+   "m_effect_measured": "same quantity",
+   "m_unit_level_ok": true,
+   "m_note": "round-1 claim; the strict check was introduced in round 2"
+  }
+ },
+ "Dynamic Models of Car Ownership a the Household Level": {
+  "extract": {
+   "relevant": true,
+   "direction_matches": true,
+   "sign": "+",
+   "horizon": "not stated",
+   "magnitude": "Small income elasticities with respect to car ownership when accounting for panel nature; no numeric value given in abstract",
+   "elasticity": null,
+   "spatial_level": "individual/household",
+   "geography": "not stated in abstract",
+   "identification": "panel with fixed effects / GMM",
+   "europe_relevant": false,
+   "measure_note": ""
+  },
+  "verify": {
+   "v_direction": "cause to effect",
+   "v_sign": "+",
+   "v_horizon": "not stated",
+   "v_identification": "panel with fixed effects / GMM",
+   "v_claim_strength": "association only",
+   "v_quantity_match": "close proxy",
+   "v_elasticity": null,
+   "v_reason": "Abstract reports small positive income elasticities of car ownership from dynamic panel logit models, without explicit causal language, and household car ownership (not cars per 1,000) is the measured outcome."
+  },
+  "measure_check": {
+   "m_cause_measured": "acceptable proxy",
+   "m_effect_measured": "same quantity",
+   "m_unit_level_ok": true,
+   "m_note": "round-1 claim; the strict check was introduced in round 2"
+  }
+ },
+ "Longitudinal Analysis of Car Ownership and car Travel Demand in the Paris Region using a Pseudo-panel Data Approach": {
+  "extract": {
+   "relevant": true,
+   "direction_matches": true,
+   "sign": "+",
+   "horizon": "not stated",
+   "magnitude": "Income elasticity of car ownership of 0.47; influence decreasing with rising income and not significant for high-income households; not a determinant in the most urbanized area but positive in car-dependent areas",
+   "elasticity": 0.47,
+   "spatial_level": "regional (NUTS-2/3 or similar)",
+   "geography": "Paris metropolitan area (Île-de-France), France",
+   "identification": "panel with fixed effects / GMM",
+   "europe_relevant": true,
+   "measure_note": ""
+  },
+  "verify": {
+   "v_direction": "cause to effect",
+   "v_sign": "+",
+   "v_horizon": "not stated",
+   "v_identification": "panel with fixed effects / GMM",
+   "v_claim_strength": "association only",
+   "v_quantity_match": "close proxy",
+   "v_elasticity": 0.47,
+   "v_reason": "Pseudo-panel cohort analysis estimates income elasticity of 0.47 on car ownership (cars per household, close proxy to cars per 1,000), a positive association not framed as strictly causal."
+  },
+  "measure_check": {
+   "m_cause_measured": "acceptable proxy",
+   "m_effect_measured": "same quantity",
+   "m_unit_level_ok": true,
+   "m_note": "round-1 claim; the strict check was introduced in round 2"
+  }
+ },
+ "Income's effect on car and vehicle ownership, worldwide: 1960–2015": {
+  "extract": {
+   "relevant": true,
+   "direction_matches": true,
+   "sign": "+",
+   "horizon": "not stated",
+   "magnitude": "Income elasticity of car ownership about 2.0 for low- and middle-income levels, falling to zero as ownership saturates at the highest income levels",
+   "elasticity": 2.0,
+   "spatial_level": "multi-country panel",
+   "geography": "26 countries including OECD countries (incl. European), China, India, Pakistan",
+   "identification": "panel with fixed effects / GMM",
+   "europe_relevant": true,
+   "measure_note": ""
+  },
+  "verify": {
+   "v_direction": "cause to effect",
+   "v_sign": "+",
+   "v_horizon": "not stated",
+   "v_identification": "panel with fixed effects / GMM",
+   "v_claim_strength": "causal claim",
+   "v_quantity_match": "close proxy",
+   "v_elasticity": 2.0,
+   "v_reason": "Panel of 26 countries over 1960-1992 is used to econometrically estimate dynamic models of car ownership as a function of per-capita income, a positive causal elasticity relationship, though car/population ratio is a close but not identical proxy for 'cars per 1,000'."
+  },
+  "measure_check": {
+   "m_cause_measured": "acceptable proxy",
+   "m_effect_measured": "same quantity",
+   "m_unit_level_ok": true,
+   "m_note": "round-1 claim; the strict check was introduced in round 2"
+  }
+ },
+ "A dynamic random effects multinomial logit model of household car ownership": {
+  "extract": {
+   "relevant": true,
+   "direction_matches": true,
+   "sign": "+",
+   "horizon": "not stated",
+   "magnitude": "\"Relatively small elasticities with respect to income and car costs are estimated\" (no numeric value given in abstract)",
+   "elasticity": null,
+   "spatial_level": "individual/household",
+   "geography": "not stated in abstract (household panel)",
+   "identification": "panel with fixed effects / GMM",
+   "europe_relevant": false,
+   "measure_note": ""
+  },
+  "verify": {
+   "v_direction": "cause to effect",
+   "v_sign": "+",
+   "v_horizon": "not stated",
+   "v_identification": "panel with fixed effects / GMM",
+   "v_claim_strength": "association only",
+   "v_quantity_match": "distant proxy",
+   "v_elasticity": null,
+   "v_reason": "The abstract reports small income elasticities of household car ownership from a dynamic panel multinomial model, not a direct causal estimate of cars per 1,000 population."
+  },
+  "measure_check": {
+   "m_cause_measured": "acceptable proxy",
+   "m_effect_measured": "same quantity",
+   "m_unit_level_ok": true,
+   "m_note": "round-1 claim; the strict check was introduced in round 2"
+  }
+ },
+ "A CROSS-COUNTRY COMPARISON OF HOUSEHOLD, CAR OWNERSHIP": {
+  "extract": {
+   "relevant": true,
+   "direction_matches": true,
+   "sign": "+",
+   "horizon": "not stated",
+   "magnitude": "not reported",
+   "elasticity": null,
+   "spatial_level": "multi-country panel",
+   "geography": "France, Italy, Japan, the Netherlands, Poland, UK, USA (Italian macro-regions North/Centre vs South/Islands)",
+   "identification": "panel with fixed effects / GMM",
+   "europe_relevant": true,
+   "measure_note": ""
+  },
+  "verify": {
+   "v_direction": "cause to effect",
+   "v_sign": "+",
+   "v_horizon": "not stated",
+   "v_identification": "panel with fixed effects / GMM",
+   "v_claim_strength": "association only",
+   "v_quantity_match": "close proxy",
+   "v_elasticity": null,
+   "v_reason": "The Age-Cohort-Period model uses panel data and shows income positively associated with car ownership rates (sensitivity to income/economic factors), though framed as association/projection rather than strict causal identification."
+  },
+  "measure_check": {
+   "m_cause_measured": "acceptable proxy",
+   "m_effect_measured": "same quantity",
+   "m_unit_level_ok": true,
+   "m_note": "round-1 claim; the strict check was introduced in round 2"
+  }
+ }
+}

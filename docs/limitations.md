@@ -62,3 +62,8 @@
 ## Causal layer: effect similarity (M7.6)
 - Region effects are short-run within-region effects from annual data, predicted from four moderators and region groups; three of seven links pass the validation gate. A pooled link means the data do not support a transferable difference, not that the effects are equal.
 - The gate depends on the region groups used as moderators: with typology classes instead of macro-regions, GDP → unemployment does not pass.
+
+## Causal layer: literature module (M7.2)
+- Grades rest on abstracts; magnitudes are rarely reported there. The strict measure check removes proxies that the first passes accept, and with it fewer edges reach grades A and B.
+- The C30 fixture is built from the claim table of the M7 analysis, with titles in place of abstracts; it tests the pipeline mechanics and the grading, not the extraction prompts.
+

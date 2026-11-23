@@ -242,3 +242,57 @@ def run_compare(cfg, geo_a: str, geo_b: str) -> pd.DataFrame:
 
     delta = {link: c.equivalence_delta_by_link.get(link, c.equivalence_delta) for link in fits}
     return s_effect(fits, resolve(geo_a), resolve(geo_b), delta=delta)
+
+
+def load_callable(spec: str):
+    """The callable named by ``"module:attribute"`` (decision D15: configurable LLM provider)."""
+    import importlib
+
+    module, _, attr = spec.partition(":")
+    if not attr:
+        raise SystemExit(f"LLM spec {spec!r} must be 'module:callable'")
+    return getattr(importlib.import_module(module), attr)
+
+
+def run_literature(cfg, edge_ids: list[str], client=None) -> tuple[pd.DataFrame, Path]:
+    """Literature pipeline (M7.2) for registry edges: search, extract, verify, strict measure check, grade.
+
+    The LLM callables come from ``causal.llm`` and ``causal.llm_verifier``; the OpenAlex API key from the
+    environment variable ``OPENALEX_API_KEY``. Claims, grades and the prompt log go to
+    ``<output_dir>/causal-literature-<hash>`` and to the evidence store.
+    """
+    import os
+
+    from regsim.causal.literature import run_edge, targeted_queries
+
+    c, _, _ = _setup(cfg)
+    if not c.llm:
+        raise SystemExit("set causal.llm to 'module:callable' (decision D15)")
+    llm = load_callable(c.llm)
+    verifier = load_callable(c.llm_verifier) if c.llm_verifier else llm
+    edges = {e.id: e for e in EdgeRegistry.from_yaml(c.edges).edges}
+    grades, claims, logs = [], [], []
+    for eid in edge_ids:
+        e = edges[eid]
+        row = {"id": e.id, "cause": e.cause, "effect": e.effect, "status": e.status}
+        qs = targeted_queries(pd.DataFrame([row]))
+        res = run_edge(
+            pd.Series({**row, "queries": qs, "query": qs[0]}),
+            llm,
+            verifier,
+            client=client,
+            api_key=os.environ.get("OPENALEX_API_KEY"),
+            max_results=c.literature_max_results,
+        )
+        grades.append(res["grade"])
+        claims.append(res["claims"].assign(edge=eid))
+        logs.append(res["log"].assign(edge=eid))
+    run = cfg.config_hash()
+    folder = Path(cfg.output_dir) / f"causal-literature-{run}"
+    folder.mkdir(parents=True, exist_ok=True)
+    graded = pd.concat(grades, ignore_index=True)
+    graded.to_csv(folder / "grades.csv", index=False)
+    pd.concat(claims, ignore_index=True).to_csv(folder / "claims.csv", index=False)
+    pd.concat(logs, ignore_index=True).to_csv(folder / "prompts.csv", index=False)
+    write_evidence(graded, cfg.evidence_path, run=run, test="literature", tier="E1")
+    return graded, folder

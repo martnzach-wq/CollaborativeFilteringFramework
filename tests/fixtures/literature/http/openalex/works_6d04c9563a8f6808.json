@@ -1,0 +1,292 @@
+{
+ "results": [
+  {
+   "id": "https://openalex.org/W7126266526",
+   "doi": "https://doi.org/10.1016/j.ecotra.2026.100448",
+   "title": "Are the rich reaching saturation: Income and fuel price elasticities of car ownership and use",
+   "publication_year": 2026,
+   "cited_by_count": 0,
+   "primary_location": {
+    "source": {
+     "display_name": "Economics of Transportation"
+    }
+   },
+   "abstract_inverted_index": {
+    "Are": [
+     0
+    ],
+    "the": [
+     1
+    ],
+    "rich": [
+     2
+    ],
+    "reaching": [
+     3
+    ],
+    "saturation:": [
+     4
+    ],
+    "Income": [
+     5
+    ],
+    "and": [
+     13
+    ],
+    "fuel": [
+     7
+    ],
+    "price": [
+     8
+    ],
+    "elasticities": [
+     9
+    ],
+    "of": [
+     10
+    ],
+    "car": [
+     11
+    ],
+    "ownership": [
+     12
+    ],
+    "use": [
+     14
+    ]
+   }
+  },
+  {
+   "id": "https://openalex.org/W1488865141",
+   "doi": "https://doi.org/10.1400/16932",
+   "title": "Dynamic Models of Car Ownership a the Household Level",
+   "publication_year": 2005,
+   "cited_by_count": 11,
+   "primary_location": {
+    "source": {
+     "display_name": "Research at the University of Copenhagen (University of Copenhagen)"
+    }
+   },
+   "abstract_inverted_index": {
+    "Dynamic": [
+     0
+    ],
+    "Models": [
+     1
+    ],
+    "of": [
+     2
+    ],
+    "Car": [
+     3
+    ],
+    "Ownership": [
+     4
+    ],
+    "a": [
+     5
+    ],
+    "the": [
+     6
+    ],
+    "Household": [
+     7
+    ],
+    "Level": [
+     8
+    ]
+   }
+  },
+  {
+   "id": "https://openalex.org/W2441201249",
+   "doi": "https://doi.org/10.1016/j.trpro.2016.05.007",
+   "title": "Longitudinal Analysis of Car Ownership and car Travel Demand in the Paris Region using a Pseudo-panel Data Approach",
+   "publication_year": 2016,
+   "cited_by_count": 17,
+   "primary_location": {
+    "source": {
+     "display_name": "Transportation research procedia"
+    }
+   },
+   "abstract_inverted_index": {
+    "Longitudinal": [
+     0
+    ],
+    "Analysis": [
+     1
+    ],
+    "of": [
+     2
+    ],
+    "Car": [
+     3
+    ],
+    "Ownership": [
+     4
+    ],
+    "and": [
+     5
+    ],
+    "car": [
+     6
+    ],
+    "Travel": [
+     7
+    ],
+    "Demand": [
+     8
+    ],
+    "in": [
+     9
+    ],
+    "the": [
+     10
+    ],
+    "Paris": [
+     11
+    ],
+    "Region": [
+     12
+    ],
+    "using": [
+     13
+    ],
+    "a": [
+     14
+    ],
+    "Pseudo-panel": [
+     15
+    ],
+    "Data": [
+     16
+    ],
+    "Approach": [
+     17
+    ]
+   }
+  },
+  {
+   "id": "https://openalex.org/W1979749010",
+   "doi": "https://doi.org/10.1016/s0965-8564(98)00026-3",
+   "title": "Income's effect on car and vehicle ownership, worldwide: 1960\u20132015",
+   "publication_year": 1999,
+   "cited_by_count": 606,
+   "primary_location": {
+    "source": {
+     "display_name": "Transportation Research Part A Policy and Practice"
+    }
+   },
+   "abstract_inverted_index": {
+    "Income's": [
+     0
+    ],
+    "effect": [
+     1
+    ],
+    "on": [
+     2
+    ],
+    "car": [
+     3
+    ],
+    "and": [
+     4
+    ],
+    "vehicle": [
+     5
+    ],
+    "ownership,": [
+     6
+    ],
+    "worldwide:": [
+     7
+    ],
+    "1960\u20132015": [
+     8
+    ]
+   }
+  },
+  {
+   "id": "https://openalex.org/W7135985065",
+   "doi": null,
+   "title": "A dynamic random effects multinomial logit model of household car ownership",
+   "publication_year": 2007,
+   "cited_by_count": 6,
+   "primary_location": {
+    "source": {
+     "display_name": "Research at the University of Copenhagen (University of Copenhagen)"
+    }
+   },
+   "abstract_inverted_index": {
+    "A": [
+     0
+    ],
+    "dynamic": [
+     1
+    ],
+    "random": [
+     2
+    ],
+    "effects": [
+     3
+    ],
+    "multinomial": [
+     4
+    ],
+    "logit": [
+     5
+    ],
+    "model": [
+     6
+    ],
+    "of": [
+     7
+    ],
+    "household": [
+     8
+    ],
+    "car": [
+     9
+    ],
+    "ownership": [
+     10
+    ]
+   }
+  },
+  {
+   "id": "https://openalex.org/W1570484751",
+   "doi": "https://doi.org/10.1016/s0386-1112(14)60242-9",
+   "title": "A CROSS-COUNTRY COMPARISON OF HOUSEHOLD, CAR OWNERSHIP",
+   "publication_year": 2009,
+   "cited_by_count": 24,
+   "primary_location": {
+    "source": {
+     "display_name": "IATSS Research"
+    }
+   },
+   "abstract_inverted_index": {
+    "A": [
+     0
+    ],
+    "CROSS-COUNTRY": [
+     1
+    ],
+    "COMPARISON": [
+     2
+    ],
+    "OF": [
+     3
+    ],
+    "HOUSEHOLD,": [
+     4
+    ],
+    "CAR": [
+     5
+    ],
+    "OWNERSHIP": [
+     6
+    ]
+   }
+  }
+ ]
+}

@@ -1,4 +1,25 @@
 # Progress
+## M7.2 Literature module (2026-11-23)
+
+**Done**
+- Decision D15 (configurable LLM callable) and D14a (macro-regions as effect-model moderators), recorded in `docs/decisions.md`.
+- `causal.literature`: `propose_edges`, `search` (OpenAlex and Crossref through `CachedClient`; responses cached by request, offline mode for recorded responses), `extract`, `verify` (second pass, `agree_sign`, `agree_design`), `measure_check` (strict measure check, mandatory third pass), `weighted_claims`, `grade` (overall and per horizon), `combine_rounds`, `targeted_queries` (mechanism and horizon terms for contested and data-flagged edges), `run_edge`. Every LLM call goes through an injected callable (prompt → text); prompts, answers and model ids are logged with the run.
+- Claim weights: design × spatial level × Europe relevance × claim strength × quantity match, with the label tables of the extraction prompts (`claim_weight`); the spatial-level factor (city 0.8, individual or not stated 0.7) was missing from the stub.
+- CLI `regsim causal literature E018 ... --config CFG` with `causal.llm` / `causal.llm_verifier` (`"module:callable"`) and the OpenAlex key from `OPENALEX_API_KEY`; grades, claims and prompts go to `runs/causal-literature-<hash>` and the evidence store.
+- Fixture `tests/fixtures/literature/` for C30 (household income → cars), built by `make_c30.py` from the claim table of the M7 analysis (study ids, titles, years and the recorded extraction and verification results); not a live recording.
+
+**Results**
+- Claim weights reproduce the recorded weights of all 121 round-1 and 158 round-2 claims.
+- `grade` reproduces the grades of all 45 round-1 edges (C30: A, 6 panel studies, consistency 1.0) and the overall, short-run and long-run grades of all 38 round-2 targets (round-1 claims with mixed results are not carried into the targeted round). GDP → life expectancy: short run − (C), long run + (B).
+- The strict measure check rule (cause and effect measured as themselves or an acceptable proxy, unit representative of regions) reproduces the 84 of 158 kept claims and removes the three hand-check failures; GDP → unemployment (Okun) stays grade A.
+- The offline pipeline (stub LLM with the recorded answers) gives C30 grade A.
+
+**Tests**: 9 unit tests (`tests/test_literature.py`); M7.2 acceptance (3 tests).
+
+**Open**
+- Live use needs an LLM callable and access to api.openalex.org and api.crossref.org; both hosts are allowed in the cloud environment, a live recording of fixtures has not been made.
+- Next: M7.4 (SD bridge); decisions D16, D20, D21.
+
 ## M7.6 Effect similarity (2026-11-23)
 
 **Done**

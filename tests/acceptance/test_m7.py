@@ -7,6 +7,7 @@ on Eurostat NUTS-2 panels 2008-2024; tolerances allow for data revisions.
 import copy
 from pathlib import Path
 
+import pandas as pd
 import pytest
 
 from regsim.causal.graph import EdgeRegistry, classify_mechanism
@@ -124,15 +125,42 @@ def test_consistency_check_rates(tmp_path):
 
 
 # M7.2 literature module
-@not_started
 def test_literature_pipeline_offline():
     """With recorded OpenAlex responses and a stub LLM, propose -> search -> extract -> verify -> grade
     reproduces the grade of C30 (household income -> cars, grade A) from fixtures."""
+    import json
+
+    from regsim.causal.literature import run_edge
+    from regsim.data.http import CachedClient
+
+    fixtures = Path("tests/fixtures/literature")
+    answers = json.loads((fixtures / "c30_answers.json").read_text(encoding="utf-8"))
+
+    def stub(prompt: str) -> str:  # recorded answers of the M7 analysis, by study title
+        step = (
+            "measure_check"
+            if "Is the cause measured" in prompt
+            else "verify"
+            if "First-pass" in prompt
+            else "extract"
+        )
+        return json.dumps(answers[next(t for t in answers if t in prompt)][step])
+
+    edge = pd.Series({"id": "C30", "cause": "hh_income_pps", "effect": "cars_per_1000",
+                      "query": "household income car ownership elasticity panel"})  # fmt: skip
+    out = run_edge(edge, stub, client=CachedClient(fixtures / "http", offline=True))
+    assert out["grade"].iloc[0].grade == "A" and out["grade"].iloc[0].consensus == "+"
 
 
-@not_started
 def test_grading_rules():
     """grade() applies DESIGN_WEIGHT and GRADE_RULES; an edge with one cross-sectional study is never above C."""
+    from regsim.causal.literature import DESIGN_WEIGHT, GRADE_RULES, claim_weight, grade
+
+    assert DESIGN_WEIGHT["quasi_experiment"] == 2.5 and GRADE_RULES["A"]["min_weight"] == 4.0
+    for design in ("cross-section regression", "simulation / model", "descriptive / correlation"):
+        w = claim_weight(design, "regional", True, "causal claim", "same")
+        one = pd.DataFrame([{"edge": "e", "sign": "+", "design": design, "weight": w}])
+        assert grade(one).grade.iloc[0] in ("C", "D")
 
 
 # M7.3 panel module and queries
@@ -245,10 +273,38 @@ def test_direction_test_reference(m73):
     assert le["result"] == "forward" and le["aligned"], le
 
 
-@not_started
 def test_strict_measure_check():
     """The literature measure check removes the three round-2 hand-check failures and keeps
     the Okun regional panels (GDP -> unemployment stays grade A)."""
+    from regsim.causal.literature import claim_weight, combine_rounds, grade, measure_ok
+
+    r2 = pd.read_csv("docs/causal/lit_r2_claims_graded.csv")
+    ok = [
+        measure_ok(a, b, c)
+        for a, b, c in zip(r2.m_cause_measured, r2.m_effect_measured, r2.m_unit_level_ok, strict=True)
+    ]
+    r2 = r2.assign(edge=r2.tid, sign=r2.v_sign, design=r2.v_identification, horizon=r2.hz, measure_ok=ok)
+    r2["weight"] = [
+        claim_weight(
+            r.v_identification, r.spatial_level, r.europe_relevant, r.v_claim_strength, r.v_quantity_match
+        )
+        for r in r2.itertuples()
+    ]
+    hand = pd.read_csv("docs/causal/literature_r2_handcheck.csv")
+    failures = hand[hand.handcheck.str.startswith(("wrong outcome", "distant proxy"))]
+    assert len(failures) == 3
+    kept = set(r2.loc[r2.measure_ok, "title"])
+    assert not kept & set(failures.title)  # all three hand-check failures are removed
+    r1 = pd.read_csv("docs/causal/causal_edges_literature.csv")
+    r1 = r1.assign(
+        edge=r1.cand_id, sign=r1.sign_final, design=r1.identification, horizon="not stated", measure_ok=True
+    )
+    r1["weight"] = [
+        claim_weight(r.identification, r.spatial_level, r.europe_relevant, r.claim_strength, r.quantity_match)
+        for r in r1.itertuples()
+    ]
+    graded = grade(combine_rounds(r1, r2)).set_index("edge")
+    assert graded.loc["N_gdp_pp_unempl", "grade"] == "A"  # Okun regional panels kept
 
 
 def test_registry_schema_v02():

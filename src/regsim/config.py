@@ -157,6 +157,9 @@ class CausalConfig(BaseModel):
     effect_groups: Literal["typology", "macro"] = "macro"  # region-type moderators of the effect model
     equivalence_delta: float = 0.1  # decision D19: practical equivalence in SD of the standardised effect
     equivalence_delta_by_link: dict[str, float] = Field(default_factory=dict)  # per-link override (D19)
+    llm: str | None = None  # literature module (D15): "module:callable", a function prompt -> answer text
+    llm_verifier: str | None = None  # stronger model for verification and the strict measure check
+    literature_max_results: int = 25
 
 
 class RunConfig(BaseModel):

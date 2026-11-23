@@ -42,6 +42,7 @@ regsim causal what-if EE00 --shock gdp_pps_hab=0.1 --config configs/causal.yaml 
 regsim causal effects --config configs/causal.yaml # effect similarity: gate and region effects (M7.6)
 regsim causal compare EE00 ES51 --config configs/causal.yaml  # P(practical equivalence) per link
 regsim app configs/example.yaml --effects configs/causal.yaml # explorer with the Effects tab
+regsim causal literature E018 --config configs/causal.yaml  # literature pipeline (needs causal.llm, OPENALEX_API_KEY)
 ```
 
 The LAU extension uses `configs/lau.yaml` (NUTS-3 → LAU with the D3.6 indicators, store `data/store_lau`).
