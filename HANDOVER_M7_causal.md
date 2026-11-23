@@ -49,7 +49,7 @@ Conventions in `CLAUDE.md` apply unchanged (British English, `src/` layout, pyda
 | `src/regsim/causal/queries.py` | stubs `what_if` (P8), `explain_difference` (P9), `vision_check` (P10) | stub |
 | `src/regsim/similarity/causal_lens.py` | `lens_for`; stub `s_causal` | partial |
 | `src/regsim/similarity/effect.py` | stubs `fit_varying`, `validate_gate`, `region_effects`, `s_effect` | stub with specification |
-| `tests/unit/test_causal_panel.py` | 3 tests on synthetic panels | passing |
+| `tests/test_causal_panel.py` | 3 tests on synthetic panels | passing in CI (Ubuntu and Windows, Python 3.12 and 3.13) |
 | `tests/acceptance/test_m7.py` | acceptance criteria M7.1–M7.6 | skipped |
 | `docs/causal/` | reports, design, test notes, CSV results, figures | docs |
 
