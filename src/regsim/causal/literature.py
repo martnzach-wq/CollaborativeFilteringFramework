@@ -37,7 +37,11 @@ CLAIM_WEIGHT = {"causal": 1.0, "associational_with_mechanism": 0.7, "association
 QUANTITY_WEIGHT = {"exact": 1.0, "proxy": 0.8, "loose": 0.4}
 
 GRADE_RULES = {
-    "A": {"min_weight": 4.0, "min_consistency": 0.75, "requires": ">=1 quasi-experiment/meta-analysis or >=3 panel studies"},
+    "A": {
+        "min_weight": 4.0,
+        "min_consistency": 0.75,
+        "requires": ">=1 quasi-experiment/meta-analysis or >=3 panel studies",
+    },
     "B": {"min_weight": 2.0, "min_consistency": 0.70},
     "C": {"min_weight": 0.0, "min_consistency": 0.60},
 }

@@ -24,12 +24,26 @@ from __future__ import annotations
 import pandas as pd
 
 
-def fit_varying(panel: pd.DataFrame, cause: str, effect: str, moderators: pd.DataFrame, alpha: float | None = None, **kwargs):
+def fit_varying(
+    panel: pd.DataFrame,
+    cause: str,
+    effect: str,
+    moderators: pd.DataFrame,
+    alpha: float | None = None,
+    **kwargs,
+):
     """Fit the varying-coefficient model; `alpha=None` selects the penalty by leave-one-group-out."""
     raise NotImplementedError("M7.6")
 
 
-def validate_gate(panel: pd.DataFrame, cause: str, effect: str, moderators: pd.DataFrame, groups: pd.Series, threshold: float = 0.9) -> dict:
+def validate_gate(
+    panel: pd.DataFrame,
+    cause: str,
+    effect: str,
+    moderators: pd.DataFrame,
+    groups: pd.Series,
+    threshold: float = 0.9,
+) -> dict:
     """Leave-one-group-out comparison with the pooled effect; returns relative error and decision."""
     raise NotImplementedError("M7.6")
 

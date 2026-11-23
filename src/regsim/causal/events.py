@@ -21,6 +21,8 @@ def load_events(path: str) -> pd.DataFrame:
     raise NotImplementedError("M7.5")
 
 
-def effect(model, events: pd.DataFrame, outcome: str, analogues: int = 20, placebo: int = 200, seed: int = 0) -> pd.DataFrame:
+def effect(
+    model, events: pd.DataFrame, outcome: str, analogues: int = 20, placebo: int = 200, seed: int = 0
+) -> pd.DataFrame:
     """Estimated effect per treated entity and post year, with placebo p-values."""
     raise NotImplementedError("M7.5")

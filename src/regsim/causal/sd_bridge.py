@@ -64,6 +64,7 @@ def transfer_parameters(params: pd.DataFrame, pioneer: str, follower: str, regis
 
 # ---- parameter-transfer protocol (docs/causal/sd_parameter_transfer.md) --------------
 
+
 def load_parameter_classes(path: str | Path = "configs/sd_parameter_classes.yaml") -> dict:
     """Classes O (observable), B (behavioural, literature), R (residual calibration),
     S (structural switch), P (policy lever) with their parameter paths."""
@@ -78,8 +79,14 @@ def domain_check(model, geo_id: str, demonstrators: list[str], lens: list[str]) 
     raise NotImplementedError("M7.4")
 
 
-def recalibrate_residuals(run_model: Callable[[dict], pd.DataFrame], city_config, targets: pd.DataFrame,
-                          residual_params: list[str], n_draws: int = 50, seed: int = 0) -> pd.DataFrame:
+def recalibrate_residuals(
+    run_model: Callable[[dict], pd.DataFrame],
+    city_config,
+    targets: pd.DataFrame,
+    residual_params: list[str],
+    n_draws: int = 50,
+    seed: int = 0,
+) -> pd.DataFrame:
     """Calibrate class-R parameters to target mode split and trip lengths. When targets are
     regsim imputations, repeat over draws from their predictive distribution and return the
     parameter distribution."""
@@ -110,7 +117,9 @@ def report_rules(domain_class: str, residuals_from_observed: bool) -> dict:
     }
 
 
-def next_demonstrator(lens_matrix: pd.DataFrame, demonstrators: list[str], candidates: list[str] | None = None) -> pd.DataFrame:
+def next_demonstrator(
+    lens_matrix: pd.DataFrame, demonstrators: list[str], candidates: list[str] | None = None
+) -> pd.DataFrame:
     """Rank candidate regions by the reduction in median distance to the nearest demonstrator
     (M7 reference: a central or western European regional city region such as DED2, DE94,
     FRF1 or NL13 raises the share of regions within 0.75 from 0.29 to about 0.58)."""

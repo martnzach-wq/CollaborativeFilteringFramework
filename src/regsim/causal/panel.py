@@ -41,7 +41,9 @@ class EdgeEstimate:
     n_entities: int
 
 
-def demean(df: pd.DataFrame, keys: list[str], cols: list[str], tol: float = 1e-10, max_iter: int = 200) -> pd.DataFrame:
+def demean(
+    df: pd.DataFrame, keys: list[str], cols: list[str], tol: float = 1e-10, max_iter: int = 200
+) -> pd.DataFrame:
     """Remove several sets of fixed effects by alternating projections."""
     X = df[cols].astype(float).copy()
     for _ in range(max_iter):
@@ -53,7 +55,9 @@ def demean(df: pd.DataFrame, keys: list[str], cols: list[str], tol: float = 1e-1
     return X
 
 
-def _prepare(panel: pd.DataFrame, cause: str, effect: str, entity: str, time: str, group: str | None) -> pd.DataFrame:
+def _prepare(
+    panel: pd.DataFrame, cause: str, effect: str, entity: str, time: str, group: str | None
+) -> pd.DataFrame:
     d = panel[[entity, time, cause, effect] + ([group] if group else [])].sort_values([entity, time]).copy()
     g = d.groupby(entity)
     d["dy"] = g[effect].diff()
@@ -163,7 +167,9 @@ def direction_test(panel: pd.DataFrame, a: str, b: str, lags: int = 2, **kwargs)
     raise NotImplementedError("M7.3")
 
 
-def heterogeneity(panel: pd.DataFrame, cause: str, effect: str, groups: pd.Series, **kwargs) -> tuple[pd.DataFrame, dict]:
+def heterogeneity(
+    panel: pd.DataFrame, cause: str, effect: str, groups: pd.Series, **kwargs
+) -> tuple[pd.DataFrame, dict]:
     """Estimate an edge per entity group and test for heterogeneity (Cochran's Q, I²).
 
     `groups` maps entity id to a group label (e.g. a macro-region or a typology class from
@@ -181,4 +187,9 @@ def heterogeneity(panel: pd.DataFrame, cause: str, effect: str, groups: pd.Serie
     mu = float((w * tab["beta_std"]).sum() / w.sum())
     Q = float((w * (tab["beta_std"] - mu) ** 2).sum())
     k = len(tab) - 1
-    return tab, {"Q": Q, "df": k, "p": float(1 - stats.chi2.cdf(Q, k)), "I2": max(0.0, (Q - k) / Q) if Q > 0 else 0.0}
+    return tab, {
+        "Q": Q,
+        "df": k,
+        "p": float(1 - stats.chi2.cdf(Q, k)),
+        "I2": max(0.0, (Q - k) / Q) if Q > 0 else 0.0,
+    }

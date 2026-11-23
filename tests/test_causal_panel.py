@@ -6,7 +6,9 @@ import pandas as pd
 from regsim.causal.panel import fit_edge, heterogeneity
 
 
-def _panel(beta: float, n_geo: int = 120, n_year: int = 15, seed: int = 0, group_beta: dict | None = None) -> pd.DataFrame:
+def _panel(
+    beta: float, n_geo: int = 120, n_year: int = 15, seed: int = 0, group_beta: dict | None = None
+) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
     rows = []
     parents = [f"P{i}" for i in range(8)]

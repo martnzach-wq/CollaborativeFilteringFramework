@@ -14,7 +14,9 @@ from __future__ import annotations
 import pandas as pd
 
 
-def lens_for(registry, target: str, include_state: bool = True, moderators: list[str] | None = None) -> list[str]:
+def lens_for(
+    registry, target: str, include_state: bool = True, moderators: list[str] | None = None
+) -> list[str]:
     """Indicators forming the lens: parents of `target`, listed moderators, and the target
     itself when `include_state` is true (saturation and level effects)."""
     parents = registry.parents(target)

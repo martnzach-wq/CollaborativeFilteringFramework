@@ -16,7 +16,9 @@ from __future__ import annotations
 import pandas as pd
 
 
-def what_if(model, registry, geo_id: str, shocks: dict[str, float], horizon: str = "short_run", alpha: float = 0.1) -> pd.DataFrame:
+def what_if(
+    model, registry, geo_id: str, shocks: dict[str, float], horizon: str = "short_run", alpha: float = 0.1
+) -> pd.DataFrame:
     """P8: consequences of relative changes in `shocks` for the descendants of the shocked nodes.
 
     M7 example: +10 % GDP in EE00 -> cars per 1,000 +0.6 % (pooled short run), +1.1 %
@@ -33,7 +35,9 @@ def explain_difference(model, registry, geo_a: str, geo_b: str, target: str) -> 
     raise NotImplementedError("M7.3")
 
 
-def vision_check(model, registry, geo_id: str, targets: dict[str, float], year: int, levers: list[str] | None = None) -> pd.DataFrame:
+def vision_check(
+    model, registry, geo_id: str, targets: dict[str, float], year: int, levers: list[str] | None = None
+) -> pd.DataFrame:
     """P10: required change in levers for each target given expected driver changes;
     flags conflicts and mismatched target variables (e.g. lever elasticity on car-km
     used for a car-ownership target). Extends `predict.tasks.vision_entity`."""

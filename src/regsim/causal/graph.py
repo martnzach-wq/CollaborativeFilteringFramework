@@ -54,8 +54,12 @@ class Edge(BaseModel):
     sources: list[Source]
     validity: dict = Field(default_factory=dict)
     data_evidence: DataEvidence | None = None
-    data_evidence_regional: list[dict] | None = None  # re-tests with regional series (flags e.g. modelled_effect_data)
-    literature_r2: dict | None = None  # strict-measure-checked grade, consensus and by_horizon {short_run, long_run}
+    data_evidence_regional: list[dict] | None = (
+        None  # re-tests with regional series (flags e.g. modelled_effect_data)
+    )
+    literature_r2: dict | None = (
+        None  # strict-measure-checked grade, consensus and by_horizon {short_run, long_run}
+    )
     temporal_precedence: dict | None = None  # result: forward | reverse | both | undecided | not tested
     resolution: str | None = None  # how a contradiction was resolved (horizon, ratio definition, population)
     status: Status
@@ -79,12 +83,16 @@ class EdgeRegistry(BaseModel):
         with open(path, "w", encoding="utf-8") as f:
             yaml.safe_dump(self.model_dump(exclude_none=True), f, sort_keys=False, allow_unicode=True)
 
-    def parents(self, effect: str, statuses: tuple[str, ...] = ("prior", "supported"), causal_only: bool = True) -> list[str]:
+    def parents(
+        self, effect: str, statuses: tuple[str, ...] = ("prior", "supported"), causal_only: bool = True
+    ) -> list[str]:
         """Causes of `effect` among edges with the given statuses."""
         return [
             e.cause
             for e in self.edges
-            if e.effect == effect and e.status in statuses and (e.mechanism_type == "causal" or not causal_only)
+            if e.effect == effect
+            and e.status in statuses
+            and (e.mechanism_type == "causal" or not causal_only)
         ]
 
     def descendants(self, node: str, **kwargs) -> list[str]:
