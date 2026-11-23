@@ -143,6 +143,20 @@ class CausalConfig(BaseModel):
     groups: Literal["typology", "macro"] = "typology"  # region groups for partial pooling (decision D14)
     estimator: Literal["fe", "gmm"] = "fe"  # decision D13
     bias_correction: Literal["jackknife", "none"] = "jackknife"  # decision D13, for estimator "fe"
+    effect_links: list[str] = Field(  # links of the effect similarity (M7.6), "cause->effect"
+        default_factory=lambda: [
+            "gdp_pps_hab->life_expectancy",
+            "gdp_pps_hab->unemployment_rate",
+            "gdp_pps_hab->cars_per_1000",
+            "hh_income_pps->cars_per_1000",
+            "old_age_dependency->gdp_pps_hab",
+            "unemployment_rate->poverty_exclusion_risk",
+            "employment_rate->fertility_rate",
+        ]
+    )
+    effect_groups: Literal["typology", "macro"] = "macro"  # region-type moderators of the effect model
+    equivalence_delta: float = 0.1  # decision D19: practical equivalence in SD of the standardised effect
+    equivalence_delta_by_link: dict[str, float] = Field(default_factory=dict)  # per-link override (D19)
 
 
 class RunConfig(BaseModel):

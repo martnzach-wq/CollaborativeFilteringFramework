@@ -5,6 +5,7 @@ import warnings
 from functools import partial
 
 import numpy as np
+import pandas as pd
 import pytest
 import shapely
 
@@ -80,6 +81,7 @@ def app(tmp_path_factory):
         indicator_sources=sources,
         n_arrows=4,
     )
+    app.test_parts = {"fitted": fitted, "geometry": geometry}  # reused by tests that build their own app
     return app, d
 
 
@@ -415,3 +417,47 @@ def test_sources_and_short_labels(app):
         state=[("lens", "value", [])],
     )["difference"]["figure"]
     assert all(y.startswith("Indicator ") for y in diff["data"][0]["y"])
+
+
+def test_effects_tab(app):
+    from regsim.similarity.effect import fit_varying, region_effects
+
+    base_app, d = app
+    ids = [g for g, v in zip(d.geo_ids, d.levels(), strict=True) if v == 2]
+    rng = np.random.default_rng(1)
+    rows = []
+    for i, g in enumerate(ids):
+        z = rng.normal()
+        x = y = dy = 0.0
+        for t in range(14):
+            dx = rng.normal()
+            dy = (0.3 + 0.3 * z) * dx + 0.2 * dy + rng.normal(0, 0.3)
+            x, y = x + dx, y + dy
+            rows.append((g, 2000 + t, f"C{i % 4}", x, y, z))
+    panel = pd.DataFrame(rows, columns=["geo_id", "year", "parent_id", "x", "y", "m"])
+    mods = panel.groupby("geo_id")[["m"]].mean()
+    fits = {
+        "x->y": fit_varying(panel, "x", "y", (mods - mods.mean()) / mods.std(), alpha=0.0, min_entities=4)
+    }
+    table = region_effects(fits["x->y"], pd.Index(ids))
+    parts = base_app.test_parts
+    dash_app = create_dash(parts["fitted"], parts["geometry"], effects={"fits": fits, "table": table})
+    client = dash_app.server.test_client()
+    assert "id='effect-link'" in repr(dash_app.layout)
+    out = _call(
+        client,
+        [("effect-compare", "figure"), ("effect-map", "figure")],
+        [("tabs", "value", "effects"), ("effect-link", "value", "x->y"), ("reference", "value", ids[0]),
+         ("partner", "value", ids[1])],
+    )  # fmt: skip
+    cmp, mp = out["effect-compare"]["figure"], out["effect-map"]["figure"]
+    assert "Effect comparison" in cmp["layout"]["title"]["text"] and len(cmp["data"]) == 2
+    assert any("P(equivalent)" in a["text"] for a in cmp["layout"]["annotations"])
+    assert len(mp["data"]) == len(ids)  # one polygon trace per region
+    none = _call(
+        client,
+        [("effect-compare", "figure"), ("effect-map", "figure")],
+        [("tabs", "value", "effects"), ("effect-link", "value", "x->y"), ("reference", "value", d.geo_ids[0]),
+         ("partner", "value", ids[1])],
+    )  # fmt: skip
+    assert "choose a reference" in none["effect-compare"]["figure"]["layout"]["title"]["text"]

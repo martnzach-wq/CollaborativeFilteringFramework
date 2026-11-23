@@ -191,6 +191,8 @@ def fit_edge(
         raise ValueError(f"unknown method {method!r} / bias_correction {bias_correction!r}")
     c = np.array([1.0, 1.0, 0.0])
     cum, se = float(c @ b), float(np.sqrt(c @ V @ c))
+    if not (se > 0 and sx > 0 and sy > 0):  # no within-entity variation left after the fixed effects
+        return None
     rho = float(b[2])
     grad = np.array([1 / (1 - rho), 1 / (1 - rho), cum / (1 - rho) ** 2])
     return EdgeEstimate(

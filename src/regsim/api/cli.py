@@ -65,6 +65,33 @@ def causal_what_if(
     typer.echo(out[cols].to_string(index=False, float_format=lambda x: f"{x:.4g}"))
 
 
+@causal_app.command("effects")
+def causal_effects(
+    config: str = typer.Option(..., "--config"),
+    write_store: bool = typer.Option(
+        True, help="store region effects as derived indicators (scenario effect)"
+    ),
+):
+    """M7.6: validation gate and region effects of the links in `causal.effect_links`."""
+    from regsim.causal.run import run_effects
+    from regsim.config import RunConfig
+
+    gate, table, folder = run_effects(RunConfig.from_yaml(config), write_store)
+    typer.echo(gate.to_string(index=False, float_format=lambda x: f"{x:.3g}"))
+    typer.echo(f"{len(table)} region effects; written to {folder}")
+
+
+@causal_app.command("compare")
+def causal_compare(geo_a: str, geo_b: str, config: str = typer.Option(..., "--config")):
+    """Effect similarity of two regions: P(practical equivalence) per link and effect distance."""
+    from regsim.causal.run import run_compare
+    from regsim.config import RunConfig
+
+    out = run_compare(RunConfig.from_yaml(config), geo_a, geo_b)
+    typer.echo(out.to_string(index=False, float_format=lambda x: f"{x:.3g}"))
+    typer.echo(f"effect distance: {out.attrs['effect_distance']:.3f}")
+
+
 @causal_app.command("direction")
 def causal_direction(
     a: str,
@@ -291,7 +318,15 @@ def serve(config: str, host: str = "127.0.0.1", port: int = 8000):
 
 
 @app.command(name="app")
-def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool = False):
+def explorer(
+    config: str,
+    host: str = "127.0.0.1",
+    port: int = 8050,
+    debug: bool = False,
+    effects: str = typer.Option(
+        "", help="causal config whose `regsim causal effects` run feeds the Effects tab"
+    ),
+):
     """Interactive explorer with linked map and embedding (Dash; extra `app`, decision D7)."""
     from pathlib import Path
 
@@ -314,6 +349,20 @@ def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool
     panel = (lambda: fit_panel(cfg)) if len(cfg.data.periods) > 1 else None
     units = ObservationStore(cfg.data.store).units()
     registry = IndicatorRegistry.from_yaml(*cfg.data.registries)
+    effect_data = None
+    if effects:
+        import pandas as pd
+
+        from regsim.causal.run import load_fits
+
+        ecfg = RunConfig.from_yaml(effects)
+        folder = Path(ecfg.output_dir) / f"causal-effects-{ecfg.config_hash()}"
+        c = ecfg.causal
+        effect_data = {
+            "fits": load_fits(ecfg),
+            "table": pd.read_csv(folder / "region_effects.csv"),
+            "delta": {lk: c.equivalence_delta_by_link.get(lk, c.equivalence_delta) for lk in c.effect_links},
+        }
     create_dash(
         run_fit(cfg),
         geometry,
@@ -321,6 +370,7 @@ def explorer(config: str, host: str = "127.0.0.1", port: int = 8050, debug: bool
         region_names=dict(zip(units.geo_id, units.name, strict=True)),
         indicator_labels={k: e.label for k, e in registry.entries.items() if e.label},
         indicator_sources={k: e.source.connector for k, e in registry.entries.items() if e.source},
+        effects=effect_data,
     ).run(host=host, port=port, debug=debug)
 
 

@@ -54,6 +54,10 @@ HELP = {
     "filled = both observed, open = at least one predicted, bars = 90 % intervals.",
     "compare": "Region compared with the reference in the difference profile: the nearest region by default, a "
     "clicked table row, a region clicked on the map or in the embedding, or any region typed here.",
+    "effects": "How alike would a driver act in the reference and the comparison region? Short-run effects "
+    "of each link (standardised, 90 % intervals) predicted from regional characteristics; P(equivalent) is the "
+    "probability that the two effects differ by less than δ. Links whose effect does not differ transferably "
+    "between regions are grey. The map shows one link; pale colours mark uncertain effects.",
     "trajectories": "Movement of each region from the first to the last period window, in the same coordinate "
     "system as the embedding with indicator directions. Relative to the mean drift removes the common "
     "movement of all regions. The model of both windows is fitted on first use (1–2 minutes).",
@@ -109,6 +113,7 @@ def create_dash(
     indicator_sources: dict[str, str] | None = None,
     n_arrows: int = 12,
     max_trajectories: int = 60,
+    effects: dict | None = None,
 ):
     """Dash app around a fitted (calibrated) model.
 
@@ -125,6 +130,9 @@ def create_dash(
         Geo id -> region name and indicator id -> label for display.
     indicator_sources : dict, optional
         Indicator id -> source connector (``eurostat``, ``d36``, ``ardeco``) for grouping and colours.
+    effects : dict, optional
+        Effect similarity (M7.6) from `regsim causal effects`: ``fits`` (link -> `VaryingFit`), ``table``
+        (region effects) and ``delta`` (link -> practical-equivalence threshold); adds the tab "Effects".
     """
     import plotly.graph_objects as go
     from dash import Dash, Input, Output, State, ctx, dash_table, dcc, html, no_update
@@ -324,6 +332,28 @@ def create_dash(
         ],
         style={"display": "flex", "gap": "16px", "marginTop": "8px"},
     )
+    effect_links = sorted(effects["table"].link.unique()) if effects is not None else []
+    effects_tab = html.Div(
+        [
+            caption("effects"),
+            dcc.Dropdown(
+                [{"label": " → ".join(labels.get(c, c) for c in lk.split("->")), "value": lk}
+                 for lk in effect_links],
+                effect_links[0] if effect_links else None,
+                id="effect-link",
+                clearable=False,
+                style={"maxWidth": "640px", "marginBottom": "6px"},
+            ),
+            html.Div(
+                [
+                    html.Div(dcc.Loading(dcc.Graph(id="effect-compare")), style={"flex": 1}),
+                    html.Div(dcc.Loading(dcc.Graph(id="effect-map", style={"height": "520px"})), style={"flex": 1}),
+                ],
+                style={"display": "flex", "gap": "8px"},
+            ),
+        ],
+        style={"marginTop": "8px"},
+    )  # fmt: skip
     traj_tab = html.Div(
         [
             caption("trajectories"),
@@ -382,6 +412,11 @@ def create_dash(
                         children=[similar_tab],
                     ),
                     dcc.Tab(label="Trajectories", value="traj", children=[traj_tab]),
+                    *(
+                        [dcc.Tab(label="Effects", value="effects", children=[effects_tab])]
+                        if effects is not None
+                        else []
+                    ),
                 ],
             ),
             dcc.Store(id="state"),
@@ -912,5 +947,34 @@ def create_dash(
             margin={"t": 50},
         )
         return fig
+
+    if effects is not None:
+        from regsim.similarity.effect import s_effect
+        from regsim.viz import effect_views as EV
+
+        effect_ids = set(effects["table"].geo_id)
+
+        @app.callback(
+            Output("effect-compare", "figure"),
+            Output("effect-map", "figure"),
+            Input("tabs", "value"),
+            Input("effect-link", "value"),
+            Input("reference", "value"),
+            Input("partner", "value"),
+        )
+        def effect_views(tab, link, ref, partner):
+            if tab != "effects":
+                return no_update, no_update
+            short = {**labels, **{c: short_label(c) for c in data.column_ids}}
+            mp = (
+                EV.effect_map_plotly(effects["table"], link, geometry, names, short)
+                if geometry and link
+                else go.Figure()
+            )
+            if not (ref in effect_ids and partner in effect_ids) or ref == partner:
+                msg = "choose a reference and a comparison region at the level of the effects (NUTS-2)"
+                return go.Figure().update_layout(title=msg), mp
+            table = s_effect(effects["fits"], ref, partner, delta=effects.get("delta", 0.1))
+            return EV.pairwise_plotly(table, names, short), mp
 
     return app

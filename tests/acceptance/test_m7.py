@@ -50,6 +50,23 @@ def m73():
     }
 
 
+@pytest.fixture(scope="module")
+def m76(tmp_path_factory):
+    """Validation gate and varying-coefficient fits of the seven M7.6 links (`regsim causal effects`)."""
+    from regsim.causal.run import run_effects
+    from regsim.config import RunConfig
+
+    cfg = RunConfig.from_yaml("configs/causal.yaml")
+    cfg.output_dir = str(tmp_path_factory.mktemp("effects"))
+    cfg.causal.evidence = str(tmp_path_factory.mktemp("evidence") / "evidence.parquet")
+    gate, table, folder = run_effects(cfg, write_store=False)
+    import pickle
+
+    with (folder / "fits.pkl").open("rb") as fh:
+        fits = pickle.load(fh)
+    return {"gate": gate, "table": table, "fits": fits}
+
+
 # M7.1 registry and consistency checks
 def test_registry_loads_and_validates():
     """configs/causal_edges.yaml validates against EdgeRegistry; every edge has >=1 source."""
@@ -249,16 +266,32 @@ def test_sd_perturbation_protocol():
 
 
 # M7.6 effect similarity
-@not_started
-def test_effect_gate():
+@needs_causal_build
+def test_effect_gate(m76):
     """Leave-one-country-out gate passes GDP -> life expectancy, GDP -> unemployment, GDP -> cars and
     fails household income -> cars, old-age dependency -> GDP, unemployment -> poverty, employment -> fertility."""
+    passes = {"gdp_pps_hab->life_expectancy", "gdp_pps_hab->unemployment_rate", "gdp_pps_hab->cars_per_1000"}
+    fails = {
+        "hh_income_pps->cars_per_1000",
+        "old_age_dependency->gdp_pps_hab",
+        "unemployment_rate->poverty_exclusion_risk",
+        "employment_rate->fertility_rate",
+    }
+    gate = m76["gate"].set_index("link")
+    assert set(gate.index[gate.heterogeneous]) == passes, gate
+    assert set(gate.index[~gate.heterogeneous]) == fails, gate
 
 
-@not_started
-def test_s_effect_equivalence():
+@needs_causal_build
+def test_s_effect_equivalence(m76):
     """s_effect(EE00, ES51): P(practical equivalence) for GDP -> life expectancy < 0.3; pooled links reported
     as 'no transferable difference'."""
+    from regsim.similarity.effect import s_effect
+
+    out = s_effect(m76["fits"], "NUTS2024:EE00", "NUTS2024:ES51").set_index("link")
+    assert out.loc["gdp_pps_hab->life_expectancy", "p_equivalent"] < 0.3, out
+    pooled = out[out.index.isin(m76["gate"].link[~m76["gate"].heterogeneous])]
+    assert (pooled.status == "no transferable difference").all() and pooled.p_equivalent.isna().all()
 
 
 # M7.4 parameter transfer

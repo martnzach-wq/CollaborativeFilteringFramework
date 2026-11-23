@@ -151,3 +151,94 @@ def run_what_if(cfg, geo: str, shocks: dict[str, float], horizon: str = "short_r
         groups=g,
     )
     return out
+
+
+def run_effects(cfg, write_store: bool = True) -> tuple[pd.DataFrame, pd.DataFrame, Path]:
+    """Effect similarity (M7.6): validation gate and varying-coefficient fit for each link of
+    ``causal.effect_links``, region effects for all entities.
+
+    Writes ``gate.csv``, ``region_effects.csv`` and ``fits.pkl`` to ``<output_dir>/causal-effects-<hash>``,
+    the gate to the evidence store and, with ``write_store``, the region effects as derived observations
+    (scenario ``effect``) to the observation store.
+    """
+    import pickle
+
+    from regsim.causal.groups import macro_groups, typology_groups
+    from regsim.similarity.effect import effect_observations, fit_varying, moderators, region_effects
+
+    c, store, _ = _setup(cfg)
+    p = panel(cfg)
+    parents = p.drop_duplicates("geo_id").set_index("geo_id")["parent_id"]
+    if c.effect_groups == "typology":
+        from regsim.api.runtime import fit
+
+        types = typology_groups(fit(cfg), c.level, seed=cfg.model.seed)
+    else:
+        types = macro_groups(parents, c.macro_regions)
+    fits, gates, effects = {}, [], []
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        for link in c.effect_links:
+            cause, effect = link.split("->")
+            if cause not in p.columns or effect not in p.columns:
+                continue
+            f = fit_varying(p, cause, effect, moderators(p, effect, types), countries=parents)
+            if f is None:
+                continue
+            fits[link] = f
+            g = f.gate
+            gates.append(
+                {
+                    "link": link,
+                    "n_groups": g["n_groups"],
+                    "alpha": g["alpha"],
+                    "rel_err": g["rel_err"],
+                    "rel_err_unshrunk": g["rel_err_unshrunk"],
+                    "heterogeneous": g["heterogeneous"],
+                }
+            )
+            effects.append(region_effects(f, pd.Index(sorted(f.moderators.index))))
+    gate = pd.DataFrame(gates)
+    table = pd.concat(effects, ignore_index=True) if effects else pd.DataFrame()
+    run = cfg.config_hash()
+    folder = Path(cfg.output_dir) / f"causal-effects-{run}"
+    folder.mkdir(parents=True, exist_ok=True)
+    cfg.write_resolved(folder)
+    gate.to_csv(folder / "gate.csv", index=False)
+    table.to_csv(folder / "region_effects.csv", index=False)
+    with (folder / "fits.pkl").open("wb") as fh:
+        pickle.dump(fits, fh)
+    write_evidence(gate, cfg.evidence_path, run=run, test="effect_gate", tier="E2")
+    if write_store and len(table):
+        since, until = cfg.data.span
+        store.write(effect_observations(table, f"{since}/{until}", run))
+    return gate, table, folder
+
+
+def load_fits(cfg) -> dict:
+    """Varying-coefficient fits of the config's latest `run_effects`."""
+    import pickle
+
+    path = Path(cfg.output_dir) / f"causal-effects-{cfg.config_hash()}" / "fits.pkl"
+    if not path.exists():
+        raise SystemExit(f"no effect fits in {path}: run `regsim causal effects --config ...` first")
+    with path.open("rb") as fh:
+        return pickle.load(fh)
+
+
+def run_compare(cfg, geo_a: str, geo_b: str) -> pd.DataFrame:
+    """Effect similarity of two entities (decision D19 thresholds from the config)."""
+    from regsim.similarity.effect import s_effect
+
+    c, store, _ = _setup(cfg)
+    fits = load_fits(cfg)
+    ids = set(next(iter(fits.values())).moderators.index) if fits else set()
+
+    def resolve(code: str) -> str:
+        hits = [g for g in ids if g == code or g.split(":", 1)[-1] == code]
+        if len(hits) != 1:
+            raise SystemExit(f"unknown entity {code!r} at level {c.level}")
+        return hits[0]
+
+    delta = {link: c.equivalence_delta_by_link.get(link, c.equivalence_delta) for link in fits}
+    return s_effect(fits, resolve(geo_a), resolve(geo_b), delta=delta)
