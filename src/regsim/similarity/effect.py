@@ -307,7 +307,8 @@ def s_effect(fits: dict, geo_a: str, geo_b: str, delta: float | dict[str, float]
     Returns
     -------
     DataFrame
-        One row per link: standardised effects of A and B, difference, its standard error,
+        One row per link: standardised effects of A and B with their standard errors, difference, its
+        standard error,
         ``p_equivalent``; links without transferable heterogeneity have ``status`` "no transferable
         difference" and no probability. ``attrs['effect_distance']`` is the root mean square of the
         standardised differences over the heterogeneous links.
@@ -325,6 +326,8 @@ def s_effect(fits: dict, geo_a: str, geo_b: str, delta: float | dict[str, float]
                 "link": link,
                 "effect_a": float(mu[0]) * s,
                 "effect_b": float(mu[1]) * s,
+                "se_a": float(np.sqrt(max(cov[0, 0], 0.0))) * s,
+                "se_b": float(np.sqrt(max(cov[1, 1], 0.0))) * s,
                 "difference": diff if het else 0.0,
                 "se": se if het else np.nan,
                 "delta": d_link,

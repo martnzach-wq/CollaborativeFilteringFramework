@@ -39,6 +39,9 @@ regsim build configs/causal.yaml                # annual NUTS-0/2 panels 2008-20
 regsim causal check --config configs/causal.yaml  # C1: sign checks of the edge registry (E1 evidence)
 regsim causal fit --config configs/causal.yaml    # C2: panel effects of all edges, direction tests
 regsim causal what-if EE00 --shock gdp_pps_hab=0.1 --config configs/causal.yaml  # P8 with horizon and tier
+regsim causal effects --config configs/causal.yaml # effect similarity: gate and region effects (M7.6)
+regsim causal compare EE00 ES51 --config configs/causal.yaml  # P(practical equivalence) per link
+regsim app configs/example.yaml --effects configs/causal.yaml # explorer with the Effects tab
 ```
 
 The LAU extension uses `configs/lau.yaml` (NUTS-3 → LAU with the D3.6 indicators, store `data/store_lau`).

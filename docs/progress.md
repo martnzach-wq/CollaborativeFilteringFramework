@@ -1,4 +1,35 @@
 # Progress
+## M7.6 Effect similarity (2026-11-23)
+
+**Done**
+- Decision D19 (practical equivalence at 0.1 SD, per link in `causal.equivalence_delta_by_link`), recorded in `docs/decisions.md`.
+- `similarity.effect`: `fit_varying` (cumulative effect linear in standardised moderators: mean log GDP, mean level of the effect indicator, mean log density, region-group dummies; ridge penalty relative to the diagonal of X'X on the moderator terms, `alpha=inf` = one pooled effect; cluster-robust covariance), `validate_gate` (leave-one-country-out prediction of each country's own estimate, precision-weighted, relative to a pooled effect; heterogeneous if the best penalty gives ≤ 0.9), `region_effects`, `s_effect` (P(|β_A − β_B| < δ) from the joint covariance, effect distance), `effect_distances`, `effect_observations`.
+- Region effects are written to the observation store as derived indicators `effect:<cause>-><effect>` with scenario `effect`; models read the scenario `observed` only, so the effects never become model inputs.
+- CLI `regsim causal effects --config configs/causal.yaml` (gate, fits, region effects; about 8 minutes for 7 links) and `regsim causal compare A B --config ...`; config `causal.effect_links`, `causal.effect_groups`, `causal.equivalence_delta`.
+- Views (`viz.effect_views`): pairwise comparison, effect space with 90 % ellipses, effect map with a value-suppressing palette (colour fades to grey with the interval width, in four steps), neighbour overlap, effect profile strip, transfer matrix; plotly versions of the comparison and the map.
+- Explorer: tab "Effects" (`regsim app CONFIG --effects configs/causal.yaml`) with the comparison of the reference and the comparison region and the effect map of a chosen link.
+
+**Results** (296 NUTS-2 regions, 2008–2024; moderators with the macro-regions of the M7 analysis)
+
+| Link | Countries held out | Penalty | Relative hold-out error (unshrunk) | Gate | M7 analysis |
+|---|---|---|---|---|---|
+| GDP → life expectancy | 23 | 0.1 | 0.35 (0.38) | heterogeneous | 0.37 |
+| GDP → unemployment | 23 | 0.3 | 0.53 (0.72) | heterogeneous | 0.73 |
+| GDP → cars per 1,000 | 21 | 3 | 0.74 (2.25) | heterogeneous | 0.77 |
+| household income → cars | 20 | ∞ | 1.00 (2.79) | pooled | (4.28) |
+| old-age dependency → GDP | 23 | 3 | 0.99 (1.31) | pooled | (1.41) |
+| unemployment → poverty risk | 18 | 1 | 0.98 (1.15) | pooled | (1.11) |
+| employment rate → fertility | 24 | 1 | 0.95 (1.13) | pooled | (1.03) |
+
+- Moderators of GDP → life expectancy (change of the standardised effect): North +0.16, South −0.12, East −0.02 against West, density +0.06 (M7 analysis: North +0.10, South −0.07, less negative in dense regions).
+- Estonia (EE00) vs Catalonia (ES51), P(practical equivalence): GDP → cars 1.00, GDP → unemployment 0.19, GDP → life expectancy 0.05 (M7 analysis 1.00, 0.33, 0.14); the pooled links are reported as "no transferable difference". Effect distance 0.19.
+- With typology classes as region-group moderators (decision D14 default) GDP → unemployment fails the gate (relative error 1.00); the other six decisions are the same. `causal.effect_groups` is set to `macro` pending a decision.
+
+**Tests**: 5 unit tests (`tests/test_effect_similarity.py`), app test of the Effects tab; M7.6 acceptance (2 tests).
+
+**Open**
+- Moderator groups of the effect model: macro-regions (reproduces the M7 analysis) or typology classes (decision D14).
+
 ## M7.3 Panel module, direction test, causal queries, causal-lens similarity (2026-11-23)
 
 **Done**

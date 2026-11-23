@@ -35,10 +35,11 @@ def pairwise_comparison(table: pd.DataFrame, names: dict | None = None, labels: 
     y = np.arange(len(table))[::-1]
     for yi, r in zip(y, table.itertuples(), strict=True):
         het = r.status == "heterogeneous"
-        half = (
-            Z90 * (r.se / np.sqrt(2)) if het and np.isfinite(r.se) else 0.0
-        )  # per-region half-width (approx.)
-        for off, val, col in ((0.12, r.effect_a, CATEGORICAL[0]), (-0.12, r.effect_b, CATEGORICAL[1])):
+        for off, val, se, col in (
+            (0.12, r.effect_a, r.se_a, CATEGORICAL[0]),
+            (-0.12, r.effect_b, r.se_b, CATEGORICAL[1]),
+        ):
+            half = Z90 * se if het and np.isfinite(se) else 0.0
             ax.errorbar(val, yi + off, xerr=half, fmt="o", color=col if het else GREY, capsize=3)
         txt = f"P(equivalent) = {r.p_equivalent:.2f}" if het else "no transferable difference"
         ax.text(1.02, yi, txt, transform=ax.get_yaxis_transform(), va="center", fontsize=8)
@@ -87,11 +88,18 @@ def effect_space(
 def vsup_colours(values: np.ndarray, widths: np.ndarray, vmax: float, n_levels: int = 4) -> np.ndarray:
     """Value-suppressing palette: a diverging colour for the value, blended towards a neutral grey in
     ``n_levels`` steps of uncertainty (interval width relative to the widest interval)."""
+    top = np.nanmax(widths) if np.size(widths) else 0.0
+    u = np.clip(widths / top, 0, 1) if top > 0 else np.zeros(np.shape(widths))
+    u = np.minimum(np.floor(u * n_levels), n_levels - 1) / n_levels  # quantised uncertainty levels
+    return _vsup(values, u, vmax)
+
+
+def _vsup(values: np.ndarray, u: np.ndarray, vmax: float) -> np.ndarray:
+    """Diverging colour of ``values`` blended towards neutral grey by the uncertainty share ``u``."""
     cmap = plt.get_cmap("RdBu_r")
-    v = np.clip(values / vmax, -1, 1) * 0.5 + 0.5
-    u = np.clip(widths / np.nanmax(widths), 0, 1)
-    u = np.floor(u * n_levels) / n_levels  # quantised: fewer distinguishable values where uncertain
+    v = np.clip(np.asarray(values) / vmax, -1, 1) * 0.5 + 0.5
     base = np.array([cmap(x)[:3] for x in v])
+    u = np.asarray(u, dtype=float)
     return base * (1 - u[:, None]) + NEUTRAL * u[:, None]
 
 
@@ -116,9 +124,8 @@ def effect_map(effects: pd.DataFrame, link: str, geometry: dict, labels: dict | 
     het = bool(e.heterogeneous.iloc[0]) if len(e) else False
     ax.set_title(_label(link, labels) + ("" if het else " (pooled: no transferable difference)"), fontsize=10)
     vals = np.linspace(-vmax, vmax, 9)
-    for k, w in enumerate(np.linspace(0, 1, 4, endpoint=False)):  # legend: value x uncertainty
-        c = vsup_colours(vals, np.full(9, w) + 1e-9 if w else np.zeros(9), vmax)
-        lax.scatter(vals, np.full(9, k), c=c, s=120, marker="s")
+    for k, u in enumerate(np.linspace(0, 1, 4, endpoint=False)):  # legend: value x uncertainty level
+        lax.scatter(vals, np.full(9, k), c=_vsup(vals, np.full(9, u), vmax), s=120, marker="s")
     lax.set_yticks(range(4), ["certain", "", "", "uncertain"])
     lax.set_xticks([-vmax, 0, vmax], [f"{-vmax:.2f}", "0", f"{vmax:.2f}"])
     lax.set_title("effect × uncertainty", fontsize=8)
@@ -211,9 +218,10 @@ def pairwise_plotly(table: pd.DataFrame, names: dict | None = None, labels: dict
     a, b = table.attrs.get("geo_a", "A"), table.attrs.get("geo_b", "B")
     fig = go.Figure()
     ylab = [_label(lnk, labels) for lnk in table.link]
-    for geo, col, key, off in ((a, CATEGORICAL[0], "effect_a", 0.15), (b, CATEGORICAL[1], "effect_b", -0.15)):
+    for geo, col, side, off in ((a, CATEGORICAL[0], "a", 0.15), (b, CATEGORICAL[1], "b", -0.15)):
+        key = f"effect_{side}"
         het = table.status == "heterogeneous"
-        half = np.where(het & np.isfinite(table.se), Z90 * table.se / np.sqrt(2), 0.0)
+        half = np.where(het & np.isfinite(table[f"se_{side}"]), Z90 * table[f"se_{side}"], 0.0)
         fig.add_trace(
             go.Scatter(
                 x=table[key],

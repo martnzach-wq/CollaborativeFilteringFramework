@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.3 (M7.6)
+- Effect similarity: varying-coefficient panel model with leave-one-country-out validation gate, region effects as derived indicators (scenario `effect`), `s_effect` with practical-equivalence threshold 0.1 SD per link (decision D19).
+- `regsim causal effects`, `regsim causal compare`; Explorer tab "Effects" (`regsim app --effects`).
+- Effect views: pairwise comparison, effect space, effect map with value-suppressing palette, neighbour overlap, profile strip, transfer matrix.
+- Registry: E2 panel evidence and temporal precedence of the causal store (16 status changes, see `docs/progress.md`).
+
 ## 0.8.2 (M7.3)
 - Panel estimation: half-panel jackknife against the Nickell bias (default) and Arellano–Bond GMM (decision D13); partial pooling of edge effects over typology classes or macro-regions (D14); `estimate_effects`.
 - `direction_test` with reference-period alignment, lagged Wald tests both ways and event-study profile; `screen` labels artefacts with `classify_mechanism`.

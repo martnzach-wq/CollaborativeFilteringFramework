@@ -133,5 +133,7 @@ def test_effect_views_render(tmp_path):
         path = tmp_path / f"{name}.png"
         fig.savefig(path)
         assert path.stat().st_size > 5_000
-    cols = EV.vsup_colours(np.array([1.0, 1.0]), np.array([0.0, 1.0]), 1.0)
-    assert np.allclose(cols[1], EV.NEUTRAL) and not np.allclose(cols[0], EV.NEUTRAL)  # uncertain -> grey
+    cols = EV.vsup_colours(np.array([1.0, 1.0, 1.0]), np.array([0.0, 0.5, 1.0]), 1.0)
+    grey = [np.linalg.norm(c - EV.NEUTRAL) for c in cols]
+    assert grey[0] > grey[1] > grey[2] > 0  # wider interval -> closer to neutral grey, never fully grey
+    assert np.isfinite(EV.vsup_colours(np.array([0.5]), np.array([0.0]), 1.0)).all()  # zero width

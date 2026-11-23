@@ -57,3 +57,8 @@
 - Group effects depend on the grouping: Estonia belongs to "North" among the macro-regions of the M7 analysis (no GDP effect on car ownership) and to a typology class with a small positive effect.
 - `explain_difference` uses a between-region regression on the causal parents; collinear parents (GDP and household income) give coefficients of opposite sign.
 
+
+
+## Causal layer: effect similarity (M7.6)
+- Region effects are short-run within-region effects from annual data, predicted from four moderators and region groups; three of seven links pass the validation gate. A pooled link means the data do not support a transferable difference, not that the effects are equal.
+- The gate depends on the region groups used as moderators: with typology classes instead of macro-regions, GDP → unemployment does not pass.
