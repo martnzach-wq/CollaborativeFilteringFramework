@@ -1,0 +1,8 @@
+link,n_countries,chosen_alpha,rel_err_chosen,rel_err_unshrunk
+employment_rate→fertility_rate,23,inf,1.0,1.034
+gdp_pps_hab→cars_per_1000,19,0.3,0.77,1.28
+gdp_pps_hab→life_expectancy,21,0.0,0.369,0.369
+gdp_pps_hab→unemployment_rate,21,0.0,0.727,0.727
+hh_income_pps→cars_per_1000,17,inf,1.0,4.281
+old_age_dependency→gdp_pps_hab,20,inf,1.0,1.406
+unemployment_rate→poverty_exclusion_risk,14,inf,1.0,1.105

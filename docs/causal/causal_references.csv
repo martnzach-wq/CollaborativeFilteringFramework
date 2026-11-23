@@ -1,0 +1,58 @@
+first_author,year,title,venue,doi,check,url
+Abadie,2010,Synthetic Control Methods for Comparative Case Studies: Estimating the Effect of California’s Tobacco Control Program,Journal of the American Statistical Association,10.1198/jasa.2009.ap08746,CrossRef,https://doi.org/10.1198/jasa.2009.ap08746
+Abrigo,2016,Estimation of Panel Vector Autoregression in Stata,The Stata Journal: Promoting communications on statistics and Stata,10.1177/1536867X1601600314,CrossRef,https://doi.org/10.1177/1536867X1601600314
+Andrade,2021,A Bayesian approach to calibrate system dynamics models using Hamiltonian Monte Carlo,System Dynamics Review,10.1002/sdr.1693,CrossRef (query),https://doi.org/10.1002/sdr.1693
+Arellano,1991,Some Tests of Specification for Panel Data: Monte Carlo Evidence and an Application to Employment Equations,The Review of Economic Studies,10.2307/2297968,CrossRef,https://doi.org/10.2307/2297968
+Arkhangelsky,2021,Synthetic Difference-in-Differences,American Economic Review,10.1257/aer.20190159,CrossRef,https://doi.org/10.1257/aer.20190159
+Athey,2021,Matrix Completion Methods for Causal Panel Data Models,Journal of the American Statistical Association,10.1080/01621459.2021.1891924,CrossRef,https://doi.org/10.1080/01621459.2021.1891924
+Bai,2009,Panel Data Models With Interactive Fixed Effects,Econometrica,10.3982/ECTA6135,CrossRef,https://doi.org/10.3982/ECTA6135
+Bai,2021,"Matrix Completion, Counterfactuals, and Factor Analysis of Missing Data",Journal of the American Statistical Association,10.1080/01621459.2021.1967163,CrossRef,https://doi.org/10.1080/01621459.2021.1967163
+Bareinboim,2016,Causal inference and the data-fusion problem,Proceedings of the National Academy of Sciences,10.1073/pnas.1510507113,CrossRef,https://doi.org/10.1073/pnas.1510507113
+Bollen,1989,Structural Equations with Latent Variables,Wiley Series in Probability and Statistics,10.1002/9781118619179,CrossRef,https://doi.org/10.1002/9781118619179
+Dumitrescu,2012,Testing for Granger non-causality in heterogeneous panels,Economic Modelling,10.1016/j.econmod.2012.02.014,CrossRef,https://doi.org/10.1016/j.econmod.2012.02.014
+Ebert-Uphoff,2012,Causal discovery for climate research using graphical models,Journal of Climate,10.1175/jcli-d-11-00387.1,CrossRef (query),https://doi.org/10.1175/jcli-d-11-00387.1
+Eker,2016,Using Textual Data in System Dynamics Model Conceptualization,Systems,10.3390/systems4030028,CrossRef,https://doi.org/10.3390/systems4030028
+Fotheringham,1991,The modifiable areal unit problem in multivariate statistical analysis,Environment and Planning A,10.1068/a231025,CrossRef (query),https://doi.org/10.1068/a231025
+Friedman,2007,Sparse inverse covariance estimation with the graphical lasso,Biostatistics,10.1093/biostatistics/kxm045,CrossRef,https://doi.org/10.1093/biostatistics/kxm045
+Glymour,2019,Review of Causal Discovery Methods Based on Graphical Models,Frontiers in Genetics,10.3389/fgene.2019.00524,CrossRef,https://doi.org/10.3389/fgene.2019.00524
+Granger,1969,Investigating Causal Relations by Econometric Models and Cross-spectral Methods,Econometrica,10.2307/1912791,CrossRef,https://doi.org/10.2307/1912791
+Greenland,1989,"Ecological bias, confounding, and effect modification",International Journal of Epidemiology,10.1093/ije/18.1.269,CrossRef (query),https://doi.org/10.1093/ije/18.1.269
+Guyatt,2008,GRADE: an emerging consensus on rating quality of evidence and strength of recommendations,BMJ,10.1136/bmj.39489.470347.AD,CrossRef,https://doi.org/10.1136/bmj.39489.470347.AD
+Heindorf,2020,CauseNet: Towards a causality graph extracted from the web,CIKM 2020,10.1145/3340531.3412763,CrossRef (query),https://doi.org/10.1145/3340531.3412763
+Hodges,2010,Adding Spatially-Correlated Errors Can Mess Up the Fixed Effect You Love,The American Statistician,10.1198/tast.2010.10052,CrossRef,https://doi.org/10.1198/tast.2010.10052
+Holtz-Eakin,1988,Estimating Vector Autoregressions with Panel Data,Econometrica,10.2307/1913103,CrossRef,https://doi.org/10.2307/1913103
+Hosseinichimeh,2016,Estimating the parameters of system dynamics models using indirect inference,System Dynamics Review,10.1002/sdr.1558,CrossRef,https://doi.org/10.1002/sdr.1558
+Imbens,2015,"Causal Inference for Statistics, Social, and Biomedical Sciences",,10.1017/CBO9781139025751,CrossRef,https://doi.org/10.1017/CBO9781139025751
+Jiralerspong,2024,Efficient causal graph discovery using large language models,arXiv:2402.01207,,arXiv API,https://arxiv.org/abs/2402.01207
+Karpatne,2017,Theory-Guided Data Science: A New Paradigm for Scientific Discovery from Data,IEEE Transactions on Knowledge and Data Engineering,10.1109/TKDE.2017.2720168,CrossRef,https://doi.org/10.1109/TKDE.2017.2720168
+Kilian,2017,Structural Vector Autoregressive Analysis,,10.1017/9781108164818,CrossRef,https://doi.org/10.1017/9781108164818
+Kilicoglu,2012,SemMedDB: a PubMed-scale repository of biomedical semantic predications,Bioinformatics,10.1093/bioinformatics/bts591,CrossRef (query),https://doi.org/10.1093/bioinformatics/bts591
+Kim,2012,Building confidence in causal maps generated from purposive text data,System Dynamics Review,10.1002/sdr.1480,CrossRef (query),https://doi.org/10.1002/sdr.1480
+Kıcıman,2023,Causal reasoning and large language models: opening a new frontier for causality,arXiv:2305.00050,,arXiv API,https://arxiv.org/abs/2305.00050
+Long,2023,Can large language models build causal graphs?,arXiv:2303.05279,,arXiv API,https://arxiv.org/abs/2303.05279
+Long,2023,Causal discovery with language models as imperfect experts,arXiv:2307.02390,,arXiv API,https://arxiv.org/abs/2307.02390
+Nickell,1981,Biases in Dynamic Models with Fixed Effects,Econometrica,10.2307/1911408,CrossRef,https://doi.org/10.2307/1911408
+Oliva,2003,Model calibration as a testing strategy for system dynamics models,European Journal of Operational Research,10.1016/s0377-2217(02)00622-7,CrossRef (query),https://doi.org/10.1016/s0377-2217(02)00622-7
+Pearl,2009,Causality,,10.1017/CBO9780511803161,CrossRef,https://doi.org/10.1017/CBO9780511803161
+Pearl,2014,External Validity: From Do-Calculus to Transportability Across Populations,Statistical Science,10.1214/14-STS486,CrossRef,https://doi.org/10.1214/14-STS486
+Pesaran,2006,Estimation and Inference in Large Heterogeneous Panels with a Multifactor Error Structure,Econometrica,10.1111/j.1468-0262.2006.00692.x,CrossRef,https://doi.org/10.1111/j.1468-0262.2006.00692.x
+Peters,2016,Causal Inference by using Invariant Prediction: Identification and Confidence Intervals,Journal of the Royal Statistical Society Series B: Statistical Methodology,10.1111/rssb.12167,CrossRef,https://doi.org/10.1111/rssb.12167
+Rahmandad,2012,Reporting guidelines for simulation-based research in social sciences,System Dynamics Review,10.1002/sdr.1481,CrossRef (query),https://doi.org/10.1002/sdr.1481
+Rahmandad (ed.),2015,Analytical Methods for Dynamic Modelers,,10.7551/mitpress/9927.001.0001,CrossRef,https://doi.org/10.7551/mitpress/9927.001.0001
+Reich,2006,Effects of Residual Smoothing on the Posterior of the Fixed Effects in Disease‐Mapping Models,Biometrics,10.1111/j.1541-0420.2006.00617.x,CrossRef,https://doi.org/10.1111/j.1541-0420.2006.00617.x
+Reich,2021,A Review of Spatial Causal Inference Methods for Environmental and Epidemiological Applications,International Statistical Review,10.1111/insr.12452,CrossRef,https://doi.org/10.1111/insr.12452
+Reichstein,2019,Deep learning and process understanding for data-driven Earth system science,Nature,10.1038/s41586-019-0912-1,CrossRef,https://doi.org/10.1038/s41586-019-0912-1
+Richardson,1986,Problems with causal‐loop diagrams,System Dynamics Review,10.1002/sdr.4260020207,CrossRef,https://doi.org/10.1002/sdr.4260020207
+Robinson,1950,Ecological correlations and the behavior of individuals,American Sociological Review,10.2307/2087176,CrossRef (query),https://doi.org/10.2307/2087176
+Runge,2019,Detecting and quantifying causal associations in large nonlinear time series datasets,Science Advances,10.1126/sciadv.aau4996,CrossRef,https://doi.org/10.1126/sciadv.aau4996
+Runge,2019,Inferring causation from time series in Earth system sciences,Nature Communications,10.1038/s41467-019-10105-3,CrossRef,https://doi.org/10.1038/s41467-019-10105-3
+Schoenberg,2020,Understanding model behavior using the Loops that Matter method,System Dynamics Review,10.1002/sdr.1658,CrossRef,https://doi.org/10.1002/sdr.1658
+Schölkopf,2019,Causality for machine learning,arXiv:1911.10500,,arXiv API,https://arxiv.org/abs/1911.10500
+Spirtes,2001,"Causation, Prediction, and Search",,10.7551/mitpress/1754.001.0001,CrossRef,https://doi.org/10.7551/mitpress/1754.001.0001
+Stock,2016,"Dynamic Factor Models, Factor-Augmented Vector Autoregressions, and Structural Vector Autoregressions in Macroeconomics",Handbook of Macroeconomics,10.1016/bs.hesmac.2016.04.002,CrossRef,https://doi.org/10.1016/bs.hesmac.2016.04.002
+Struben,2015,Parameter estimation through maximum likelihood and bootstrapping methods,Analytical Methods for Dynamic Modelers (MIT Press),10.7551/mitpress/9927.003.0006,CrossRef (query),https://doi.org/10.7551/mitpress/9927.003.0006
+Sugihara,2012,Detecting Causality in Complex Ecosystems,Science,10.1126/science.1227079,CrossRef,https://doi.org/10.1126/science.1227079
+Wang,2019,The Blessings of Multiple Causes,Journal of the American Statistical Association,10.1080/01621459.2019.1686987,CrossRef,https://doi.org/10.1080/01621459.2019.1686987
+Xu,2017,Generalized Synthetic Control Method: Causal Inference with Interactive Fixed Effects Models,Political Analysis,10.1017/pan.2016.2,CrossRef,https://doi.org/10.1017/pan.2016.2
+Zheng,2018,DAGs with NO TEARS: continuous optimization for structure learning,arXiv:1803.01422,,arXiv API,https://arxiv.org/abs/1803.01422
+de Chaisemartin,2020,Two-Way Fixed Effects Estimators with Heterogeneous Treatment Effects,American Economic Review,10.1257/aer.20181169,CrossRef,https://doi.org/10.1257/aer.20181169

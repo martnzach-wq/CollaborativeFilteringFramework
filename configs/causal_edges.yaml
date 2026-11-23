@@ -1,0 +1,3369 @@
+schema_version: '0.2'
+created: '2026-11-20'
+description: Causal edge registry for regsim (M7). Indicator ids follow configs/indicators_eurostat_v1.yaml; SD
+  variables use model names.
+status_values:
+- prior
+- hypothesis
+- supported
+- contested
+- model_review
+- retired
+mechanism_types:
+- causal
+- accounting_identity
+- shared_denominator
+- shared_survey_base
+edges:
+- id: E001
+  cause: unemployment_rate
+  effect: poverty_exclusion_risk
+  sign_prior: +
+  grade: B
+  mechanism_type: causal
+  lag_prior: <1 year
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C02
+    dois:
+    - 10.24857/rgsa.v18n7-002
+    - ' 10.18488/journal.aefr.2020.1010.1088.1099'
+    - ' 10.56279/ter.v11i1.75'
+    - ' 10.1080/10875549.2023.2173708'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.669
+    within_country_r: 0.782
+    within_region_beta_std: 0.106
+    within_region_t: 1.979
+    ci95:
+    - 0.001
+    - 0.211
+    status: supported
+    tier: E2
+  status: supported
+  temporal_precedence:
+    result: reverse
+    p_forward: 0.2701
+    p_reverse: 0.0008
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E002
+  cause: tertiary_attainment
+  effect: gdp_pps_hab
+  sign_prior: +
+  grade: B
+  mechanism_type: causal
+  lag_prior: 3-10 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C06
+    dois:
+    - 10.3390/su142315524
+    - ' 10.31695/ijasre.2023.9.10'
+    - ' 10.23900/artefactum.v25i10.4602'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.648
+    within_country_r: 0.656
+    within_region_beta_std: -0.015
+    within_region_t: -0.639
+    ci95:
+    - -0.06
+    - 0.031
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.519
+    p_reverse: 0.3698
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E003
+  cause: lifelong_learning
+  effect: employment_rate
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C07
+    dois:
+    - 10.1080/09645292.2022.2059804
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.629
+    within_country_r: 0.426
+    within_region_beta_std: 0.097
+    within_region_t: 2.55
+    ci95:
+    - 0.022
+    - 0.171
+    status: supported
+    tier: E2
+  status: supported
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.8204
+    p_reverse: 0.4925
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E004
+  cause: rd_expenditure_gdp
+  effect: gdp_pps_hab
+  sign_prior: +
+  grade: C
+  mechanism_type: shared_denominator
+  lag_prior: 3-10 years
+  horizon: long_run
+  strength_prior:
+    value: -0.19
+    range:
+    - -0.19
+    - -0.19
+    unit: elasticity
+  sources:
+  - type: literature
+    ref: C08
+    dois:
+    - 10.3390/su9050676
+    - ' 10.21511/ppm.24(3).2026.46'
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.697
+    within_country_r: 0.486
+    within_region_beta_std: -0.138
+    within_region_t: -2.962
+    ci95:
+    - -0.229
+    - -0.047
+    status: contradicted
+    tier: E2
+  status: contested
+  literature_r2:
+    target_id: C08
+    grade: C
+    consensus_sign: +
+    consistency: 0.91
+    weight: 1.19
+    by_horizon:
+      long_run:
+        sign: +
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.1614
+    p_reverse: 0.1093
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+  resolution: Panel contradiction attributed to the R&D/GDP ratio definition.
+- id: E005
+  cause: hh_income_pps
+  effect: poverty_exclusion_risk
+  sign_prior: '-'
+  grade: B
+  mechanism_type: causal
+  lag_prior: <1 year
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C10
+    dois:
+    - 10.2298/eka2443041s
+    - ' 10.3389/fenrg.2023.1290904'
+    - ' 10.1007/s44197-026-00607-x'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.382
+    within_country_r: -0.758
+    within_region_beta_std: 0.083
+    within_region_t: 1.391
+    ci95:
+    - -0.034
+    - 0.201
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.1844
+    p_reverse: 0.5261
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E006
+  cause: gini
+  effect: poverty_exclusion_risk
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: <1 year
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C11
+    dois:
+    - 10.60084/eje.v1i2.114
+    - ' 10.32479/ijefi.18681'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: 0.883
+    within_country_r: null
+    within_region_beta_std: 0.171
+    within_region_t: 1.815
+    ci95:
+    - -0.014
+    - 0.357
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E007
+  cause: gdp_pps_hab
+  effect: life_expectancy
+  sign_prior: +
+  grade: A
+  mechanism_type: causal
+  lag_prior: 3-10 years
+  horizon: differs by horizon
+  strength_prior:
+    value: 0.05
+    range:
+    - 0.05
+    - 0.05
+    unit: elasticity
+  sources:
+  - type: literature
+    ref: C12
+    dois:
+    - 10.34023/2313-6383-2020-27-5-76-86
+    - ' 10.15171/ijhpm.2013.09'
+    - ' 10.1177/00469580261486900'
+    - ' 10.18069/firatsbed.1642449'
+    - ' 10.1186/s12982-026-02447-3'
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.588
+    within_country_r: 0.538
+    within_region_beta_std: -0.105
+    within_region_t: -4.107
+    ci95:
+    - -0.156
+    - -0.055
+    status: contradicted
+    tier: E2
+  status: contested
+  literature_r2:
+    target_id: C12
+    grade: A
+    consensus_sign: +
+    consistency: 0.79
+    weight: 15.25
+    by_horizon:
+      short_run:
+        sign: '-'
+        grade: C
+        n_claims: 5
+      long_run:
+        sign: +
+        grade: B
+        n_claims: 5
+    strict_measure_check: true
+  note: ' Short-run and long-run evidence have opposite signs.'
+  temporal_precedence:
+    result: forward
+    p_forward: 0.0003
+    p_reverse: 0.2241
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+  resolution: 'Contradiction resolved by horizon: short-run literature negative (procyclical mortality), matching
+    the within-region panel; long-run literature positive.'
+- id: E008
+  cause: poverty_exclusion_risk
+  effect: life_expectancy
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: 3-10 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C14
+    dois:
+    - 10.56201/ijssmr.vol.12no3.2026.pg12.23
+    - ' 10.18502/ijph.v49i9.4088'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.256
+    within_country_r: -0.55
+    within_region_beta_std: -0.002
+    within_region_t: -0.037
+    ci95:
+    - -0.113
+    - 0.109
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.4922
+    p_reverse: 0.8052
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E009
+  cause: hospital_beds
+  effect: life_expectancy
+  sign_prior: +
+  grade: B
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C15
+    dois:
+    - 10.34023/2313-6383-2023-30-5-53-66
+    - ' 10.1007/s10754-022-09338-5'
+    - ' 10.3390/ijerph16132367'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.31
+    within_country_r: 0.14
+    within_region_beta_std: 0.134
+    within_region_t: 0.91
+    ci95:
+    - -0.155
+    - 0.423
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E010
+  cause: life_expectancy
+  effect: old_age_dependency
+  sign_prior: +
+  grade: identity
+  mechanism_type: accounting_identity
+  lag_prior: 3-10 years
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C16
+    dois:
+    - 10.4054/demres.2013.28.26
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.3
+    within_country_r: 0.063
+    within_region_beta_std: 0.069
+    within_region_t: 1.67
+    ci95:
+    - -0.012
+    - 0.151
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: forward
+    p_forward: 0.0
+    p_reverse: 0.7937
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E011
+  cause: fertility_rate
+  effect: share_age_0_14
+  sign_prior: +
+  grade: identity
+  mechanism_type: accounting_identity
+  lag_prior: 1-3 years
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C17
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E012
+  cause: fertility_rate
+  effect: pop_growth_rate
+  sign_prior: +
+  grade: identity
+  mechanism_type: accounting_identity
+  lag_prior: <1 year
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C18
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.379
+    within_country_r: 0.15
+    within_region_beta_std: 0.042
+    within_region_t: 1.197
+    ci95:
+    - -0.027
+    - 0.11
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.1549
+    p_reverse: 0.0541
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E013
+  cause: net_migration_rate
+  effect: pop_growth_rate
+  sign_prior: +
+  grade: identity
+  mechanism_type: accounting_identity
+  lag_prior: <1 year
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C19
+    dois:
+    - 10.38191/iirr-jorr.24.035
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.723
+    within_country_r: 0.704
+    within_region_beta_std: 1.38
+    within_region_t: 15.311
+    ci95:
+    - 1.204
+    - 1.557
+    status: supported
+    tier: E2
+  status: supported
+  temporal_precedence:
+    result: both
+    p_forward: 0.0364
+    p_reverse: 0.0046
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E014
+  cause: median_age
+  effect: old_age_dependency
+  sign_prior: +
+  grade: identity
+  mechanism_type: accounting_identity
+  lag_prior: 3-10 years
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C21
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E015
+  cause: employment_rate
+  effect: fertility_rate
+  sign_prior: '-'
+  grade: B
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C23
+    dois:
+    - 10.32599/apjb.15.1.202403.335
+    - ' 10.1111/j.1467-9914.2005.00323.x'
+    - ' 10.3390/economies13100298'
+    - ' 10.53568/yyusbed.1752249'
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.092
+    within_country_r: -0.106
+    within_region_beta_std: 0.08
+    within_region_t: 2.295
+    ci95:
+    - 0.012
+    - 0.149
+    status: contradicted
+    tier: E2
+  status: contested
+  literature_r2:
+    target_id: C23
+    grade: C
+    consensus_sign: +
+    consistency: 0.62
+    weight: 6.66
+    by_horizon:
+      short_run:
+        sign: +
+        grade: A
+        n_claims: 4
+    strict_measure_check: true
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.0732
+    p_reverse: 0.1127
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+  resolution: 'Contradiction resolved by horizon: short-run literature positive (procyclical fertility, grade A),
+    matching the panel.'
+- id: E016
+  cause: unemployment_rate
+  effect: net_migration_rate
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C25
+    dois:
+    - 10.36369/2616-9045/2026/v15i1a5
+    - ' 10.2298/stnv2102083o'
+    - ' 10.2478/eoik-2026-0043'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.41
+    within_country_r: -0.462
+    within_region_beta_std: -0.052
+    within_region_t: -1.629
+    ci95:
+    - -0.115
+    - 0.011
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.3369
+    p_reverse: 0.359
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E017
+  cause: gdp_pps_hab
+  effect: net_migration_rate
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C26
+    dois:
+    - 10.51176/1997-9967-2026-2-101-116
+    - ' 10.1093/migration/mns004'
+    - ' 10.21833/ijaas.2026.05.003'
+    - ' 10.2478/eoik-2026-0043'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.629
+    within_country_r: 0.561
+    within_region_beta_std: 0.096
+    within_region_t: 2.19
+    ci95:
+    - 0.01
+    - 0.183
+    status: supported
+    tier: E2
+  status: supported
+  temporal_precedence:
+    result: forward
+    p_forward: 0.0435
+    p_reverse: 0.1484
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E018
+  cause: gdp_pps_hab
+  effect: cars_per_1000
+  sign_prior: +
+  grade: B
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior:
+    value: 0.47
+    range:
+    - 0.47
+    - 0.47
+    unit: elasticity
+  sources:
+  - type: literature
+    ref: C29
+    dois:
+    - 10.1177/03611981231161357
+    - ' 10.1016/j.trpro.2016.05.007'
+    - ' 10.1016/j.tbs.2021.07.008'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.536
+    within_country_r: 0.308
+    within_region_beta_std: 0.099
+    within_region_t: 3.689
+    ci95:
+    - 0.046
+    - 0.152
+    status: supported
+    tier: E2
+  status: supported
+  temporal_precedence:
+    result: reverse
+    p_forward: 0.7339
+    p_reverse: 0.0035
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E019
+  cause: hh_income_pps
+  effect: cars_per_1000
+  sign_prior: +
+  grade: A
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior:
+    value: 0.47
+    range:
+    - 0.45
+    - 2.0
+    unit: elasticity
+  sources:
+  - type: literature
+    ref: C30
+    dois:
+    - 10.1016/j.ecotra.2026.100448
+    - ' 10.1400/16932'
+    - ' 10.1016/j.trpro.2016.05.007'
+    - ' 10.1016/s0965-8564(98)00026-3'
+    - ' '
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.552
+    within_country_r: 0.4
+    within_region_beta_std: 0.033
+    within_region_t: 0.9
+    ci95:
+    - -0.039
+    - 0.105
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: reverse
+    p_forward: 0.7324
+    p_reverse: 0.014
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E020
+  cause: pop_density
+  effect: cars_per_1000
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C31
+    dois:
+    - 10.1016/j.trd.2024.104087
+    - ' 10.11361/cpij1.43.0.141.0'
+    - ' '
+    - ' 10.21608/ijaeur.2023.291605'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.141
+    within_country_r: -0.089
+    within_region_beta_std: -0.058
+    within_region_t: -2.044
+    ci95:
+    - -0.113
+    - -0.002
+    status: supported
+    tier: E2
+  status: supported
+  temporal_precedence:
+    result: reverse
+    p_forward: 0.216
+    p_reverse: 0.0045
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E021
+  cause: d36_transport_infrastructure_road_density_mean
+  effect: cars_per_1000
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C32
+    dois:
+    - 10.3390/su10051566
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E022
+  cause: d36_transport_infrastructure_rail_lines_density_mean
+  effect: cars_per_1000
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C35
+    dois:
+    - 10.1016/j.retrec.2020.100957
+    - ' 10.18757/ejtir.2015.15.1.3060'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E023
+  cause: d36_transport_infrastructure_cycling_lines_density_mean
+  effect: cars_per_1000
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C36
+    dois:
+    - 10.1155/2021/8895057
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E024
+  cause: cars_per_1000
+  effect: ghg_per_capita
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C37
+    dois:
+    - 10.1016/j.ecmx.2021.100126
+    - ' 10.1088/1748-9326/adf07b'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: 0.41
+    within_country_r: null
+    within_region_beta_std: 0.023
+    within_region_t: 0.52
+    ci95:
+    - -0.064
+    - 0.11
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E025
+  cause: renewables_share
+  effect: ghg_per_capita
+  sign_prior: '-'
+  grade: A
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C38
+    dois:
+    - 10.3390/en12173289
+    - ' 10.1002/sd.2154'
+    - ' 10.1016/j.esr.2022.100971'
+    - ' 10.1016/j.renene.2022.05.095'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: -0.175
+    within_country_r: null
+    within_region_beta_std: -0.175
+    within_region_t: -1.145
+    ci95:
+    - -0.476
+    - 0.125
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E026
+  cause: d36_electricity_total_demand_mean
+  effect: ghg_per_capita
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: <1 year
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C39
+    dois:
+    - 10.3390/su10093251
+    - ' '
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E027
+  cause: heating_degree_days
+  effect: d36_electricity_total_demand_mean
+  sign_prior: +
+  grade: B
+  mechanism_type: causal
+  lag_prior: <1 year
+  horizon: long_run
+  strength_prior:
+    value: 0.457
+    range:
+    - 0.457
+    - 0.457
+    unit: elasticity
+  sources:
+  - type: literature
+    ref: C40
+    dois:
+    - 10.3390/cli10100142
+    - ' 10.1016/j.apenergy.2020.116298'
+    - ' '
+    - ' 10.5296/rae.v12i3.16883'
+    - ' 10.1016/j.accre.2024.12.004'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E028
+  cause: cooling_degree_days
+  effect: d36_electricity_total_demand_mean
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: <1 year
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C41
+    dois:
+    - 10.1016/j.enpol.2020.111796
+    - ' 10.1175/2007jamc1480.1'
+    - ' 10.3354/cr01360'
+    - ' 10.30521/jes.1969238'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E029
+  cause: d36_heat_days_1990_2020_mean
+  effect: life_expectancy
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: 1-3 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C45
+    dois:
+    - 10.1007/s10584-020-02797-0
+    - ' 10.1161/circoutcomes.112.965707'
+    - ' 10.46544/ams.v29i1.15'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E030
+  cause: gdp_pps_hab
+  effect: renewables_share
+  sign_prior: +
+  grade: A
+  mechanism_type: causal
+  lag_prior: 3-10 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C48
+    dois:
+    - 10.3390/en13092280
+    - ' 10.3390/en12132520'
+    - ' 10.3390/en14196254'
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: -0.221
+    within_country_r: null
+    within_region_beta_std: -0.151
+    within_region_t: -2.218
+    ci95:
+    - -0.284
+    - -0.018
+    status: contradicted
+    tier: E2
+  status: contested
+  literature_r2:
+    target_id: C48
+    grade: A
+    consensus_sign: +
+    consistency: 1.0
+    weight: 4.08
+    by_horizon:
+      long_run:
+        sign: +
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+  resolution: Panel contradiction attributed to the share's denominator (total energy use rises with GDP); no short-run
+    study passes the strict check.
+- id: E031
+  cause: rd_expenditure_gdp
+  effect: renewables_share
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: 3-10 years
+  horizon: long_run
+  strength_prior: null
+  sources:
+  - type: literature
+    ref: C49
+    dois:
+    - 10.13044/j.sdewes.d11.0463
+    - ' 10.3390/su11215937'
+    - ' 10.3390/electricity5030026'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: 0.107
+    within_country_r: null
+    within_region_beta_std: 0.032
+    within_region_t: 0.66
+    ci95:
+    - -0.063
+    - 0.128
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E032
+  cause: old_age_dependency
+  effect: gdp_pps_hab
+  sign_prior: '-'
+  grade: B
+  mechanism_type: causal
+  lag_prior: 3-10 years
+  horizon: long_run
+  strength_prior:
+    value: -0.55
+    range:
+    - -0.55
+    - -0.55
+    unit: elasticity
+  sources:
+  - type: literature
+    ref: C51
+    dois:
+    - 10.24294/jipd.v8i8.4875
+    - ' 10.63468/jpsa.4.1.26'
+    - ' 10.18267/j.pep.846'
+    - ' 10.5539/ijef.v7n3p199'
+    - ' 10.35854/1998-1627-2026-8-1088-1100'
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.199
+    within_country_r: -0.174
+    within_region_beta_std: 0.021
+    within_region_t: 1.076
+    ci95:
+    - -0.017
+    - 0.059
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: forward
+    p_forward: 0.0111
+    p_reverse: 0.1381
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E033
+  cause: pop_density
+  effect: d36_electricity_total_demand_mean
+  sign_prior: '-'
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: KNOWING integrated SD model (Python, Tallinn config), perturbation runs
+    ref: S005
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E034
+  cause: pop_density
+  effect: ghg_per_capita
+  sign_prior: '-'
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: KNOWING integrated SD model (Python, Tallinn config), perturbation runs
+    ref: S006
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: -0.003
+    within_country_r: null
+    within_region_beta_std: -0.082
+    within_region_t: -1.332
+    ci95:
+    - -0.202
+    - 0.039
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E035
+  cause: pop_growth_rate
+  effect: ghg_per_capita
+  sign_prior: '-'
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: KNOWING integrated SD model (Python, Tallinn config), perturbation runs
+    ref: S014
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: 0.268
+    within_country_r: null
+    within_region_beta_std: 0.108
+    within_region_t: 1.44
+    ci95:
+    - -0.039
+    - 0.255
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E036
+  cause: renewables_share
+  effect: ghg_per_capita
+  sign_prior: '-'
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: KNOWING integrated SD model (Python, Tallinn config), perturbation runs
+    ref: S062
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: -0.175
+    within_country_r: null
+    within_region_beta_std: -0.175
+    within_region_t: -1.145
+    ci95:
+    - -0.476
+    - 0.125
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E037
+  cause: d36_transport_infrastructure_cycling_lines_density_mean
+  effect: ghg_per_capita
+  sign_prior: '-'
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: KNOWING integrated SD model (Python, Tallinn config), perturbation runs
+    ref: S094
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E038
+  cause: pop_density
+  effect: ghg_per_capita
+  sign_prior: '-'
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: Zahabi et al. 2012 (via D4.2 p. 5)
+    ref: S159
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: -0.003
+    within_country_r: null
+    within_region_beta_std: -0.082
+    within_region_t: -1.332
+    ci95:
+    - -0.202
+    - 0.039
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E039
+  cause: pop_density
+  effect: road_deaths_pmh
+  sign_prior: '-'
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: Najaf et al. 2018 (via D4.2 p. 6)
+    ref: S160
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.64
+    within_country_r: -0.756
+    within_region_beta_std: -0.038
+    within_region_t: -1.86
+    ci95:
+    - -0.078
+    - 0.002
+    status: undecided
+    tier: E0
+  status: prior
+  literature_r2:
+    target_id: R06
+    grade: C
+    consensus_sign: '-'
+    consistency: 0.63
+    weight: 1.52
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.122
+    p_reverse: 0.1222
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E040
+  cause: gdp_pps_hab
+  effect: ghg_per_capita
+  sign_prior: +
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: van Zanden et al. 2014 (via D4.2 p. 5)
+    ref: S161
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: 0.519
+    within_country_r: null
+    within_region_beta_std: 0.089
+    within_region_t: 1.088
+    ci95:
+    - -0.072
+    - 0.251
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: not tested
+- id: E041
+  cause: road_deaths_pmh
+  effect: gdp_pps_hab
+  sign_prior: '-'
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: Elvik 2000 (via D4.2 p. 6)
+    ref: S162
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.659
+    within_country_r: -0.307
+    within_region_beta_std: 0.065
+    within_region_t: 1.745
+    ci95:
+    - -0.008
+    - 0.139
+    status: undecided
+    tier: E0
+  status: prior
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.1062
+    p_reverse: 0.0863
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E042
+  cause: gdp_pps_hab
+  effect: employment_rate
+  sign_prior: +
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C00
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.71
+    within_country_r: 0.605
+    within_region_beta_std: 0.109
+    within_region_t: 2.989
+    ci95:
+    - 0.038
+    - 0.181
+    status: contradicted
+    tier: E2
+  status: supported
+  literature_r2:
+    target_id: C00
+    grade: D
+    consensus_sign: '-'
+    consistency: 0.59
+    weight: 0.96
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.1341
+    p_reverse: 0.785
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+  resolution: LLM prior sign (-) wrong; Okun literature implies +; merged with GDP -> unemployment (grade A).
+- id: E043
+  cause: employment_rate
+  effect: gdp_pps_hab
+  sign_prior: +
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C01
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.71
+    within_country_r: 0.605
+    within_region_beta_std: 0.094
+    within_region_t: 2.238
+    ci95:
+    - 0.012
+    - 0.176
+    status: supported
+    tier: E2
+  status: supported
+  literature_r2:
+    target_id: C01
+    grade: D
+    consensus_sign: +
+    consistency: 0.58
+    weight: 1.48
+    by_horizon:
+      long_run:
+        sign: '-'
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.785
+    p_reverse: 0.1341
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E044
+  cause: unemployment_rate
+  effect: gini
+  sign_prior: '-'
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: differs by horizon
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C03
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: 0.593
+    within_country_r: null
+    within_region_beta_std: 0.069
+    within_region_t: 1.185
+    ci95:
+    - -0.045
+    - 0.182
+    status: undecided
+    tier: E0
+  status: hypothesis
+  literature_r2:
+    target_id: C03
+    grade: D
+    consensus_sign: +
+    consistency: 0.38
+    weight: 5.12
+    by_horizon:
+      short_run:
+        sign: +
+        grade: C
+        n_claims: 1
+      long_run:
+        sign: '-'
+        grade: D
+        n_claims: 3
+    strict_measure_check: true
+  note: ' Short-run and long-run evidence have opposite signs.'
+  temporal_precedence:
+    result: not tested
+- id: E045
+  cause: employment_rate
+  effect: hh_income_pps
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C04
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.582
+    within_country_r: 0.756
+    within_region_beta_std: 0.196
+    within_region_t: 4.991
+    ci95:
+    - 0.119
+    - 0.273
+    status: 'no'
+    tier: E0
+  status: prior
+  literature_r2:
+    target_id: C04
+    grade: C
+    consensus_sign: +
+    consistency: 0.68
+    weight: 1.24
+    by_horizon:
+      long_run:
+        sign: '-'
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E046
+  cause: tertiary_attainment
+  effect: employment_rate
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C05
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.588
+    within_country_r: 0.465
+    within_region_beta_std: 0.183
+    within_region_t: 4.195
+    ci95:
+    - 0.098
+    - 0.269
+    status: 'no'
+    tier: E0
+  status: prior
+  literature_r2:
+    target_id: C05
+    grade: C
+    consensus_sign: +
+    consistency: 1.0
+    weight: 1.76
+    by_horizon:
+      short_run:
+        sign: +
+        grade: C
+        n_claims: 1
+      long_run:
+        sign: +
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E047
+  cause: gdp_pps_hab
+  effect: rd_expenditure_gdp
+  sign_prior: +
+  grade: C
+  mechanism_type: shared_denominator
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C09
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.697
+    within_country_r: 0.486
+    within_region_beta_std: -0.151
+    within_region_t: -3.947
+    ci95:
+    - -0.225
+    - -0.076
+    status: 'no'
+    tier: E0
+  status: prior
+  literature_r2:
+    target_id: C09
+    grade: C
+    consensus_sign: +
+    consistency: 1.0
+    weight: 0.56
+    by_horizon:
+      long_run:
+        sign: +
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E048
+  cause: unemployment_rate
+  effect: life_expectancy
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C13
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.101
+    within_country_r: -0.532
+    within_region_beta_std: 0.049
+    within_region_t: 1.599
+    ci95:
+    - -0.011
+    - 0.11
+    status: 'no'
+    tier: E0
+  status: prior
+  literature_r2:
+    target_id: C13
+    grade: C
+    consensus_sign: '-'
+    consistency: 1.0
+    weight: 0.96
+    by_horizon:
+      long_run:
+        sign: '-'
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E049
+  cause: gdp_pps_hab
+  effect: fertility_rate
+  sign_prior: +
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C22
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.081
+    within_country_r: -0.314
+    within_region_beta_std: 0.014
+    within_region_t: 0.526
+    ci95:
+    - -0.038
+    - 0.066
+    status: undecided
+    tier: E0
+  status: hypothesis
+  literature_r2:
+    target_id: C22
+    grade: D
+    consensus_sign: +
+    consistency: 0.42
+    weight: 4.27
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: forward
+    p_forward: 0.0023
+    p_reverse: 0.1061
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E050
+  cause: net_migration_rate
+  effect: unemployment_rate
+  sign_prior: '-'
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: differs by horizon
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C24
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.41
+    within_country_r: -0.462
+    within_region_beta_std: -0.041
+    within_region_t: -0.897
+    ci95:
+    - -0.131
+    - 0.049
+    status: undecided
+    tier: E0
+  status: hypothesis
+  literature_r2:
+    target_id: C24
+    grade: D
+    consensus_sign: '-'
+    consistency: 0.32
+    weight: 7.2
+    by_horizon:
+      short_run:
+        sign: +
+        grade: C
+        n_claims: 1
+      long_run:
+        sign: '-'
+        grade: D
+        n_claims: 4
+    strict_measure_check: true
+  note: ' Short-run and long-run evidence have opposite signs.'
+  temporal_precedence:
+    result: undecided
+    p_forward: 0.359
+    p_reverse: 0.3369
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E051
+  cause: cars_per_1000
+  effect: road_deaths_pmh
+  sign_prior: +
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C33
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: -0.204
+    within_country_r: 0.197
+    within_region_beta_std: 0.033
+    within_region_t: 1.577
+    ci95:
+    - -0.008
+    - 0.074
+    status: undecided
+    tier: E0
+  status: hypothesis
+  literature_r2:
+    target_id: C33
+    grade: D
+    consensus_sign: +
+    consistency: 0.46
+    weight: 2.63
+    by_horizon:
+      long_run:
+        sign: '-'
+        grade: C
+        n_claims: 2
+    strict_measure_check: true
+  temporal_precedence:
+    result: forward
+    p_forward: 0.0032
+    p_reverse: 0.4761
+    test: lagged within-region test, NUTS-2 annual, lags 1-2
+- id: E052
+  cause: hh_electricity_kwh_cap
+  effect: ghg_per_capita
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: model/deliverable
+    ref: C39
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: 0.229
+    within_country_r: null
+    within_region_beta_std: 0.08
+    within_region_t: 0.686
+    ci95:
+    - -0.149
+    - 0.31
+    status: undecided
+    tier: E0
+  status: hypothesis
+  temporal_precedence:
+    result: not tested
+- id: E053
+  cause: heating_degree_days
+  effect: hh_electricity_kwh_cap
+  sign_prior: +
+  grade: B
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: model/deliverable
+    ref: C40
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: 0.071
+    within_country_r: null
+    within_region_beta_std: -0.048
+    within_region_t: -0.38
+    ci95:
+    - -0.297
+    - 0.2
+    status: undecided
+    tier: E0
+  status: hypothesis
+  temporal_precedence:
+    result: not tested
+- id: E054
+  cause: cooling_degree_days
+  effect: hh_electricity_kwh_cap
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: model/deliverable
+    ref: C41
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: -0.175
+    within_country_r: null
+    within_region_beta_std: 0.007
+    within_region_t: 0.048
+    ci95:
+    - -0.287
+    - 0.302
+    status: undecided
+    tier: E0
+  status: hypothesis
+  temporal_precedence:
+    result: not tested
+- id: E055
+  cause: pop_density
+  effect: renewables_share
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C47
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: -0.724
+    within_country_r: null
+    within_region_beta_std: 0.058
+    within_region_t: 1.041
+    ci95:
+    - -0.051
+    - 0.168
+    status: 'no'
+    tier: E0
+  status: hypothesis
+  literature_r2:
+    target_id: C47
+    grade: D
+    consensus_sign: null
+    consistency: null
+    weight: 0.0
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E056
+  cause: poverty_exclusion_risk
+  effect: unemployment_rate
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C50
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.669
+    within_country_r: 0.782
+    within_region_beta_std: -0.065
+    within_region_t: -1.161
+    ci95:
+    - -0.175
+    - 0.045
+    status: 'no'
+    tier: E0
+  status: prior
+  literature_r2:
+    target_id: C50
+    grade: C
+    consensus_sign: +
+    consistency: 1.0
+    weight: 1.12
+    by_horizon:
+      long_run:
+        sign: +
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E057
+  cause: pop_density
+  effect: hospital_beds
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C52
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.048
+    within_country_r: -0.059
+    within_region_beta_std: -0.194
+    within_region_t: -3.266
+    ci95:
+    - -0.31
+    - -0.078
+    status: 'no'
+    tier: E0
+  status: prior
+  literature_r2:
+    target_id: C52
+    grade: C
+    consensus_sign: +
+    consistency: 1.0
+    weight: 0.84
+    by_horizon:
+      long_run:
+        sign: +
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E058
+  cause: gdp_pps_hab
+  effect: hospital_beds
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: llm_hypothesis
+    ref: C53
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS2
+    between_r: 0.01
+    within_country_r: 0.269
+    within_region_beta_std: -0.158
+    within_region_t: -1.246
+    ci95:
+    - -0.406
+    - 0.09
+    status: 'no'
+    tier: E0
+  status: prior
+  literature_r2:
+    target_id: C53
+    grade: C
+    consensus_sign: +
+    consistency: 1.0
+    weight: 0.67
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E059
+  cause: pop_density
+  effect: hh_electricity_kwh_cap
+  sign_prior: '-'
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: model/deliverable
+    ref: S005
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_2008_2024
+    level: NUTS0
+    between_r: -0.373
+    within_country_r: null
+    within_region_beta_std: -0.203
+    within_region_t: -1.639
+    ci95:
+    - -0.446
+    - 0.04
+    status: undecided
+    tier: E0
+  status: hypothesis
+  temporal_precedence:
+    result: not tested
+- id: E060
+  cause: gdp_pps_hab
+  effect: unemployment_rate
+  sign_prior: '-'
+  grade: A
+  mechanism_type: causal
+  lag_prior: <1 year
+  horizon: short_run
+  strength_prior: null
+  sources:
+  - type: data_screen
+    ref: causal_panel_screening.csv
+    dois:
+    - 10.3386/w18668
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_screen_2008_2024
+    level: NUTS2
+    within_region_beta_std: -0.131
+    within_region_t: -3.936
+    status: discovered
+    tier: E2
+  status: prior
+  note: Okun-type relation flagged by data screen; send to literature module.
+  literature_r2:
+    target_id: N_gdp_pp_unempl
+    grade: A
+    consensus_sign: '-'
+    consistency: 0.93
+    weight: 9.3
+    by_horizon:
+      short_run:
+        sign: '-'
+        grade: A
+        n_claims: 7
+      long_run:
+        sign: '-'
+        grade: C
+        n_claims: 2
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E061
+  cause: unemployment_rate
+  effect: gdp_pps_hab
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: <1 year
+  horizon: short_run
+  strength_prior: null
+  sources:
+  - type: data_screen
+    ref: causal_panel_screening.csv
+    dois:
+    - 10.3386/w18668
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_screen_2008_2024
+    level: NUTS2
+    within_region_beta_std: -0.117
+    within_region_t: -4.216
+    status: discovered
+    tier: E2
+  status: prior
+  note: Okun-type relation flagged by data screen; send to literature module.
+  literature_r2:
+    target_id: N_unempl_gdp_pp
+    grade: C
+    consensus_sign: '-'
+    consistency: 1.0
+    weight: 1.96
+    by_horizon:
+      short_run:
+        sign: '-'
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E062
+  cause: hh_income_pps
+  effect: unemployment_rate
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: <1 year
+  horizon: short_run
+  strength_prior: null
+  sources:
+  - type: data_screen
+    ref: causal_panel_screening.csv
+    dois: []
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS2
+    regions: Europe
+  data_evidence:
+    test: annual_panel_screen_2008_2024
+    level: NUTS2
+    within_region_beta_std: -0.185
+    within_region_t: -4.915
+    status: discovered
+    tier: E2
+  status: hypothesis
+  note: Okun-type relation flagged by data screen; send to literature module.
+  literature_r2:
+    target_id: N_hh_inc_unempl
+    grade: D
+    consensus_sign: null
+    consistency: null
+    weight: 0.0
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E063
+  cause: fuel_car_cost
+  effect: active_mode_km_cap
+  sign_prior: null
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: '2050'
+  strength_prior:
+    value: -0.34
+    unit: elasticity (SD perturbation, Tallinn 2050)
+  sources:
+  - type: sd_model
+    ref: KNOWING-integrated-SD-model, TALLINN
+    dois: []
+  - type: sd_model
+    ref: sd_model_review.md
+    dois: []
+  validity:
+    levels:
+    - city
+    regions: Tallinn
+  data_evidence: null
+  status: model_review
+  note: 'R2: Tallinn GC-neutral calibration anchors the 2019 fuel cost; with calibration off the response is car-km
+    -0.11, active km +0.09. Granollers: car-km -0.28.'
+  temporal_precedence:
+    result: not tested
+- id: E064
+  cause: cooling_degree_days
+  effect: '*'
+  sign_prior: null
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: '2050'
+  strength_prior:
+    value: 0.0
+    unit: elasticity (SD perturbation, Tallinn 2050)
+  sources:
+  - type: sd_model
+    ref: KNOWING-integrated-SD-model, TALLINN
+    dois: []
+  - type: sd_model
+    ref: sd_model_review.md
+    dois: []
+  validity:
+    levels:
+    - city
+    regions: Tallinn
+  data_evidence: null
+  status: model_review
+  note: 'R1: time-constant inputs absorbed by the Tallinn calibration; Granollers CDD -> active km -0.35, car-km
+    +0.93.'
+  temporal_precedence:
+    result: not tested
+- id: E065
+  cause: population
+  effect: total_emissions
+  sign_prior: null
+  grade: model/deliverable
+  mechanism_type: causal
+  lag_prior: null
+  horizon: '2050'
+  strength_prior:
+    value: -0.47
+    unit: elasticity (SD perturbation, Tallinn 2050)
+  sources:
+  - type: sd_model
+    ref: KNOWING-integrated-SD-model, TALLINN
+    dois: []
+  - type: sd_model
+    ref: sd_model_review.md
+    dois: []
+  validity:
+    levels:
+    - city
+    regions: Tallinn
+  data_evidence: null
+  status: model_review
+  note: 'R4: perturbation artefact (only internal population scaled) and energy population not linked to mobility
+    population; consistent scaling gives about 0.'
+  temporal_precedence:
+    result: not tested
+- id: E066
+  cause: hh_income_pps
+  effect: employment_rate
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  literature_r2:
+    target_id: N_hh_inc_employ
+    grade: C
+    consensus_sign: +
+    consistency: 1.0
+    weight: 0.24
+    by_horizon:
+      short_run:
+        sign: +
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E067
+  cause: cars_per_1000
+  effect: gdp_pps_hab
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  literature_r2:
+    target_id: N_cars_p_gdp_pp
+    grade: D
+    consensus_sign: null
+    consistency: null
+    weight: 0.0
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E068
+  cause: net_migration_rate
+  effect: median_age
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  literature_r2:
+    target_id: C20
+    grade: C
+    consensus_sign: '-'
+    consistency: 0.69
+    weight: 1.88
+    by_horizon:
+      long_run:
+        sign: '-'
+        grade: C
+        n_claims: 2
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E069
+  cause: pop_density
+  effect: broadband_households
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  literature_r2:
+    target_id: C27
+    grade: D
+    consensus_sign: null
+    consistency: null
+    weight: 0.0
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E070
+  cause: gdp_pps_hab
+  effect: broadband_households
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  literature_r2:
+    target_id: C28
+    grade: D
+    consensus_sign: null
+    consistency: null
+    weight: 0.0
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E071
+  cause: d36_transport_infrastructure_road_density_mean
+  effect: road_deaths_pmh
+  sign_prior: '-'
+  grade: B
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  literature_r2:
+    target_id: C34
+    grade: B
+    consensus_sign: '-'
+    consistency: 1.0
+    weight: 2.24
+    by_horizon:
+      long_run:
+        sign: '-'
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E072
+  cause: median_age
+  effect: gdp_pps_hab
+  sign_prior: '-'
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  literature_r2:
+    target_id: R00
+    grade: C
+    consensus_sign: '-'
+    consistency: 0.63
+    weight: 4.8
+    by_horizon:
+      long_run:
+        sign: '-'
+        grade: C
+        n_claims: 5
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E073
+  cause: broadband_households
+  effect: gdp_pps_hab
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  literature_r2:
+    target_id: R02
+    grade: C
+    consensus_sign: +
+    consistency: 1.0
+    weight: 1.24
+    by_horizon:
+      long_run:
+        sign: +
+        grade: C
+        n_claims: 2
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E074
+  cause: broadband_households
+  effect: employment_rate
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  literature_r2:
+    target_id: R03
+    grade: C
+    consensus_sign: +
+    consistency: 1.0
+    weight: 1.6
+    by_horizon:
+      short_run:
+        sign: +
+        grade: C
+        n_claims: 1
+      long_run:
+        sign: +
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E075
+  cause: gdp_pps_hab
+  effect: road_deaths_pmh
+  sign_prior: +
+  grade: B
+  mechanism_type: causal
+  lag_prior: null
+  horizon: differs by horizon
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  literature_r2:
+    target_id: R04
+    grade: B
+    consensus_sign: +
+    consistency: 0.73
+    weight: 6.37
+    by_horizon:
+      short_run:
+        sign: '-'
+        grade: C
+        n_claims: 1
+      long_run:
+        sign: +
+        grade: B
+        n_claims: 7
+    strict_measure_check: true
+  note: ' Short-run and long-run evidence have opposite signs.'
+  temporal_precedence:
+    result: not tested
+- id: E076
+  cause: unemployment_rate
+  effect: road_deaths_pmh
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  literature_r2:
+    target_id: R05
+    grade: C
+    consensus_sign: +
+    consistency: 0.72
+    weight: 1.94
+    by_horizon:
+      short_run:
+        sign: '-'
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E077
+  cause: net_migration_rate
+  effect: share_age_0_14
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  literature_r2:
+    target_id: R07
+    grade: D
+    consensus_sign: null
+    consistency: null
+    weight: 0.0
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E078
+  cause: pop_growth_rate
+  effect: gdp_pps_hab
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  literature_r2:
+    target_id: R08
+    grade: D
+    consensus_sign: '-'
+    consistency: 0.5
+    weight: 3.23
+    by_horizon:
+      long_run:
+        sign: '-'
+        grade: D
+        n_claims: 3
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E079
+  cause: old_age_dependency
+  effect: pop_growth_rate
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  literature_r2:
+    target_id: R09
+    grade: D
+    consensus_sign: null
+    consistency: null
+    weight: 0.0
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E080
+  cause: broadband_households
+  effect: net_migration_rate
+  sign_prior: +
+  grade: C
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: prior
+  literature_r2:
+    target_id: R10
+    grade: C
+    consensus_sign: +
+    consistency: 1.0
+    weight: 1.6
+    by_horizon:
+      long_run:
+        sign: +
+        grade: C
+        n_claims: 1
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E081
+  cause: median_age
+  effect: fertility_rate
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: literature_r2
+    ref: causal_edges_literature_r2.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  literature_r2:
+    target_id: R11
+    grade: D
+    consensus_sign: null
+    consistency: null
+    weight: 0.0
+    by_horizon: null
+    strict_measure_check: true
+  temporal_precedence:
+    result: not tested
+- id: E082
+  cause: cars_per_1000
+  effect: ghg_transport_cap
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: supported
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: 0.211
+    t: 4.2
+    n_regions: 308
+    status: supported
+    flags:
+    - modelled_effect_data
+  temporal_precedence:
+    result: not tested
+- id: E083
+  cause: cars_per_1000
+  effect: ghg_cap_r
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: 0.036
+    t: 1.24
+    n_regions: 312
+    status: undecided
+    flags:
+    - modelled_effect_data
+  temporal_precedence:
+    result: not tested
+- id: E084
+  cause: heating_degree_days
+  effect: ghg_buildings_cap
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: supported
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: 0.438
+    t: 10.41
+    n_regions: 286
+    status: supported
+    flags:
+    - modelled_effect_data
+  temporal_precedence:
+    result: not tested
+- id: E085
+  cause: heating_degree_days
+  effect: ghg_cap_r
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: -0.002
+    t: -0.05
+    n_regions: 286
+    status: undecided
+    flags:
+    - modelled_effect_data
+  temporal_precedence:
+    result: not tested
+- id: E086
+  cause: cooling_degree_days
+  effect: ghg_cap_r
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: 0.03
+    t: 0.73
+    n_regions: 286
+    status: undecided
+    flags:
+    - modelled_effect_data
+  temporal_precedence:
+    result: not tested
+- id: E087
+  cause: gdp_pps_hab
+  effect: ghg_cap_r
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: supported
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: 0.09
+    t: 2.05
+    n_regions: 280
+    status: supported
+    flags:
+    - modelled_effect_data
+  temporal_precedence:
+    result: not tested
+- id: E088
+  cause: pop_density
+  effect: ghg_cap_r
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: -0.026
+    t: -0.66
+    n_regions: 312
+    status: undecided
+    flags:
+    - modelled_effect_data
+  temporal_precedence:
+    result: not tested
+- id: E089
+  cause: pop_growth_rate
+  effect: ghg_cap_r
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: -0.033
+    t: -0.92
+    n_regions: 324
+    status: undecided
+    flags:
+    - modelled_effect_data
+  temporal_precedence:
+    result: not tested
+- id: E090
+  cause: unemployment_rate
+  effect: s80_s20
+  sign_prior: null
+  grade: D
+  mechanism_type: causal
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: hypothesis
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: -0.018
+    t: -0.37
+    n_regions: 220
+    status: undecided
+    flags: []
+  temporal_precedence:
+    result: not tested
+- id: E091
+  cause: s80_s20
+  effect: poverty_exclusion_risk
+  sign_prior: null
+  grade: D
+  mechanism_type: shared_survey_base
+  lag_prior: null
+  horizon: unspecified
+  strength_prior: null
+  sources:
+  - type: data_regional
+    ref: regional_retests.csv
+    dois: []
+  validity:
+    levels:
+    - NUTS0
+    - NUTS2
+    regions: Europe
+  data_evidence: null
+  status: supported
+  data_evidence_regional:
+  - test: NUTS-2 regional series 2014-2024 (EDGAR/Eurostat)
+    beta_std: 0.53
+    t: 6.24
+    n_regions: 233
+    status: supported
+    flags: []
+  temporal_precedence:
+    result: not tested
+new_fields:
+- literature_r2 (strict measure check, by_horizon)
+- temporal_precedence
+- data_evidence_regional
+- horizon may be 'differs by horizon'

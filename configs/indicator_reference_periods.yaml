@@ -1,0 +1,29 @@
+description: Reference period of each indicator, used to align series before timing (temporal precedence) tests.
+indicators:
+  gdp_pps_hab: calendar year (flow)
+  hh_income_pps: calendar year (flow)
+  employment_rate: annual average of quarterly LFS
+  unemployment_rate: annual average of quarterly LFS
+  tertiary_attainment: annual average LFS
+  lifelong_learning: annual average LFS (last 4 weeks)
+  life_expectancy: calendar year (deaths)
+  fertility_rate: calendar year (births)
+  net_migration_rate: calendar year (flow)
+  pop_growth_rate: calendar year (1 Jan to 1 Jan)
+  old_age_dependency: 1 January stock
+  pop_density: annual average population / area
+  population: 1 January stock
+  cars_per_1000: stock at 31 December (registrations)
+  road_deaths_pmh: calendar year
+  hospital_beds: 31 December stock
+  rd_expenditure_gdp: calendar year (flow), ratio to GDP
+  poverty_exclusion_risk: EU-SILC survey year t; income reference period mostly calendar year t-1; deprivation and
+    work intensity at t / t-1
+  s80_s20: EU-SILC; income reference period mostly t-1
+  gini: EU-SILC; income reference period mostly t-1
+  heating_degree_days: calendar year
+  cooling_degree_days: calendar year
+  ghg_per_capita: calendar year (inventory)
+  ghg_cap_r: calendar year (EDGAR, downscaled)
+  renewables_share: calendar year (energy balance)
+  hh_electricity_kwh_cap: calendar year (energy balance)

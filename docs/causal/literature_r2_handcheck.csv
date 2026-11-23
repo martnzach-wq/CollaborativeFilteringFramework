@@ -1,0 +1,11 @@
+cid,title,v_sign,v_horizon,v_identification,handcheck,measure_ok_after_strict_check
+C12,The Effect of the Great Recession on Italian Life Expectancy,+,long run,"quasi-experiment (DiD, RDD, IV, natural experiment)","partial: recession effect via health-care austerity, indirect",False
+C23,Fertility and unemployment in times of crisis in Italy 21,+,short run,panel with fixed effects / GMM,"correct: procyclical fertility, short run",True
+N_gdp_pp_unempl,Relevance of Okun’s Law in Montenegro,-,both,"time-series (VAR, Granger, cointegration)","correct: Okun, short and long run",True
+R05,Old age mortality and macroeconomic cycles,-,short run,panel with fixed effects / GMM,"wrong outcome: all-cause mortality, not road deaths",False
+C05,Effects of Vocational Re-training on Employment Outcomes Among Persons with Disabilities in Germany: A Quasi-Experiment,+,long run,"quasi-experiment (DiD, RDD, IV, natural experiment)",distant proxy: individual re-training programme,False
+R03,Place‐based subsidies and employment growth in rural America: Evidence from the broadband initiatives programme,+,long run,"quasi-experiment (DiD, RDD, IV, natural experiment)",correct: broadband programme raises employment growth,False
+C00,Asymmetry relationship between economic growth and unemployment rates in the Saudi economy: Application of Okun’s law during the period 1991–2017,+,short run,"time-series (VAR, Granger, cointegration)","correct direction, proxy: unemployment for employment rate",False
+C48,"The relationship between energy prices, economic growth and renewable energy consumption: Evidence from Europe",+,long run,"time-series (VAR, Granger, cointegration)","close proxy: renewable consumption, not share",False
+R04,"Determinants of Road Traffic Crash Fatalities: A Case of Road Accidents in India, 2004–2018",+,long run,panel with fixed effects / GMM,"correct, non-European",True
+C13,"Job loss, disability insurance and health expenditure",-,long run,"quasi-experiment (DiD, RDD, IV, natural experiment)","wrong outcome: disability insurance, not life expectancy",False

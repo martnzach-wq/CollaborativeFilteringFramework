@@ -1,0 +1,4 @@
+city,value_of_time_base,value_of_time_dist,mode_change_damping,parking_cost_base,calibration (GC-neutral),base attractiveness,cooling_degree_days,coping_type_distribution,fuel cost input,network capacity,base_attr car/PT/walk (internal)
+Tallinn,15.0,1.0,0.264,1.5,True,flat per mode (hard-coded),100,"[0.12, 0.16, 0.33, 0.14, 0.12, 0.13]",series,False,
+Granollers,5.09502,0.1,0.84,0.18,False,per mode × zone,380,"[0.04, 0.09, 0.1, 0.37, 0.31, 0.09]",constant,True,"[2.0399, 2.6624, 5.8769]"
+Naples,5.5,0.1,0.0376,1.0,False,per mode × zone,120,"[0.04, 0.08, 0.11, 0.36, 0.3, 0.11]",constant,True,"[2.1, 2.9, 5.5]"

@@ -1,0 +1,179 @@
+model,cause,effect,effect_is_stock,cause_is_constant
+Submodel_Mobility_v10.mdl,cl cooling degree days,tr attractiveness,False,True
+Submodel_Mobility_v10.mdl,copingtypedistrofprevioustimestep,ctchange,False,False
+Submodel_Mobility_v10.mdl,copingtypedistrofprevioustimestep,tr demandincreasect,False,False
+Submodel_Mobility_v10.mdl,hb initialpopulation,hb population,True,False
+Submodel_Mobility_v10.mdl,hb initialpopulation,tr initialtrips,False,False
+Submodel_Mobility_v10.mdl,hb population,tr totaldistancepermodeperyearperperson,False,False
+Submodel_Mobility_v10.mdl,pi streetgreening,tr attractiveness,False,True
+Submodel_Mobility_v10.mdl,time step,copingtypedistrofprevioustimestep,False,True
+Submodel_Mobility_v10.mdl,time step,saveper,False,True
+Submodel_Mobility_v10.mdl,time step,tr generalisedcostofprevioustimestep,False,True
+Submodel_Mobility_v10.mdl,tr accesstime,tr traveltime,False,False
+Submodel_Mobility_v10.mdl,tr adaptedareatoll,tr cost,False,False
+Submodel_Mobility_v10.mdl,tr adaptednetworkcapacity,tr averagespeed,False,False
+Submodel_Mobility_v10.mdl,tr adaptednetworkcapacity,tr streetnetworkload,False,False
+Submodel_Mobility_v10.mdl,tr adaptedparkingcost,tr cost,False,False
+Submodel_Mobility_v10.mdl,tr adaptedroadpricing,tr cost,False,False
+Submodel_Mobility_v10.mdl,tr annualptticketschangerate,tr percentageofannualpttickets,True,True
+Submodel_Mobility_v10.mdl,tr attractiveness,tr generalisedcost,False,False
+Submodel_Mobility_v10.mdl,tr attractivenessdistinction,tr attractiveness,False,True
+Submodel_Mobility_v10.mdl,tr attractivenessprofile,tr attractiveness,False,False
+Submodel_Mobility_v10.mdl,tr averagespeed,tr traveltime,False,False
+Submodel_Mobility_v10.mdl,tr baseatttractiveness,tr attractiveness,False,False
+Submodel_Mobility_v10.mdl,tr basevalueoftime,tr valueoftime,False,True
+Submodel_Mobility_v10.mdl,tr cal areatoll,tr adaptedareatoll,False,True
+Submodel_Mobility_v10.mdl,tr cal capacityadaptation,tr adaptednetworkcapacity,False,True
+Submodel_Mobility_v10.mdl,tr cal carpassengeraddedattractiveness,tr attractiveness,False,True
+Submodel_Mobility_v10.mdl,tr cal cyclingaddedattractiveness,tr attractiveness,False,True
+Submodel_Mobility_v10.mdl,tr cal distanceadaptation,tr shortertrips,False,True
+Submodel_Mobility_v10.mdl,tr cal evadoptionadaptation,tr evchangerate,False,True
+Submodel_Mobility_v10.mdl,tr cal parkingcostadaptation,tr adaptedparkingcost,False,True
+Submodel_Mobility_v10.mdl,tr cal pttraveltimeadaptation,tr traveltime,False,True
+Submodel_Mobility_v10.mdl,tr cal roadpricing,tr adaptedroadpricing,False,True
+Submodel_Mobility_v10.mdl,tr carcostsperkm,tr cost,False,False
+Submodel_Mobility_v10.mdl,tr carownershipchangerate,tr percentageofcarownership,True,True
+Submodel_Mobility_v10.mdl,tr cost,tr generalisedcost,False,False
+Submodel_Mobility_v10.mdl,tr demandchangerate,tr trips,True,False
+Submodel_Mobility_v10.mdl,tr demandelasticity,tr demandchangerate,False,True
+Submodel_Mobility_v10.mdl,tr demandincreasect,tr trips,True,False
+Submodel_Mobility_v10.mdl,tr demandincreasepop,tr trips,True,False
+Submodel_Mobility_v10.mdl,tr evchangerate,tr percentageofevs,True,False
+Submodel_Mobility_v10.mdl,tr freecarvelocity,tr averagespeed,False,False
+Submodel_Mobility_v10.mdl,tr generalisedcost,tr demandchangerate,False,False
+Submodel_Mobility_v10.mdl,tr generalisedcost,tr generalisedcostofprevioustimestep,False,False
+Submodel_Mobility_v10.mdl,tr generalisedcost,tr modechangerate,False,False
+Submodel_Mobility_v10.mdl,tr generalisedcostofprevioustimestep,tr demandchangerate,False,False
+Submodel_Mobility_v10.mdl,tr initialtriplength,tr cost,False,False
+Submodel_Mobility_v10.mdl,tr initialtriplength,tr initialtotaltraveltime,False,False
+Submodel_Mobility_v10.mdl,tr initialtriplength,tr modalsplit,False,False
+Submodel_Mobility_v10.mdl,tr initialtriplength,tr modalsplitperct,False,False
+Submodel_Mobility_v10.mdl,tr initialtriplength,tr totaldistancetravelled,False,False
+Submodel_Mobility_v10.mdl,tr initialtriplength,tr totaldistancetravelledperct,False,False
+Submodel_Mobility_v10.mdl,tr initialtriplength,tr totaltravelspeed,False,False
+Submodel_Mobility_v10.mdl,tr initialtriplength,tr traveltime,False,False
+Submodel_Mobility_v10.mdl,tr initialtriprate,tr demandincreasepop,False,False
+Submodel_Mobility_v10.mdl,tr initialtriprate,tr initialtrips,False,False
+Submodel_Mobility_v10.mdl,tr initialtrips,tr trips,True,False
+Submodel_Mobility_v10.mdl,tr modalsplit,tr totaldistancepermodeperyearperperson,False,False
+Submodel_Mobility_v10.mdl,tr modechangeelasticity,tr modechangerate,False,True
+Submodel_Mobility_v10.mdl,tr modechangerate,tr trips,True,False
+Submodel_Mobility_v10.mdl,tr networkcapacity,tr adaptednetworkcapacity,False,True
+Submodel_Mobility_v10.mdl,tr noncarvelocity,tr averagespeed,False,False
+Submodel_Mobility_v10.mdl,tr parkingcost,tr adaptedparkingcost,False,True
+Submodel_Mobility_v10.mdl,tr percentageofevs,tr carcostsperkm,False,False
+Submodel_Mobility_v10.mdl,tr percentageofevs,tr dist cars electr,False,False
+Submodel_Mobility_v10.mdl,tr percentageofevs,tr dist cars fuels,False,False
+Submodel_Mobility_v10.mdl,tr percentageofevs,tr evchangerate,False,False
+Submodel_Mobility_v10.mdl,tr pi areatoll,tr adaptedareatoll,False,True
+Submodel_Mobility_v10.mdl,tr pi capacityadaptation,tr adaptednetworkcapacity,False,True
+Submodel_Mobility_v10.mdl,tr pi carpassengeraddedattractiveness,tr attractiveness,False,True
+Submodel_Mobility_v10.mdl,tr pi cyclingaddedattractiveness,tr attractiveness,False,True
+Submodel_Mobility_v10.mdl,tr pi distanceadaptation,tr shortertrips,False,True
+Submodel_Mobility_v10.mdl,tr pi evadoptionadaptation,tr evchangerate,False,True
+Submodel_Mobility_v10.mdl,tr pi parkingcostadaptation,tr adaptedparkingcost,False,True
+Submodel_Mobility_v10.mdl,tr pi pttraveltimeadaptation,tr traveltime,False,True
+Submodel_Mobility_v10.mdl,tr pi roadpricing,tr adaptedroadpricing,False,True
+Submodel_Mobility_v10.mdl,tr shortertrips,tr trips,True,False
+Submodel_Mobility_v10.mdl,tr totaldistancepermodeperyearperperson,tr dist cars electr,False,False
+Submodel_Mobility_v10.mdl,tr totaldistancepermodeperyearperperson,tr dist cars fuels,False,False
+Submodel_Mobility_v10.mdl,tr totaldistancepermodeperyearperperson,tr dist publ tr electr,False,False
+Submodel_Mobility_v10.mdl,tr totaldistancetravelled,tr modalsplit,False,False
+Submodel_Mobility_v10.mdl,tr totaldistancetravelled,tr totaldistancepermodeperyearperperson,False,False
+Submodel_Mobility_v10.mdl,tr totaldistancetravelledperct,tr modalsplitperct,False,False
+Submodel_Mobility_v10.mdl,tr totaltravelspeed,comparisonofspeed,False,False
+Submodel_Mobility_v10.mdl,tr totaltrips,comparisonoftrips,False,False
+Submodel_Mobility_v10.mdl,tr totaltrips,tr tripsweight,False,False
+Submodel_Mobility_v10.mdl,tr traveltime,tr averagetraveltime,False,False
+Submodel_Mobility_v10.mdl,tr traveltime,tr generalisedcost,False,False
+Submodel_Mobility_v10.mdl,tr traveltime,tr totaltravelspeed,False,False
+Submodel_Mobility_v10.mdl,tr traveltime,tr totaltraveltime,False,False
+Submodel_Mobility_v10.mdl,tr trips,comparisonoftrips,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr averagespeed,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr averagetraveltime,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr demandchangerate,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr demandincreasect,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr initialtotaltraveltime,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr modalsplit,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr modalsplitperct,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr modalsplitpertriplength,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr modechangerate,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr shortertrips,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr streetnetworkload,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr totaldistancetravelled,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr totaldistancetravelledperct,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr totaltraveltime,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr totaltrips,False,False
+Submodel_Mobility_v10.mdl,tr trips,tr tripsperct,False,False
+Submodel_Mobility_v10.mdl,tr valueoftime,tr generalisedcost,False,False
+Submodel_Mobility_v10.mdl,tr valueoftimedistinction,tr valueoftime,False,True
+Submodel_Mobility_v10.mdl,tr valueoftimeprofile,tr valueoftime,False,False
+Submodel_EnergySupply_v4.mdl,cl averagehydroinflow,es hydroflh,False,True
+Submodel_EnergySupply_v4.mdl,cl averagewindspeed,es windflh,False,True
+Submodel_EnergySupply_v4.mdl,cl dni,cl averagesolarirradiance,False,True
+Submodel_EnergySupply_v4.mdl,cl ghi,cl averagesolarirradiance,False,True
+Submodel_EnergySupply_v4.mdl,cl pvproductivity,es powerproduction pv,False,False
+Submodel_EnergySupply_v4.mdl,ed coreheatdemandofprevioustimestep,ed coreheatdemandincrease,False,False
+Submodel_EnergySupply_v4.mdl,ed dhelectricitydemand,ed totalelectricitydemand,False,False
+Submodel_EnergySupply_v4.mdl,ed totalelectricitydemand,ed electricity peakdemand,False,False
+Submodel_EnergySupply_v4.mdl,ed totalelectricitydemand,ed totalelectricitydemand ofprevioustimestep,False,False
+Submodel_EnergySupply_v4.mdl,ed totalelectricitydemand,ed totalelectricitydemandincrease,False,False
+Submodel_EnergySupply_v4.mdl,ed totalelectricitydemand,es netimportedelectricity,False,False
+Submodel_EnergySupply_v4.mdl,ed totalelectricitydemand,es powerproduction fossile,False,False
+Submodel_EnergySupply_v4.mdl,ed totalelectricitydemand ofprevioustimestep,ed totalelectricitydemandincrease,False,False
+Submodel_EnergySupply_v4.mdl,es heatsupply biomass,es heatsupply total,False,False
+Submodel_EnergySupply_v4.mdl,es heatsupply electric,ed dhelectricitydemand,False,False
+Submodel_EnergySupply_v4.mdl,es heatsupply gas,es heatsupply total,False,False
+Submodel_EnergySupply_v4.mdl,es heatsupply heatpump,ed dhelectricitydemand,False,False
+Submodel_EnergySupply_v4.mdl,es heatsupply heatpump,es heatsupply total,False,False
+Submodel_EnergySupply_v4.mdl,es heatsupply oil,es heatsupply total,False,False
+Submodel_EnergySupply_v4.mdl,es heatsupply total,es heatsupplygap,False,False
+Submodel_EnergySupply_v4.mdl,es heatsupply waste,es heatsupply total,False,False
+Submodel_EnergySupply_v4.mdl,es heatsupplygap,es heatsupply electric,False,False
+Submodel_EnergySupply_v4.mdl,es hydrocal,es hydroflh,False,True
+Submodel_EnergySupply_v4.mdl,es hydroflh,es powerproduction hydro,False,False
+Submodel_EnergySupply_v4.mdl,es importedelectricitymixfactor,es electricitygentotalemissions,False,False
+Submodel_EnergySupply_v4.mdl,es initialinstalledcapacity fossile,es installedcapacity fossile,True,False
+Submodel_EnergySupply_v4.mdl,es initialinstalledcapacity hydro,es installedcapacity hydro,True,True
+Submodel_EnergySupply_v4.mdl,es initialinstalledcapacity pv,es installedcapacity pv,True,False
+Submodel_EnergySupply_v4.mdl,es initialinstalledcapacity wind,es installedcapacity wind,True,True
+Submodel_EnergySupply_v4.mdl,es installedcapacity biomasschp,es heatsupply biomass,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity dhheatpump,es heatsupply heatpump,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity electricboiler,es heatsupply electric,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity fossile,es phase out fosssile,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity fossile,es powerproduction fossile,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity gasboiler,es heatsupply gas,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity hydro,es powerproduction hydro,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity oilboiler,es heatsupply oil,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity pv,es powerproduction pv,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity wastechp,es heatsupply waste,False,False
+Submodel_EnergySupply_v4.mdl,es installedcapacity wind,es powerproduction wind,False,False
+Submodel_EnergySupply_v4.mdl,es netimportedelectricity,es electricitygentotalemissions,False,False
+Submodel_EnergySupply_v4.mdl,es new biomass,es installedcapacity biomasschp,True,False
+Submodel_EnergySupply_v4.mdl,es new electrboilers,es installedcapacity electricboiler,True,False
+Submodel_EnergySupply_v4.mdl,es new fossile,es installedcapacity fossile,True,True
+Submodel_EnergySupply_v4.mdl,es new gasboilers,es installedcapacity gasboiler,True,True
+Submodel_EnergySupply_v4.mdl,es new heatpumps,es installedcapacity dhheatpump,True,False
+Submodel_EnergySupply_v4.mdl,es new hydro,es installedcapacity hydro,True,True
+Submodel_EnergySupply_v4.mdl,es new oilboilers,es installedcapacity oilboiler,True,True
+Submodel_EnergySupply_v4.mdl,es new wastechp,es installedcapacity wastechp,True,False
+Submodel_EnergySupply_v4.mdl,es new wind,es installedcapacity wind,True,True
+Submodel_EnergySupply_v4.mdl,es phase out fosssile,es installedcapacity fossile,True,False
+Submodel_EnergySupply_v4.mdl,es phase out gasboilers,es installedcapacity gasboiler,True,False
+Submodel_EnergySupply_v4.mdl,es phase out oilboilers,es installedcapacity oilboiler,True,False
+Submodel_EnergySupply_v4.mdl,es powerproduction fossile,es electricitygentotalemissions,False,False
+Submodel_EnergySupply_v4.mdl,es powerproduction fossile,es powerproduction total,False,False
+Submodel_EnergySupply_v4.mdl,es powerproduction hydro,es powerproduction fossile,False,False
+Submodel_EnergySupply_v4.mdl,es powerproduction hydro,es powerproduction total,False,False
+Submodel_EnergySupply_v4.mdl,es powerproduction pv,es powerproduction fossile,False,False
+Submodel_EnergySupply_v4.mdl,es powerproduction pv,es powerproduction total,False,False
+Submodel_EnergySupply_v4.mdl,es powerproduction total,es netimportedelectricity,False,False
+Submodel_EnergySupply_v4.mdl,es powerproduction wind,es powerproduction fossile,False,False
+Submodel_EnergySupply_v4.mdl,es powerproduction wind,es powerproduction total,False,False
+Submodel_EnergySupply_v4.mdl,es pv increase,es installedcapacity pv,True,False
+Submodel_EnergySupply_v4.mdl,es windcal,es windflh,False,True
+Submodel_EnergySupply_v4.mdl,es windflh,es powerproduction wind,False,False
+Submodel_EnergySupply_v4.mdl,pi capacity,es policy,False,True
+Submodel_EnergySupply_v4.mdl,pi pv,es policy,False,True
+Submodel_EnergySupply_v4.mdl,time step,ed totalelectricitydemand ofprevioustimestep,False,True
+Submodel_EnergySupply_v4.mdl,time step,saveper,False,True

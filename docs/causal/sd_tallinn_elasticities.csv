@@ -1,0 +1,402 @@
+driver,scenario,output,elasticity
+population (internal),BAU,car_km_share_2030,-0.01644223009149538
+population (internal),BAU,car_km_cap_2030,-0.5859875187104174
+population (internal),BAU,active_km_cap_2030,0.06467880834494412
+population (internal),BAU,ev_share_2030,0.0
+population (internal),BAU,final_energy_2030,-0.1459694624618929
+population (internal),BAU,elec_demand_2030,-0.01681701962255808
+population (internal),BAU,emissions_total_2030,-0.24069551104919934
+population (internal),BAU,emissions_transport_2030,-0.5532320572409021
+population (internal),BAU,car_km_share_2050,-0.026985979561156198
+population (internal),BAU,car_km_cap_2050,-0.5766415766131119
+population (internal),BAU,active_km_cap_2050,0.20689620389481272
+population (internal),BAU,ev_share_2050,0.0
+population (internal),BAU,final_energy_2050,-0.13099144248452496
+population (internal),BAU,elec_demand_2050,-0.05004123703694595
+population (internal),BAU,emissions_total_2050,-0.46605741614415513
+population (internal),BAU,emissions_transport_2050,-0.5677807436646223
+population (internal),PI=1,car_km_share_2030,-0.026584415744619522
+population (internal),PI=1,car_km_cap_2030,-0.5980273237846101
+population (internal),PI=1,active_km_cap_2030,0.031234595618426265
+population (internal),PI=1,ev_share_2030,0.0
+population (internal),PI=1,final_energy_2030,-0.12610343871613283
+population (internal),PI=1,elec_demand_2030,-0.021894846896158872
+population (internal),PI=1,emissions_total_2030,-0.2142082667340045
+population (internal),PI=1,emissions_transport_2030,-0.5561649146913069
+population (internal),PI=1,car_km_share_2050,-0.0886618995993188
+population (internal),PI=1,car_km_cap_2050,-0.6247904117558443
+population (internal),PI=1,active_km_cap_2050,-0.04746695561267056
+population (internal),PI=1,ev_share_2050,0.0
+population (internal),PI=1,final_energy_2050,-0.030738851538167685
+population (internal),PI=1,elec_demand_2050,-0.035846905552041446
+population (internal),PI=1,emissions_total_2050,-0.1372350330207924
+population (internal),PI=1,emissions_transport_2050,-0.48833737627684826
+population growth,BAU,car_km_share_2030,-1.6086475989573695e-15
+population growth,BAU,car_km_cap_2030,-0.005393524011331004
+population growth,BAU,active_km_cap_2030,-0.00539352401133063
+population growth,BAU,ev_share_2030,0.0
+population growth,BAU,final_energy_2030,-0.00134447290761702
+population growth,BAU,elec_demand_2030,-0.0001576514900262316
+population growth,BAU,emissions_total_2030,-0.0022165678732520636
+population growth,BAU,emissions_transport_2030,-0.005092037439864182
+population growth,BAU,car_km_share_2050,-1.5453184920470017e-15
+population growth,BAU,car_km_cap_2050,-0.016824207425317626
+population growth,BAU,active_km_cap_2050,-0.016824207425316807
+population growth,BAU,ev_share_2050,0.0
+population growth,BAU,final_energy_2050,-0.003834592940621854
+population growth,BAU,elec_demand_2050,-0.001483732168541336
+population growth,BAU,emissions_total_2050,-0.01360193592887052
+population growth,BAU,emissions_transport_2050,-0.016565682030114822
+population growth,PI=1,car_km_share_2030,1.8628978088628124e-15
+population growth,PI=1,car_km_cap_2030,-0.00539352401133125
+population growth,PI=1,active_km_cap_2030,-0.005393524011331571
+population growth,PI=1,ev_share_2030,0.0
+population growth,PI=1,final_energy_2030,-0.0011390438536578254
+population growth,PI=1,elec_demand_2030,-0.0002024219238273331
+population growth,PI=1,emissions_total_2030,-0.0019341318475969986
+population growth,PI=1,emissions_transport_2030,-0.005015972853322536
+population growth,PI=1,car_km_share_2050,0.0
+population growth,PI=1,car_km_cap_2050,-0.016824207425316245
+population growth,PI=1,active_km_cap_2050,-0.01682420742531602
+population growth,PI=1,ev_share_2050,0.0
+population growth,PI=1,final_energy_2050,-0.0008566070522923551
+population growth,PI=1,elec_demand_2050,-0.0010102911292941556
+population growth,PI=1,emissions_total_2050,-0.0037265140156197227
+population growth,PI=1,emissions_transport_2050,-0.013149832579743035
+cooling degree days,BAU,car_km_share_2030,0.0
+cooling degree days,BAU,car_km_cap_2030,0.0
+cooling degree days,BAU,active_km_cap_2030,0.0
+cooling degree days,BAU,ev_share_2030,0.0
+cooling degree days,BAU,final_energy_2030,0.0
+cooling degree days,BAU,elec_demand_2030,0.0
+cooling degree days,BAU,emissions_total_2030,0.0
+cooling degree days,BAU,emissions_transport_2030,0.0
+cooling degree days,BAU,car_km_share_2050,0.0
+cooling degree days,BAU,car_km_cap_2050,0.0
+cooling degree days,BAU,active_km_cap_2050,0.0
+cooling degree days,BAU,ev_share_2050,0.0
+cooling degree days,BAU,final_energy_2050,0.0
+cooling degree days,BAU,elec_demand_2050,0.0
+cooling degree days,BAU,emissions_total_2050,0.0
+cooling degree days,BAU,emissions_transport_2050,0.0
+cooling degree days,PI=1,car_km_share_2030,0.0
+cooling degree days,PI=1,car_km_cap_2030,0.0
+cooling degree days,PI=1,active_km_cap_2030,0.0
+cooling degree days,PI=1,ev_share_2030,0.0
+cooling degree days,PI=1,final_energy_2030,0.0
+cooling degree days,PI=1,elec_demand_2030,0.0
+cooling degree days,PI=1,emissions_total_2030,0.0
+cooling degree days,PI=1,emissions_transport_2030,0.0
+cooling degree days,PI=1,car_km_share_2050,0.0
+cooling degree days,PI=1,car_km_cap_2050,0.0
+cooling degree days,PI=1,active_km_cap_2050,0.0
+cooling degree days,PI=1,ev_share_2050,0.0
+cooling degree days,PI=1,final_energy_2050,0.0
+cooling degree days,PI=1,elec_demand_2050,0.0
+cooling degree days,PI=1,emissions_total_2050,0.0
+cooling degree days,PI=1,emissions_transport_2050,0.0
+fuel car cost per km,BAU,car_km_share_2030,-0.010151222874163418
+fuel car cost per km,BAU,car_km_cap_2030,-0.010825774853112655
+fuel car cost per km,BAU,active_km_cap_2030,-0.13463090793068158
+fuel car cost per km,BAU,ev_share_2030,0.0
+fuel car cost per km,BAU,final_energy_2030,-0.0024382258837922846
+fuel car cost per km,BAU,elec_demand_2030,0.00047181281640049734
+fuel car cost per km,BAU,emissions_total_2030,-0.0041278514292953095
+fuel car cost per km,BAU,emissions_transport_2030,-0.010220636962363163
+fuel car cost per km,BAU,car_km_share_2050,0.0048189071016701696
+fuel car cost per km,BAU,car_km_cap_2050,0.007491549831549573
+fuel car cost per km,BAU,active_km_cap_2050,-0.336396270275922
+fuel car cost per km,BAU,ev_share_2050,0.0
+fuel car cost per km,BAU,final_energy_2050,0.0016806058835978665
+fuel car cost per km,BAU,elec_demand_2050,0.0006107252790407993
+fuel car cost per km,BAU,emissions_total_2050,0.006047975793528281
+fuel car cost per km,BAU,emissions_transport_2050,0.007376432617881763
+fuel car cost per km,PI=1,car_km_share_2030,-0.016392974261713912
+fuel car cost per km,PI=1,car_km_cap_2030,-0.019538008740518573
+fuel car cost per km,PI=1,active_km_cap_2030,-0.09784210394904934
+fuel car cost per km,PI=1,ev_share_2030,0.0
+fuel car cost per km,PI=1,final_energy_2030,-0.003736199931711438
+fuel car cost per km,PI=1,elec_demand_2030,0.0003807274777232503
+fuel car cost per km,PI=1,emissions_total_2030,-0.006507823149422182
+fuel car cost per km,PI=1,emissions_transport_2030,-0.018170331909989634
+fuel car cost per km,PI=1,car_km_share_2050,0.004660228125356304
+fuel car cost per km,PI=1,car_km_cap_2050,0.007439660631828844
+fuel car cost per km,PI=1,active_km_cap_2050,-0.05528822436786297
+fuel car cost per km,PI=1,ev_share_2050,0.0
+fuel car cost per km,PI=1,final_energy_2050,0.00037010133346939447
+fuel car cost per km,PI=1,elec_demand_2050,0.0004332048869625297
+fuel car cost per km,PI=1,emissions_total_2050,0.0016385105600183133
+fuel car cost per km,PI=1,emissions_transport_2050,0.005814852925044372
+EV car cost per km,BAU,car_km_share_2030,-0.0007464530276787723
+EV car cost per km,BAU,car_km_cap_2030,-0.0010343190526975181
+EV car cost per km,BAU,active_km_cap_2030,0.000416669989020121
+EV car cost per km,BAU,ev_share_2030,0.0
+EV car cost per km,BAU,final_energy_2030,-0.00024238987980329825
+EV car cost per km,BAU,elec_demand_2030,1.6511005752997577e-05
+EV car cost per km,BAU,emissions_total_2030,-0.0004060249489870122
+EV car cost per km,BAU,emissions_transport_2030,-0.0009765028078175686
+EV car cost per km,BAU,car_km_share_2050,-0.014439372718106334
+EV car cost per km,BAU,car_km_cap_2050,-0.02012433003624365
+EV car cost per km,BAU,active_km_cap_2050,0.01068761193105071
+EV car cost per km,BAU,ev_share_2050,0.0
+EV car cost per km,BAU,final_energy_2050,-0.0042216034356462855
+EV car cost per km,BAU,elec_demand_2050,-0.0010960420131927513
+EV car cost per km,BAU,emissions_total_2050,-0.01615114388240014
+EV car cost per km,BAU,emissions_transport_2050,-0.019815094050006903
+EV car cost per km,PI=1,car_km_share_2030,-0.0012659782038731973
+EV car cost per km,PI=1,car_km_cap_2030,-0.0016766794666852323
+EV car cost per km,PI=1,active_km_cap_2030,0.0014247442124082675
+EV car cost per km,PI=1,ev_share_2030,0.0
+EV car cost per km,PI=1,final_energy_2030,-0.00032890414812562557
+EV car cost per km,PI=1,elec_demand_2030,9.027963768124631e-06
+EV car cost per km,PI=1,emissions_total_2030,-0.0005690591522084963
+EV car cost per km,PI=1,emissions_transport_2030,-0.0015593105121906937
+EV car cost per km,PI=1,car_km_share_2050,-0.11852536379387435
+EV car cost per km,PI=1,car_km_cap_2050,-0.13135128150520833
+EV car cost per km,PI=1,active_km_cap_2050,0.0505304533337011
+EV car cost per km,PI=1,ev_share_2050,0.0
+EV car cost per km,PI=1,final_energy_2050,-0.004122108394423959
+EV car cost per km,PI=1,elec_demand_2050,-0.003888425107846929
+EV car cost per km,PI=1,emissions_total_2050,-0.026332538290904657
+EV car cost per km,PI=1,emissions_transport_2050,-0.10266441189549332
+parking cost (base),BAU,car_km_share_2030,0.0
+parking cost (base),BAU,car_km_cap_2030,0.0
+parking cost (base),BAU,active_km_cap_2030,0.0
+parking cost (base),BAU,ev_share_2030,0.0
+parking cost (base),BAU,final_energy_2030,0.0
+parking cost (base),BAU,elec_demand_2030,0.0
+parking cost (base),BAU,emissions_total_2030,0.0
+parking cost (base),BAU,emissions_transport_2030,0.0
+parking cost (base),BAU,car_km_share_2050,0.0
+parking cost (base),BAU,car_km_cap_2050,0.0
+parking cost (base),BAU,active_km_cap_2050,-2.1976505906616307e-15
+parking cost (base),BAU,ev_share_2050,0.0
+parking cost (base),BAU,final_energy_2050,0.0
+parking cost (base),BAU,elec_demand_2050,0.0
+parking cost (base),BAU,emissions_total_2050,0.0
+parking cost (base),BAU,emissions_transport_2050,0.0
+parking cost (base),PI=1,car_km_share_2030,-0.0020090638693923404
+parking cost (base),PI=1,car_km_cap_2030,-0.002693371996230002
+parking cost (base),PI=1,active_km_cap_2030,0.005452266530634542
+parking cost (base),PI=1,ev_share_2030,0.0
+parking cost (base),PI=1,final_energy_2030,-0.0005305716257921922
+parking cost (base),PI=1,elec_demand_2030,8.134988158271386e-06
+parking cost (base),PI=1,emissions_total_2030,-0.000916970651012193
+parking cost (base),PI=1,emissions_transport_2030,-0.0025048337207024454
+parking cost (base),PI=1,car_km_share_2050,-0.02780871282384849
+parking cost (base),PI=1,car_km_cap_2050,-0.03072950895782977
+parking cost (base),PI=1,active_km_cap_2050,0.011948768997043356
+parking cost (base),PI=1,ev_share_2050,0.0
+parking cost (base),PI=1,final_energy_2050,-0.0009619663562543717
+parking cost (base),PI=1,elec_demand_2050,-0.0009059570535187524
+parking cost (base),PI=1,emissions_total_2050,-0.006157892703317248
+parking cost (base),PI=1,emissions_transport_2050,-0.024018242752106844
+value of time,BAU,car_km_share_2030,0.0
+value of time,BAU,car_km_cap_2030,0.0
+value of time,BAU,active_km_cap_2030,0.0
+value of time,BAU,ev_share_2030,0.0
+value of time,BAU,final_energy_2030,0.0
+value of time,BAU,elec_demand_2030,0.0
+value of time,BAU,emissions_total_2030,0.0
+value of time,BAU,emissions_transport_2030,0.0
+value of time,BAU,car_km_share_2050,0.0
+value of time,BAU,car_km_cap_2050,0.0
+value of time,BAU,active_km_cap_2050,0.0
+value of time,BAU,ev_share_2050,0.0
+value of time,BAU,final_energy_2050,0.0
+value of time,BAU,elec_demand_2050,0.0
+value of time,BAU,emissions_total_2050,0.0
+value of time,BAU,emissions_transport_2050,0.0
+value of time,PI=1,car_km_share_2030,0.0
+value of time,PI=1,car_km_cap_2030,0.0
+value of time,PI=1,active_km_cap_2030,0.0
+value of time,PI=1,ev_share_2030,0.0
+value of time,PI=1,final_energy_2030,0.0
+value of time,PI=1,elec_demand_2030,0.0
+value of time,PI=1,emissions_total_2030,0.0
+value of time,PI=1,emissions_transport_2030,0.0
+value of time,PI=1,car_km_share_2050,0.0
+value of time,PI=1,car_km_cap_2050,0.0
+value of time,PI=1,active_km_cap_2050,0.0
+value of time,PI=1,ev_share_2050,0.0
+value of time,PI=1,final_energy_2050,0.0
+value of time,PI=1,elec_demand_2050,0.0
+value of time,PI=1,emissions_total_2050,0.0
+value of time,PI=1,emissions_transport_2050,0.0
+grid emission factor,BAU,car_km_share_2030,0.0
+grid emission factor,BAU,car_km_cap_2030,0.0
+grid emission factor,BAU,active_km_cap_2030,0.0
+grid emission factor,BAU,ev_share_2030,0.0
+grid emission factor,BAU,final_energy_2030,0.0
+grid emission factor,BAU,elec_demand_2030,0.0
+grid emission factor,BAU,emissions_total_2030,0.36951894521564266
+grid emission factor,BAU,emissions_transport_2030,0.0
+grid emission factor,BAU,car_km_share_2050,0.0
+grid emission factor,BAU,car_km_cap_2050,0.0
+grid emission factor,BAU,active_km_cap_2050,0.0
+grid emission factor,BAU,ev_share_2050,0.0
+grid emission factor,BAU,final_energy_2050,0.0
+grid emission factor,BAU,elec_demand_2050,0.0
+grid emission factor,BAU,emissions_total_2050,0.1711763021379619
+grid emission factor,BAU,emissions_transport_2050,0.0
+grid emission factor,PI=1,car_km_share_2030,0.0
+grid emission factor,PI=1,car_km_cap_2030,0.0
+grid emission factor,PI=1,active_km_cap_2030,0.0
+grid emission factor,PI=1,ev_share_2030,0.0
+grid emission factor,PI=1,final_energy_2030,0.0
+grid emission factor,PI=1,elec_demand_2030,0.0
+grid emission factor,PI=1,emissions_total_2030,0.40619649172073513
+grid emission factor,PI=1,emissions_transport_2030,0.0
+grid emission factor,PI=1,car_km_share_2050,0.0
+grid emission factor,PI=1,car_km_cap_2050,0.0
+grid emission factor,PI=1,active_km_cap_2050,0.0
+grid emission factor,PI=1,ev_share_2050,0.0
+grid emission factor,PI=1,final_energy_2050,0.0
+grid emission factor,PI=1,elec_demand_2050,0.0
+grid emission factor,PI=1,emissions_total_2050,0.674477067294237
+grid emission factor,PI=1,emissions_transport_2050,0.0
+policy_parking_cost_adaptation,PI=1 lever removed,car_km_share_2030,-0.0020058864254740368
+policy_parking_cost_adaptation,PI=1 lever removed,car_km_cap_2030,-0.00268991818147937
+policy_parking_cost_adaptation,PI=1 lever removed,active_km_cap_2030,0.00547864565502002
+policy_parking_cost_adaptation,PI=1 lever removed,ev_share_2030,0.0
+policy_parking_cost_adaptation,PI=1 lever removed,final_energy_2030,-0.0005310421503262131
+policy_parking_cost_adaptation,PI=1 lever removed,elec_demand_2030,8.135555218627863e-06
+policy_parking_cost_adaptation,PI=1 lever removed,emissions_total_2030,-0.0009174273100008967
+policy_parking_cost_adaptation,PI=1 lever removed,emissions_transport_2030,-0.002502092811181357
+policy_parking_cost_adaptation,PI=1 lever removed,car_km_share_2050,-0.027267115239724332
+policy_parking_cost_adaptation,PI=1 lever removed,car_km_cap_2050,-0.030133852193861166
+policy_parking_cost_adaptation,PI=1 lever removed,active_km_cap_2050,0.012193932392381054
+policy_parking_cost_adaptation,PI=1 lever removed,ev_share_2050,0.0
+policy_parking_cost_adaptation,PI=1 lever removed,final_energy_2050,-0.0009714916172653279
+policy_parking_cost_adaptation,PI=1 lever removed,elec_demand_2050,-0.0009148609567287602
+policy_parking_cost_adaptation,PI=1 lever removed,emissions_total_2050,-0.006187417090381994
+policy_parking_cost_adaptation,PI=1 lever removed,emissions_transport_2050,-0.023708707464721063
+policy_area_toll,PI=1 lever removed,car_km_share_2030,-0.11898446236572754
+policy_area_toll,PI=1 lever removed,car_km_cap_2030,-0.16134318601016295
+policy_area_toll,PI=1 lever removed,active_km_cap_2030,0.4179384365588777
+policy_area_toll,PI=1 lever removed,ev_share_2030,0.0
+policy_area_toll,PI=1 lever removed,final_energy_2030,-0.036498475734384306
+policy_area_toll,PI=1 lever removed,elec_demand_2030,0.0006292403784873532
+policy_area_toll,PI=1 lever removed,emissions_total_2030,-0.0614525458988494
+policy_area_toll,PI=1 lever removed,emissions_transport_2030,-0.15176306493193356
+policy_area_toll,PI=1 lever removed,car_km_share_2050,-0.6628753120519869
+policy_area_toll,PI=1 lever removed,car_km_cap_2050,-0.7261092139229
+policy_area_toll,PI=1 lever removed,active_km_cap_2050,2.4753141526510483
+policy_area_toll,PI=1 lever removed,ev_share_2050,0.0
+policy_area_toll,PI=1 lever removed,final_energy_2050,-0.07572803108284304
+policy_area_toll,PI=1 lever removed,elec_demand_2050,-0.07107181672339147
+policy_area_toll,PI=1 lever removed,emissions_total_2050,-0.34645387397933125
+policy_area_toll,PI=1 lever removed,emissions_transport_2050,-0.6744894715024505
+policy_road_pricing,PI=1 lever removed,car_km_share_2030,-0.0220260157577621
+policy_road_pricing,PI=1 lever removed,car_km_cap_2030,-0.029146869639175746
+policy_road_pricing,PI=1 lever removed,active_km_cap_2030,0.021048551322100456
+policy_road_pricing,PI=1 lever removed,ev_share_2030,0.0
+policy_road_pricing,PI=1 lever removed,final_energy_2030,-0.0058517062742667455
+policy_road_pricing,PI=1 lever removed,elec_demand_2030,0.00017044525355663578
+policy_road_pricing,PI=1 lever removed,emissions_total_2030,-0.010082713482474538
+policy_road_pricing,PI=1 lever removed,emissions_transport_2030,-0.027161983301566668
+policy_road_pricing,PI=1 lever removed,car_km_share_2050,-0.3826719446408139
+policy_road_pricing,PI=1 lever removed,car_km_cap_2050,-0.4217308138845706
+policy_road_pricing,PI=1 lever removed,active_km_cap_2050,0.2342813169833258
+policy_road_pricing,PI=1 lever removed,ev_share_2050,0.0
+policy_road_pricing,PI=1 lever removed,final_energy_2050,-0.022126044526156026
+policy_road_pricing,PI=1 lever removed,elec_demand_2050,-0.020744275244928157
+policy_road_pricing,PI=1 lever removed,emissions_total_2050,-0.12734271710351397
+policy_road_pricing,PI=1 lever removed,emissions_transport_2050,-0.3630658639442563
+policy_cycling_attractiveness,PI=1 lever removed,car_km_share_2030,-0.001173068711725027
+policy_cycling_attractiveness,PI=1 lever removed,car_km_cap_2030,-0.001410042110698907
+policy_cycling_attractiveness,PI=1 lever removed,active_km_cap_2030,0.029179432418667706
+policy_cycling_attractiveness,PI=1 lever removed,ev_share_2030,0.0
+policy_cycling_attractiveness,PI=1 lever removed,final_energy_2030,-0.00028924829610126073
+policy_cycling_attractiveness,PI=1 lever removed,elec_demand_2030,-2.7651653209397705e-05
+policy_cycling_attractiveness,PI=1 lever removed,emissions_total_2030,-0.000494772353621278
+policy_cycling_attractiveness,PI=1 lever removed,emissions_transport_2030,-0.0013114674396970906
+policy_cycling_attractiveness,PI=1 lever removed,car_km_share_2050,-0.04611274622544332
+policy_cycling_attractiveness,PI=1 lever removed,car_km_cap_2050,-0.05254580882959366
+policy_cycling_attractiveness,PI=1 lever removed,active_km_cap_2050,0.18193135433042745
+policy_cycling_attractiveness,PI=1 lever removed,ev_share_2050,0.0
+policy_cycling_attractiveness,PI=1 lever removed,final_energy_2050,-0.001988587945458969
+policy_cycling_attractiveness,PI=1 lever removed,elec_demand_2050,-0.002030602174098156
+policy_cycling_attractiveness,PI=1 lever removed,emissions_total_2050,-0.011261352882551813
+policy_cycling_attractiveness,PI=1 lever removed,emissions_transport_2050,-0.04154669014939643
+policy_pt_traveltime_adaptation,PI=1 lever removed,car_km_share_2030,-0.001335115935664155
+policy_pt_traveltime_adaptation,PI=1 lever removed,car_km_cap_2030,-0.00161122514678362
+policy_pt_traveltime_adaptation,PI=1 lever removed,active_km_cap_2030,-0.001504121205576823
+policy_pt_traveltime_adaptation,PI=1 lever removed,ev_share_2030,0.0
+policy_pt_traveltime_adaptation,PI=1 lever removed,final_energy_2030,-0.00031240361705670976
+policy_pt_traveltime_adaptation,PI=1 lever removed,elec_demand_2030,2.03252659861947e-05
+policy_pt_traveltime_adaptation,PI=1 lever removed,emissions_total_2030,-0.000542225270681886
+policy_pt_traveltime_adaptation,PI=1 lever removed,emissions_transport_2030,-0.0014986070725572528
+policy_pt_traveltime_adaptation,PI=1 lever removed,car_km_share_2050,-0.020299837770683136
+policy_pt_traveltime_adaptation,PI=1 lever removed,car_km_cap_2050,-0.020793672024538308
+policy_pt_traveltime_adaptation,PI=1 lever removed,active_km_cap_2050,-0.01880197892442896
+policy_pt_traveltime_adaptation,PI=1 lever removed,ev_share_2050,0.0
+policy_pt_traveltime_adaptation,PI=1 lever removed,final_energy_2050,-0.0005820265341291896
+policy_pt_traveltime_adaptation,PI=1 lever removed,elec_demand_2050,-0.0004973794771225764
+policy_pt_traveltime_adaptation,PI=1 lever removed,emissions_total_2050,-0.004149368850099487
+policy_pt_traveltime_adaptation,PI=1 lever removed,emissions_transport_2050,-0.016326517259643125
+policy_distance_adaptation,PI=1 lever removed,car_km_share_2030,0.0
+policy_distance_adaptation,PI=1 lever removed,car_km_cap_2030,0.0
+policy_distance_adaptation,PI=1 lever removed,active_km_cap_2030,0.0
+policy_distance_adaptation,PI=1 lever removed,ev_share_2030,0.0
+policy_distance_adaptation,PI=1 lever removed,final_energy_2030,0.0
+policy_distance_adaptation,PI=1 lever removed,elec_demand_2030,0.0
+policy_distance_adaptation,PI=1 lever removed,emissions_total_2030,0.0
+policy_distance_adaptation,PI=1 lever removed,emissions_transport_2030,0.0
+policy_distance_adaptation,PI=1 lever removed,car_km_share_2050,0.0
+policy_distance_adaptation,PI=1 lever removed,car_km_cap_2050,0.0
+policy_distance_adaptation,PI=1 lever removed,active_km_cap_2050,0.0
+policy_distance_adaptation,PI=1 lever removed,ev_share_2050,0.0
+policy_distance_adaptation,PI=1 lever removed,final_energy_2050,0.0
+policy_distance_adaptation,PI=1 lever removed,elec_demand_2050,0.0
+policy_distance_adaptation,PI=1 lever removed,emissions_total_2050,0.0
+policy_distance_adaptation,PI=1 lever removed,emissions_transport_2050,0.0
+policy_car_passenger_attractiveness,PI=1 lever removed,car_km_share_2030,0.0016768984156044896
+policy_car_passenger_attractiveness,PI=1 lever removed,car_km_cap_2030,0.002244557348489055
+policy_car_passenger_attractiveness,PI=1 lever removed,active_km_cap_2030,-0.005017216609525208
+policy_car_passenger_attractiveness,PI=1 lever removed,ev_share_2030,0.0
+policy_car_passenger_attractiveness,PI=1 lever removed,final_energy_2030,0.0004415802856054751
+policy_car_passenger_attractiveness,PI=1 lever removed,elec_demand_2030,-6.145189027967328e-06
+policy_car_passenger_attractiveness,PI=1 lever removed,emissions_total_2030,0.0007633175290540535
+policy_car_passenger_attractiveness,PI=1 lever removed,emissions_transport_2030,0.0020871085425398952
+policy_car_passenger_attractiveness,PI=1 lever removed,car_km_share_2050,0.03817460332898863
+policy_car_passenger_attractiveness,PI=1 lever removed,car_km_cap_2050,0.042340231928391814
+policy_car_passenger_attractiveness,PI=1 lever removed,active_km_cap_2050,-0.018114020415389332
+policy_car_passenger_attractiveness,PI=1 lever removed,ev_share_2050,0.0
+policy_car_passenger_attractiveness,PI=1 lever removed,final_energy_2050,0.0012806629572350502
+policy_car_passenger_attractiveness,PI=1 lever removed,elec_demand_2050,0.001210604590461405
+policy_car_passenger_attractiveness,PI=1 lever removed,emissions_total_2050,0.008214855079798989
+policy_car_passenger_attractiveness,PI=1 lever removed,emissions_transport_2050,0.03278999600354134
+policy_ev_adoption_adaptation,PI=1 lever removed,car_km_share_2030,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,car_km_cap_2030,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,active_km_cap_2030,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,ev_share_2030,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,final_energy_2030,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,elec_demand_2030,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,emissions_total_2030,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,emissions_transport_2030,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,car_km_share_2050,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,car_km_cap_2050,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,active_km_cap_2050,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,ev_share_2050,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,final_energy_2050,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,elec_demand_2050,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,emissions_total_2050,0.0
+policy_ev_adoption_adaptation,PI=1 lever removed,emissions_transport_2050,0.0
+policy_capacity_adaptation,PI=1 lever removed,car_km_share_2030,0.0
+policy_capacity_adaptation,PI=1 lever removed,car_km_cap_2030,0.0
+policy_capacity_adaptation,PI=1 lever removed,active_km_cap_2030,0.0
+policy_capacity_adaptation,PI=1 lever removed,ev_share_2030,0.0
+policy_capacity_adaptation,PI=1 lever removed,final_energy_2030,0.0
+policy_capacity_adaptation,PI=1 lever removed,elec_demand_2030,0.0
+policy_capacity_adaptation,PI=1 lever removed,emissions_total_2030,0.0
+policy_capacity_adaptation,PI=1 lever removed,emissions_transport_2030,0.0
+policy_capacity_adaptation,PI=1 lever removed,car_km_share_2050,0.0
+policy_capacity_adaptation,PI=1 lever removed,car_km_cap_2050,0.0
+policy_capacity_adaptation,PI=1 lever removed,active_km_cap_2050,0.0
+policy_capacity_adaptation,PI=1 lever removed,ev_share_2050,0.0
+policy_capacity_adaptation,PI=1 lever removed,final_energy_2050,0.0
+policy_capacity_adaptation,PI=1 lever removed,elec_demand_2050,0.0
+policy_capacity_adaptation,PI=1 lever removed,emissions_total_2050,0.0
+policy_capacity_adaptation,PI=1 lever removed,emissions_transport_2050,0.0
+policy_street_green,PI=1,(empty in Tallinn),

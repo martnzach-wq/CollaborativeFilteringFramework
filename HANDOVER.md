@@ -95,3 +95,7 @@ Ask the user before deciding any of these, and record the answer in `docs/decisi
 - The aggregation constraint must be applied on the original scale (population-weighted mean of rates, sum of counts); the prototype applied it on the transformed scale.
 - With all indicators in the lens, NUTS-3 typologies follow national borders, because most indicators are inherited from parents (`docs/visualisation.md`, V4). Show the share of observed values per entity wherever typologies or similarities are reported.
 - Windows: `multiprocessing` pools may be unavailable in sandboxed environments; use `joblib` (loky backend) or process-level parallelism with a sequential fallback.
+
+## Addendum M7: causal layer
+
+Milestones M7.1–M7.6 (causal edge registry, literature module, panel estimation and direction test, SD bridge with parameter-transfer protocol, intervention effects, effect similarity) and open decisions D10–D21 are specified in `HANDOVER_M7_causal.md`. Supporting documents are in `docs/causal/`; an index is in `README_M7.md`.

@@ -1,0 +1,96 @@
+model: martnzach-wq/KNOWING-integrated-SD-model (city_config.CityConfig)
+description: Parameter classes for transfer of SD calibrations to non-demonstrator regions (docs/causal/sd_parameter_transfer.md).
+classes:
+  O:
+    label: observable input
+    rule: take from data; impute with regsim and propagate the interval where missing
+    parameters:
+    - mobility.population_internal
+    - mobility.population_od
+    - mobility.pop_net_increase_internal
+    - mobility.pop_net_increase_od
+    - mobility.initial_trip_length_internal
+    - mobility.initial_trip_length_od
+    - mobility.initial_trip_rate
+    - mobility.mode_specific_trip_length
+    - mobility.initial_travel_speed
+    - mobility.cooling_degree_days
+    - mobility.policy_car_costs_fuel
+    - mobility.policy_car_costs_ev
+    - mobility.car_cost_per_km_fuel_constant
+    - mobility.car_cost_per_km_ev_constant
+    - mobility.parking_cost_base
+    - mobility.pt_cost_by_zone
+    - mobility.network_capacity
+    - mobility.access_time_by_mode
+    - energy_supply.grid_emission_factor
+    - energy_supply.has_district_heating
+    - energy_demand.xlsx_path (sector demand series)
+    - energy_supply.xlsx_path (supply data)
+  B:
+    label: behavioural parameter with external evidence
+    rule: 'literature function with interval (value of time: income and trip characteristics, Wardman et al. 2016); demonstrators
+      as checks'
+    parameters:
+    - mobility.value_of_time_base
+    - mobility.value_of_time_dist
+    - mobility.value_of_time_profile
+    - mobility.ev_pi_trajectory (adoption curve, national evidence)
+  R:
+    label: residual calibration constant
+    rule: never transferred; recalibrate to target mode split and trip-length distribution
+    parameters:
+    - mobility.base_attr_by_mode_and_zone
+    - mobility.attr_distinction
+    - mobility.coping_type_distribution
+    - mobility.mode_change_damping
+    - mobility.ev_bau_damping_pivot_year
+    - GC-neutral base-attractiveness correction (computed)
+  S:
+    label: structural switch
+    rule: one model variant for all transfers; never mixed between donor and target
+    parameters:
+    - mobility.apply_cdd_baseattr_compensation
+    - 'branch: generic (base_attr_by_mode_and_zone set) vs Tallinn-style'
+    - congestion term (network_capacity set)
+    - energy_supply.fossil_power_dispatch_mode
+    - energy_supply.fossil_power_phases_out_after_10y
+    - energy_demand.detailed_heating_breakdown
+  P:
+    label: policy lever (scenario input)
+    rule: set by scenario; lever effects go to the intervention table, compared by ranking across regions
+    parameters:
+    - mobility.policy_capacity_adaptation
+    - mobility.policy_parking_cost_adaptation
+    - mobility.policy_area_toll
+    - mobility.policy_road_pricing
+    - mobility.policy_cycling_attractiveness
+    - mobility.policy_pt_traveltime_adaptation
+    - mobility.policy_distance_adaptation
+    - mobility.policy_car_passenger_attractiveness
+    - mobility.policy_ev_adoption_adaptation
+    - mobility.policy_street_green
+    - mobility.area_toll_applicable
+    - energy_supply.plater_pv_target_2050
+domain_classes:
+  close: < 0.5
+  moderate: 0.5-0.75
+  distant: 0.75-1.0
+  extrapolation: '>= 1.0'
+domain_lens:
+- gdp_pps_hab
+- hh_income_pps
+- pop_density
+- cars_per_1000
+- heating_degree_days
+- cooling_degree_days
+reporting:
+  levels_allowed_for:
+  - close
+  - moderate
+  - recalibrated to observed targets
+  rankings_allowed_for:
+  - close
+  - moderate
+  - distant
+  - extrapolation

@@ -1,0 +1,7 @@
+edge,doi,extracted,full_text,verdict
+renewables share → GHG per capita,10.3390/en12173289,"−, 0.17–0.22 % per 1 %",confirmed (EU + Ukraine panel 2000–2016),correct
+old-age dependency → GDP per inhabitant,10.18267/j.pep.846,−,"negative effect on growth stated in conclusions (panel ARDL, OECD)",correct
+"rail density → cars per 1,000",10.18757/ejtir.2015.15.1.3060,"+ (pass 1), − (verification)",past rail access associated with lower auto ownership (Boston tracts),"pass-1 sign wrong, corrected by verification; proxy is historical access, not density"
+R&D expenditure → GDP per inhabitant,10.21511/ppm.24(3).2026.46,−0.19,"not accessible; abstract: exploratory, N = 15, mechanical link between R&D share and GDP","extraction faithful, but not causal evidence; down-weighted by Europe and claim weights"
+"cars per 1,000 → road deaths",10.3390/su18031313,+,not accessible; abstract supports sign,"sign correct; design is a national time series, classified as cross-section"
+heating degree days → electricity demand,10.3390/cli10100142,+,not accessible; abstract supports sign (G7 panel),sign correct

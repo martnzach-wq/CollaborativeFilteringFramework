@@ -1,0 +1,11 @@
+city,scaling,car_km_cap_2050,active_km_cap_2050,emissions_total_2050,test,calibration,driver
+TALLINN,internal only,-0.577,0.207,-0.466,population scaling,,
+TALLINN,internal and OD,0.015,0.015,0.012,population scaling,,
+GRANOLLERS,internal only,-0.71,-0.306,-0.186,population scaling,,
+GRANOLLERS,internal and OD,-0.025,0.006,-0.007,population scaling,,
+TALLINN,,0.0,0.0,0.0,calibration on/off,True,cooling degree days
+TALLINN,,0.007,-0.336,0.006,calibration on/off,True,fuel car cost per km
+TALLINN,,0.0,-0.0,0.0,calibration on/off,True,parking cost (base)
+TALLINN,,0.034,-0.133,0.028,calibration on/off,False,cooling degree days
+TALLINN,,-0.106,0.088,-0.087,calibration on/off,False,fuel car cost per km
+TALLINN,,-0.077,0.146,-0.063,calibration on/off,False,parking cost (base)

@@ -1,0 +1,21 @@
+edge,cause,effect,prior_sign,fixed_effects,beta_std,t,n_regions,n_obs,status
+"C37 (cars → GHG), transport sector",cars_per_1000,ghg_transport_cap,+,region + country×year,0.2113,4.1972,308,2375,supported
+"C37 (cars → GHG), transport sector",cars_per_1000,ghg_transport_cap,+,region + year,0.1679,6.737,308,2375,supported
+C37 (cars → GHG),cars_per_1000,ghg_cap_r,+,region + country×year,0.036,1.2449,312,2409,undecided
+C37 (cars → GHG),cars_per_1000,ghg_cap_r,+,region + year,0.0604,1.8766,312,2409,undecided
+HDD → buildings GHG (proxy for C40 HDD → household energy),heating_degree_days,ghg_buildings_cap,+,region + country×year,0.4384,10.4148,286,2394,supported
+HDD → buildings GHG (proxy for C40 HDD → household energy),heating_degree_days,ghg_buildings_cap,+,region + year,0.4608,11.6644,286,2394,supported
+HDD → GHG,heating_degree_days,ghg_cap_r,+,region + country×year,-0.002,-0.0458,286,2394,undecided
+HDD → GHG,heating_degree_days,ghg_cap_r,+,region + year,0.1036,2.2281,286,2394,supported
+CDD → GHG (proxy for C41),cooling_degree_days,ghg_cap_r,+,region + country×year,0.0301,0.7252,286,2394,undecided
+CDD → GHG (proxy for C41),cooling_degree_days,ghg_cap_r,+,region + year,-0.0593,-1.0659,286,2394,undecided
+S161 GDP → GHG,gdp_pps_hab,ghg_cap_r,+,region + country×year,0.0904,2.048,280,2496,supported
+S161 GDP → GHG,gdp_pps_hab,ghg_cap_r,+,region + year,0.1705,4.3691,280,2496,supported
+S006 density → GHG,pop_density,ghg_cap_r,-,region + country×year,-0.0261,-0.6589,312,2577,undecided
+S006 density → GHG,pop_density,ghg_cap_r,-,region + year,-0.053,-1.3605,312,2577,undecided
+S014 population growth → GHG,pop_growth_rate,ghg_cap_r,-,region + country×year,-0.0329,-0.9155,324,2697,undecided
+S014 population growth → GHG,pop_growth_rate,ghg_cap_r,-,region + year,0.0156,0.3926,324,2697,undecided
+C03 unemployment → inequality (S80/S20 for Gini),unemployment_rate,s80_s20,+,region + country×year,-0.0178,-0.3707,220,1796,undecided
+C03 unemployment → inequality (S80/S20 for Gini),unemployment_rate,s80_s20,+,region + year,0.0114,0.3444,220,1796,undecided
+C11 inequality → poverty risk,s80_s20,poverty_exclusion_risk,+,region + country×year,0.5298,6.2442,233,1269,supported
+C11 inequality → poverty risk,s80_s20,poverty_exclusion_risk,+,region + year,0.494,6.1179,233,1269,supported
