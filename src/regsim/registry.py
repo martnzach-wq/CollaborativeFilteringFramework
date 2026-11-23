@@ -46,6 +46,9 @@ class IndicatorEntry(BaseModel):
     source: SourceSpec
     same_as: str | None = None
     temporal: Literal["annual", "static"] = "annual"  # static values enter every period window
+    numerator: str | None = None  # quantity in the numerator (decision D11), e.g. "gdp"
+    denominator: str | None = None  # quantity in the denominator, e.g. "population"
+    survey: str | None = None  # source survey shared by several indicators, e.g. "LFS", "EU-SILC"
 
     @field_validator("polarity")
     @classmethod

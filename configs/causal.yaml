@@ -1,0 +1,15 @@
+# Causal layer (M7): annual NUTS-0/2 panels 2008-2024 for the edge registry
+data:
+  indicator_registry:
+    - configs/indicators_eurostat_v1.yaml
+  geo_scheme: NUTS2024        # decision D1
+  levels: [0, 2]
+  periods: ["2008/2024"]      # one window spanning the annual panel
+  store: data/store_causal
+  sources: [eurostat]
+causal:
+  edges: configs/causal_edges.yaml
+  reference_periods: configs/indicator_reference_periods.yaml
+  level: 2
+  min_years: 5
+output_dir: runs

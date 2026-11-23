@@ -46,3 +46,7 @@
 - **Maps.** Polygons are simplified to 1 km and drawn without holes; overseas regions lie outside the default extent.
 - **Explorer.** Typology runs in the app use 10 bootstrap resamples to stay interactive; the app holds the model in memory for a single user.
 - **Report figures.** The images in `docs/visualisation.md` are those of the prototype; `regsim report` writes the current ones to the run folder.
+
+## Causal layer: consistency checks (C1)
+- C1 correlates region means; agreement with a prior sign is evidence tier E1 (an association in the expected direction), not a causal effect. Between-region correlations mix within- and between-country differences; four edges contradict their prior between regions but agree within countries.
+- `classify_mechanism` knows two composite quantities (labour force, population change); other accounting links (GDP and household income in the national accounts) are not yet described by the metadata.

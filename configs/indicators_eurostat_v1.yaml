@@ -7,6 +7,8 @@ population_weights:
     unit: NR
 indicators:
 - indicator_id: pop_density
+  numerator: population
+  denominator: area
   label: population density
   dtype: continuous
   transform: log
@@ -22,6 +24,8 @@ indicators:
   - population
   - area_km2
 - indicator_id: gdp_pps_hab
+  numerator: gdp
+  denominator: population
   label: GDP per inhabitant (PPS)
   dtype: continuous
   transform: log
@@ -47,6 +51,8 @@ indicators:
       indic_de: MEDAGEPOP
   note: medians are not aggregable
 - indicator_id: old_age_dependency
+  numerator: population_65plus
+  denominator: population_15_64
   label: old-age dependency
   dtype: continuous
   transform: identity
@@ -60,6 +66,8 @@ indicators:
       indic_de: OLDDEP1
   note: exact weight is population aged 15-64
 - indicator_id: share_age_0_14
+  numerator: population_0_14
+  denominator: population
   label: share aged 0–14
   dtype: continuous
   transform: identity
@@ -72,6 +80,8 @@ indicators:
     filters:
       indic_de: PC_Y0_14
 - indicator_id: pop_growth_rate
+  numerator: population_change
+  denominator: population
   label: population growth
   dtype: continuous
   transform: identity
@@ -84,6 +94,8 @@ indicators:
     filters:
       indic_de: GROWRT
 - indicator_id: net_migration_rate
+  numerator: net_migration
+  denominator: population
   label: net migration
   dtype: continuous
   transform: identity
@@ -96,6 +108,8 @@ indicators:
     filters:
       indic_de: CNMIGRATRT
 - indicator_id: fertility_rate
+  numerator: live_births
+  denominator: women_15_49
   label: fertility rate
   dtype: continuous
   transform: identity
@@ -109,6 +123,9 @@ indicators:
       indic_de: TOTFERRT
   note: exact weight is women aged 15-49; population weight is an approximation
 - indicator_id: unemployment_rate
+  numerator: unemployed
+  denominator: labour_force
+  survey: LFS
   label: unemployment
   dtype: continuous
   transform: log
@@ -125,6 +142,9 @@ indicators:
       unit: PC
   note: exact weight is the labour force; population weight is an approximation
 - indicator_id: employment_rate
+  numerator: employed
+  denominator: population_20_64
+  survey: LFS
   label: employment rate
   dtype: continuous
   transform: identity
@@ -139,6 +159,9 @@ indicators:
       age: Y20-64
       unit: PC
 - indicator_id: tertiary_attainment
+  numerator: tertiary_graduates_25_64
+  denominator: population_25_64
+  survey: LFS
   label: tertiary attainment
   dtype: continuous
   transform: identity
@@ -168,6 +191,8 @@ indicators:
       age: Y_LT1
       unit: YR
 - indicator_id: cars_per_1000
+  numerator: passenger_cars
+  denominator: population
   label: cars per 1,000
   dtype: continuous
   transform: identity
@@ -181,6 +206,8 @@ indicators:
       vehicle: CAR
       unit: P_THAB
 - indicator_id: hh_income_pps
+  numerator: household_income
+  denominator: population
   label: household income (PPS)
   dtype: continuous
   transform: log
@@ -195,6 +222,8 @@ indicators:
       na_item: B6N
       direct: BAL
 - indicator_id: road_deaths_pmh
+  numerator: road_deaths
+  denominator: population
   label: road deaths
   dtype: continuous
   transform: log1p
@@ -208,6 +237,8 @@ indicators:
       victim: KIL
       unit: P_MHAB
 - indicator_id: rd_expenditure_gdp
+  numerator: rd_expenditure
+  denominator: gdp
   label: R&D expenditure
   dtype: continuous
   transform: log1p
@@ -222,6 +253,9 @@ indicators:
       unit: PC_GDP
   note: GDP-weighted in reality; treated as not aggregable
 - indicator_id: poverty_exclusion_risk
+  numerator: persons_at_risk
+  denominator: population
+  survey: EU-SILC
   label: poverty/exclusion risk
   dtype: continuous
   transform: identity
@@ -234,6 +268,8 @@ indicators:
     filters:
       unit: PC
 - indicator_id: hospital_beds
+  numerator: hospital_beds
+  denominator: population
   label: hospital beds
   dtype: continuous
   transform: log
@@ -246,6 +282,9 @@ indicators:
     filters:
       unit: P_HTHAB
 - indicator_id: broadband_households
+  numerator: households_broadband
+  denominator: households
+  survey: ICT-HH
   label: broadband households
   dtype: continuous
   transform: identity
@@ -258,6 +297,9 @@ indicators:
     filters:
       unit: PC_HH
 - indicator_id: lifelong_learning
+  numerator: adults_in_learning
+  denominator: population_25_64
+  survey: LFS
   label: lifelong learning
   dtype: continuous
   transform: log1p
@@ -272,6 +314,8 @@ indicators:
       age: Y25-64
       unit: PC
 - indicator_id: renewables_share
+  numerator: renewable_energy
+  denominator: gross_final_energy
   label: renewables share
   dtype: continuous
   transform: identity
@@ -286,6 +330,8 @@ indicators:
       unit: PC
   note: energy-weighted in reality; treated as not aggregable
 - indicator_id: ghg_per_capita
+  numerator: ghg_emissions
+  denominator: population
   label: GHG per capita
   dtype: continuous
   transform: log
@@ -299,6 +345,7 @@ indicators:
       unit: T_HAB
       src_crf: TOTX4_MEMO
 - indicator_id: gini
+  survey: EU-SILC
   label: Gini
   dtype: continuous
   transform: identity

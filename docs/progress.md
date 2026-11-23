@@ -1,4 +1,27 @@
 # Progress
+## M7.1 Causal registry and consistency checks (2026-11-23)
+
+**Done**
+- Decisions D10 (edges in YAML, claims and estimates in a Parquet evidence store) and D11 (`numerator`, `denominator`, `survey` in `IndicatorEntry`), recorded in `docs/decisions.md`.
+- `EdgeRegistry`: `children`, `descendants` (breadth-first, cycles allowed), `edge`, `update_evidence` (supported / contested by sign and |t|, edges never removed, retired edges and edges without a prior sign keep their status). `to_yaml` keeps the key order, explicit nulls and line endings of an existing file: a rewrite without changes is byte-identical, an update changes only the edited fields.
+- `classify_mechanism`: accounting identity (numerator of one indicator is a part of the numerator or denominator of the other: employment/unemployment via the labour force, net migration/population growth), shared denominator (GDP and R&D in % of GDP; population density and per-capita indicators: shared population stock; any shared denominator other than a population), shared survey base (LFS, EU-SILC, ICT household survey). Metadata added to 21 indicators of `configs/indicators_eurostat_v1.yaml`.
+- `regsim.causal.data`: annual panels from the observation store (country from the hierarchy graph, registry transforms) and region means.
+- C1 (`regsim.causal.check`): between-region Spearman correlation of region means (NUTS-2 where both indicators cover ≥ 30 regions, else national) and within-country correlation (country means removed), labelled against `sign_prior`; agreement rates over distinct signed cause–effect pairs, overall and per grade. Results go to the evidence store (`<store>/causal_evidence.parquet`, tier E1); `--write-registry` writes E1 items into edges without data evidence.
+- `configs/causal.yaml`: annual NUTS-0/2 store 2008–2024 (`data/store_causal`, Eurostat; 39 countries, 299 NUTS-2 regions, 93,484 observations). CLI `regsim causal check --config configs/causal.yaml`.
+
+**Results**
+- Between-region sign agreement 40 of 53 signed pairs (0.75; M7 analysis 27/38, 0.71), within-country 40 of 44 (0.91; M7 analysis 23/25). By grade (between / within country): A 4/5, 3/3; B 4/8, 7/8; C 21/24, 19/21; D 3/6, 4/5.
+- Agreement with the correlations of the M7 analysis stored in the registry (44 edges): r = 0.996 between regions, 0.999 within countries; the two sign differences are correlations of ±0.03.
+- 14 edges contradict their prior between regions. Four of them (hospital beds → life expectancy, density → cars, old-age dependency → GDP, median age → GDP) agree within countries: the between-region sign comes from differences between countries. GDP → road deaths (B, +) is negative at both levels (−0.65, −0.30).
+- 27 edges are not observed: 10 graph nodes are SD-model variables, EDGAR sector emissions or indicators without a registry entry (household electricity, S80/S20, fuel cost, car-km, active-mode km).
+- E1 items written for 10 edges without earlier data evidence.
+
+**Tests**: 8 unit tests (`tests/test_causal_graph.py`); M7.1 acceptance (5 tests in `tests/acceptance/test_m7.py`) passes; other M7 tests stay skipped.
+
+**Open**
+- National-only indicators of the M7 analysis (household electricity, S80/S20 at NUTS-2 from `ilc_di11_r`, EDGAR sectors) are not yet in the registry.
+- Next: M7.3 (panel module with the store, `direction_test`, `what_if`, `s_causal`); decisions D12, D13, D14 are needed first.
+
 ## LAU demographic indicators and export for heatimpact (2026-10-29)
 - `regsim.data.statat.StatAtConnector`: OGD population table by municipality and single year of age; 2,116 municipality codes in the 2026 table (23 Vienna districts, code 0 with 0 persons, Fürstenfeld 62280 created 2025 from LAU 2024 62252 Söchau and 62267 Fürstenfeld). After mapping, the 2,093 Austrian LAU 2024 codes are covered.
 - Build step for source `statat`, `configs/lau_at.yaml`, `regsim export-lau`.

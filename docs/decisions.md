@@ -13,6 +13,8 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D7 | 2026-10-14 | Interactive front end: **Dash** (Plotly), with linked map–embedding views through callbacks. It is an optional extra (`app`) on top of the views and the REST service; the KNOWING DSS can use the REST service independently. | M. Zach |
 | D8 | 2026-10-13 | TRF classes (TRF1–TRF5) are reported **only in D3.6 compatibility mode**; regsim similarities are reported as percentile scores without classes. | M. Zach |
 | D9 | 2026-10-13 | D3.6 gates are **soft** in regsim mode: a triggered gate adds a warning flag with its reason to the pair; scores and rankings are unchanged. Hard exclusion (D3.6 `eligible = 0`) applies only in D3.6 compatibility mode. | M. Zach |
+| D10 | 2026-11-23 | Causal registry: **edges in YAML** (`configs/causal_edges.yaml`, reviewed in git), **claims and estimates in Parquet** (evidence store `causal_evidence.parquet` next to the observation store). The YAML keeps one summary `data_evidence` item per edge. | M. Zach |
+| D11 | 2026-11-23 | Indicator metadata for mechanism classification: optional fields **`numerator`, `denominator`, `survey`** in `IndicatorEntry` of the indicator registry. | M. Zach |
 
 ## Consequences
 

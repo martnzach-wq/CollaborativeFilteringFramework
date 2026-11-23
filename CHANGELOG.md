@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.1 (M7.1)
+- Causal edge registry: `descendants`, `update_evidence`, format-preserving `to_yaml`; `classify_mechanism` from the new indicator fields `numerator`, `denominator`, `survey` (decisions D10, D11).
+- C1 consistency checks (`regsim.causal.check`, `regsim causal check --config configs/causal.yaml`) on annual NUTS-0/2 panels 2008–2024 (`configs/causal.yaml`); evidence store in Parquet; E1 items for 10 edges in `configs/causal_edges.yaml`.
+- `RunConfig.causal` section; configs without it keep their hash.
+
 ## 0.8.0
 - Statistik Austria connector (`regsim.data.statat`, source `statat`): residents per LAU on 1 January and age shares from the OGD table `OGD_bevstandjbab2002_BevStand_<year>` (CC BY 4.0). Vienna districts are summed to LAU 90001; municipalities created after LAU 2024 are mapped to their predecessors through `successors` in the registry (shares copied, counts split by LAU-list population, both flagged).
 - Registry `configs/indicators_statat_v1.yaml`: `statat_population`, `statat_share_age_65plus` (1 January 2026).

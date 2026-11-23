@@ -461,7 +461,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: 0.715
+    within_country_r: 0.741
+    status: consistent
+    tier: E1
   status: prior
   temporal_precedence:
     result: not tested
@@ -556,7 +562,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: 0.912
+    within_country_r: 0.912
+    status: consistent
+    tier: E1
   status: prior
   temporal_precedence:
     result: not tested
@@ -2553,7 +2565,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: 0.599
+    within_country_r: 0.761
+    status: consistent
+    tier: E1
   status: prior
   literature_r2:
     target_id: N_hh_inc_employ
@@ -2617,7 +2635,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: 0.026
+    within_country_r: -0.003
+    status: contradicting
+    tier: E1
   status: prior
   literature_r2:
     target_id: C20
@@ -2745,7 +2769,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: 0.164
+    within_country_r: -0.124
+    status: contradicting
+    tier: E1
   status: prior
   literature_r2:
     target_id: R00
@@ -2779,7 +2809,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: 0.696
+    within_country_r: 0.677
+    status: consistent
+    tier: E1
   status: prior
   literature_r2:
     target_id: R02
@@ -2813,7 +2849,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: 0.673
+    within_country_r: 0.585
+    status: consistent
+    tier: E1
   status: prior
   literature_r2:
     target_id: R03
@@ -2851,7 +2893,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: -0.651
+    within_country_r: -0.301
+    status: contradicting
+    tier: E1
   status: prior
   literature_r2:
     target_id: R04
@@ -2890,7 +2938,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: 0.217
+    within_country_r: -0.114
+    status: consistent
+    tier: E1
   status: prior
   literature_r2:
     target_id: R05
@@ -3018,7 +3072,13 @@ edges:
     - NUTS0
     - NUTS2
     regions: Europe
-  data_evidence: null
+  data_evidence:
+    test: c1_region_means
+    level: regional
+    between_r: 0.452
+    within_country_r: 0.527
+    status: consistent
+    tier: E1
   status: prior
   literature_r2:
     target_id: R10

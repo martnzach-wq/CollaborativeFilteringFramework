@@ -35,6 +35,8 @@ regsim evaluate configs/benchmark_m3.yaml      # masked hold-out benchmark and m
 regsim report configs/example.yaml             # figures of docs/visualisation.md (PNG and HTML)
 regsim serve configs/example.yaml              # REST service (OpenAPI at /docs)
 regsim app configs/example.yaml                # explorer with linked map and embedding
+regsim build configs/causal.yaml                # annual NUTS-0/2 panels 2008-2024 for the causal layer (M7)
+regsim causal check --config configs/causal.yaml  # C1: sign checks of the edge registry (E1 evidence)
 ```
 
 The LAU extension uses `configs/lau.yaml` (NUTS-3 → LAU with the D3.6 indicators, store `data/store_lau`).

@@ -5,6 +5,23 @@ from __future__ import annotations
 import typer
 
 app = typer.Typer(help="regsim: similarity and prediction for multi-level regional indicators")
+causal_app = typer.Typer(help="Causal layer (M7): edge registry, consistency checks, panel estimates")
+app.add_typer(causal_app, name="causal")
+
+
+@causal_app.command("check")
+def causal_check(
+    config: str = typer.Option(..., "--config", help="run config with a causal section"),
+    write_registry: bool = typer.Option(False, help="write E1 items into the edge registry file"),
+):
+    """C1: sign checks of the edge registry against region means of the annual panels."""
+    from regsim.causal.check import run_check
+    from regsim.config import RunConfig
+
+    table, rates, folder = run_check(RunConfig.from_yaml(config), write_registry=write_registry)
+    typer.echo(table.label.value_counts().to_string())
+    typer.echo(rates[rates.grade == "all"].to_string(index=False))
+    typer.echo(f"written to {folder}")
 
 
 @app.command()

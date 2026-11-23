@@ -130,15 +130,35 @@ class ReportConfig(BaseModel):
     seed: int = 0
 
 
+class CausalConfig(BaseModel):
+    """Causal layer (M7): edge registry, reference periods and evidence store (decision D10)."""
+
+    edges: str = "configs/causal_edges.yaml"
+    reference_periods: str = "configs/indicator_reference_periods.yaml"
+    evidence: str | None = None  # Parquet evidence store; default <data.store>/causal_evidence.parquet
+    level: int = 2  # level of the regional panels; national-only indicators use level 0
+    min_years: int = 5  # years an entity needs in a series to enter a region mean
+
+
 class RunConfig(BaseModel):
     data: DataConfig
     model: ModelConfig = ModelConfig()
     evaluation: EvaluationConfig = EvaluationConfig()
     report: ReportConfig = ReportConfig()
+    causal: CausalConfig | None = None
     output_dir: str = "runs"
 
     def config_hash(self) -> str:
-        return hashlib.sha256(json.dumps(self.model_dump(), sort_keys=True).encode()).hexdigest()[:12]
+        dump = self.model_dump()
+        if dump.get("causal") is None:  # configs without a causal section keep their earlier hash
+            dump.pop("causal", None)
+        return hashlib.sha256(json.dumps(dump, sort_keys=True).encode()).hexdigest()[:12]
+
+    @property
+    def evidence_path(self) -> Path:
+        """Parquet evidence store of the causal layer (decision D10)."""
+        c = self.causal or CausalConfig()
+        return Path(c.evidence) if c.evidence else Path(self.data.store) / "causal_evidence.parquet"
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> RunConfig:
