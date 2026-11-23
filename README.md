@@ -37,6 +37,8 @@ regsim serve configs/example.yaml              # REST service (OpenAPI at /docs)
 regsim app configs/example.yaml                # explorer with linked map and embedding
 regsim build configs/causal.yaml                # annual NUTS-0/2 panels 2008-2024 for the causal layer (M7)
 regsim causal check --config configs/causal.yaml  # C1: sign checks of the edge registry (E1 evidence)
+regsim causal fit --config configs/causal.yaml    # C2: panel effects of all edges, direction tests
+regsim causal what-if EE00 --shock gdp_pps_hab=0.1 --config configs/causal.yaml  # P8 with horizon and tier
 ```
 
 The LAU extension uses `configs/lau.yaml` (NUTS-3 → LAU with the D3.6 indicators, store `data/store_lau`).

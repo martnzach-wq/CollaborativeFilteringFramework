@@ -24,6 +24,7 @@ def annual_panel(
     until: int | None = None,
     transform: bool = True,
     scenario: str = "observed",
+    transforms: dict[str, str] | None = None,
 ) -> pd.DataFrame:
     """Long panel with one row per entity-year at ``level``.
 
@@ -32,7 +33,8 @@ def annual_panel(
     store : ObservationStore
         Store with annual observations (periods ``"YYYY"``).
     registry : IndicatorRegistry, optional
-        Source of the transforms; without it values stay on the original scale.
+        Source of the transforms and of the ``same_as`` copies, which fill the gaps of the indicator
+        that enters the model; without it values stay on the original scale.
     indicators : iterable of str, optional
         Indicator ids (default: all in the store).
     level : int
@@ -41,6 +43,9 @@ def annual_panel(
         First and last year.
     transform : bool
         Apply the registry transform (log, log1p, logit) to each indicator.
+    transforms : dict, optional
+        Indicator id -> transform replacing the registry transform (``causal.transforms`` of the
+        config; e.g. log for cars per 1,000, so that log-log coefficients are elasticities).
 
     Returns
     -------
@@ -64,10 +69,18 @@ def annual_panel(
     wide = obs.pivot_table(index=["geo_id", "year"], columns="indicator_id", values="value", aggfunc="mean")
     wide.columns.name = None
     wide = wide.reset_index()
-    if transform and registry is not None:
+    if registry is not None:  # copies (same_as) fill the gaps of the indicator that enters the model
+        for copy, canon in registry.canonical().items():
+            if copy != canon and copy in wide.columns:
+                wide[canon] = wide[canon].fillna(wide[copy]) if canon in wide.columns else wide[copy]
+                wide = wide.drop(columns=copy)
+    if transform:
         for c in wide.columns[2:]:
-            if c in registry.entries:
-                wide[c] = forward(wide[c].to_numpy(), str(registry[c].transform))
+            kind = (transforms or {}).get(c) or (
+                str(registry[c].transform) if registry is not None and c in registry.entries else None
+            )
+            if kind:
+                wide[c] = forward(wide[c].to_numpy(), kind)
     graph = store.graph()
     country = {}
     for g in wide.geo_id.unique():

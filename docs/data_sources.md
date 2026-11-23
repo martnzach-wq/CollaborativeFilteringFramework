@@ -36,3 +36,10 @@
 ## Statistik Austria (source `statat`)
 - Table `OGD_bevstandjbab2002_BevStand_<year>` on data.statistik.gv.at: residents on 1 January by sex, municipality (current boundaries) and single year of age; code lists `_C-GRGEMAKT-0` and `_C-GALTEJ112-0`. Licence CC BY 4.0.
 - Vienna is published by district (901xx–923xx) and summed to LAU 90001. Mergers after LAU 2024 are listed under `successors` in `configs/indicators_statat_v1.yaml`.
+
+## Causal panels (M7, `configs/causal.yaml`)
+- Annual Eurostat series 2008–2024 at NUTS-0 and NUTS-2 (store `data/store_causal`), registries `indicators_eurostat_v1.yaml` and `indicators_causal_v1.yaml`.
+- The NUTS-3 tables of median age, old-age dependency, share aged 0–14 (`demo_r_pjanind3`) and fertility (`demo_r_find3`) start in 2013–2014; the NUTS-2 tables `demo_r_pjanind2` and `demo_r_find2` (from 1990) fill the earlier years as `same_as` copies. Where both exist the values agree (median ratio 1.000).
+- S80/S20 at NUTS-2 from `ilc_di11_r` (EU-SILC, income reference year t−1), more than 100 regions from 2018.
+- Transform override for the causal layer: cars per 1,000 on the log scale (`causal.transforms`), so that its coefficients are elasticities; the model of `configs/example.yaml` keeps the registry transform.
+

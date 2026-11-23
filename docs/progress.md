@@ -1,4 +1,35 @@
 # Progress
+## M7.3 Panel module, direction test, causal queries, causal-lens similarity (2026-11-23)
+
+**Done**
+- Decisions D12 (effect sources in `what_if`), D13 (fixed effects with bias correction, Arellano–Bond GMM as option) and D14 (typology classes for partial pooling, macro-regions as fallback), recorded in `docs/decisions.md`.
+- `fit_edge`: half-panel jackknife (default) and one-step Arellano–Bond difference GMM with collapsed instruments; the plain within estimator stays available (`bias_correction="none"`, the M7 reference values). On simulated panels (T = 15, ρ = 0.5) the plain estimator gives ρ = 0.39 and a long-run effect of 0.70 (true 0.8); jackknife 0.51 / 0.83, GMM 0.50 / 0.80 with twice the spread of the jackknife.
+- `causal.groups`: macro-regions from `causal.macro_regions`, typology classes, `pooled_effects` (DerSimonian–Laird τ², empirical-Bayes shrinkage of group effects towards the pooled effect).
+- `causal.effects.estimate_effects`: pooled and group effects of all edges; `causal.run` and CLI `regsim causal fit` (effects and direction tests into `runs/causal-fit-<hash>` and the evidence store; `--write-registry` writes E2 items and `temporal_precedence`), `regsim causal what-if`, `regsim causal direction`.
+- `direction_test`: lagged within-region Wald tests both ways (Bonferroni over the tests of a batch), event-study profile with pre-trend test; series aligned by `reference_offsets` (EU-SILC income measures to t−1; 1 January stocks keep their year, as in the M7 analysis). `screen` labels pairs with `classify_mechanism` and marks those for the literature module.
+- Queries (`causal.queries`): `what_if` (first-order propagation of log changes in topological order, cycles left out and reported, shocked indicators held fixed; local elasticities from coefficients on transformed scales; source order D12; interval, horizon, weakest tier and edges per row; absolute change in original units), `explain_difference` (between-entity regression on the causal parents, residual and `missing_causes` flag), `vision_check` (required lever change per target, `feasible`, `conflict`, `mismatch`).
+- `similarity.causal_lens.s_causal` (nearest entities on the causes of a target, Jaccard overlap with general neighbours); `predict.tasks.analogues(target=, registry=)` uses it.
+- `evaluation.benchmark.graph_forecast_benchmark`: one-year forecasts of standardised annual changes, hold-out of the last two years.
+- Data: `configs/indicators_causal_v1.yaml` (NUTS-2 copies back to 2008, S80/S20); `annual_panel` merges `same_as` copies and applies `causal.transforms` (cars per 1,000 on the log scale, see `docs/data_sources.md`).
+
+**Results** (NUTS-2, 2008–2024)
+- GDP → cars per 1,000: β_std 0.099, t 3.67 with the M7 estimator (reference 0.099, t 3.69); 0.066 (t 2.45, ρ 0.20 instead of 0.10) with the jackknife. The 32 NUTS-2 edges of `causal_panel_results.csv` reproduce with r = 0.998.
+- Heterogeneity by macro-region (GDP → cars): East 0.22, South 0.08, North −0.04, West −0.04; I² 0.80, p 0.002 (reference I² 80 %, p 0.002).
+- Direction tests: GDP ↔ cars undecided (p 0.72 forward, 0.0034 reverse; reference 0.73 / 0.0035); life expectancy → old-age dependency forward (p 0.00026, flat pre-trend). Over the 54 observed registry pairs (Bonferroni over 108 tests): 5 forward, 1 reverse, 1 both, 47 undecided.
+- `what_if` +10 % GDP in EE00 (short run, typology class of Estonia): cars per 1,000 +0.3 % (90 % interval −0.06 to +0.7 %), unemployment −0.38 points, employment rate +0.5 points; tier E2 on all magnitudes.
+- `explain_difference` EE00 − ES51 for cars per 1,000: the residual (1.13 on the model scale) exceeds the observed difference (0.10), so the parents in the graph do not explain it (`missing_causes`).
+- `s_causal` EE00, cars per 1,000, k = 10: lens GDP, household income, density, cars; Jaccard with the general neighbours 0.11.
+- Forecasts (median RMSE relative to the training SD of annual change, 42 indicator-years): no change 1.09, region trend 1.06, own AR(1) 0.91, ridge VAR 0.99, graph-constrained VAR 0.95 (reference 1.07, 1.04, 0.92, 1.02, 0.94). The graph constraint beats the unconstrained VAR in 67 % of indicator-years.
+- Screen of 21 NUTS-2 indicators (420 pairs, Bonferroni): 34 pairs flagged, 10 of them accounting identities, shared denominators or shared survey bases.
+- C1 on the rebuilt store: between-region agreement 40/53, within-country 39/44.
+
+**Tests**: 11 unit tests (`tests/test_causal_queries.py`) on synthetic panels; M7.1 and M7.3 acceptance (12 tests) pass; the M7.2, M7.4–M7.6 tests stay skipped.
+
+**Open**
+- The registry still holds the E2 items and `temporal_precedence` of the M7 analysis; `regsim causal fit --write-registry` would replace them with the jackknife estimates of this store.
+- `classify_mechanism` does not describe age-structure composition (e.g. old-age dependency and median age) or the national-accounts link between GDP and household income; such pairs pass the screen as causal.
+- Next: M7.6 (effect similarity), decision D19 first.
+
 ## M7.1 Causal registry and consistency checks (2026-11-23)
 
 **Done**

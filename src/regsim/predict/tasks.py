@@ -153,12 +153,27 @@ def vision_entity(model, base_geo: str, targets: dict[str, float], alpha: float 
 
 # ---------------------------------------------------------------------------------------------------- P5
 def analogues(
-    model, profile, lens: Lens | None = None, k: int = 10, level: int | None = None
+    model,
+    profile,
+    lens: Lens | None = None,
+    k: int = 10,
+    level: int | None = None,
+    target: str | None = None,
+    registry=None,
 ) -> pd.DataFrame:
     """P5: the ``k`` real entities nearest to ``profile`` under S-profile. ``profile`` is a geo id, a dict of
     original-scale values per indicator (e.g. the vision column of :func:`vision_entity`) or a model-scale
-    vector of all columns."""
+    vector of all columns. With a ``target`` indicator and an edge ``registry`` the lens is the causal lens
+    of the target (its causes and the target itself, `similarity.causal_lens`): analogues are entities
+    where the target responds to the same drivers."""
     data = _data(model)
+    if target is not None:
+        from regsim.similarity.causal_lens import lens_for
+
+        if registry is None:
+            raise ValueError("a causal lens needs the edge registry")
+        cols = tuple(c for c in lens_for(registry, target) if c in data.column_ids)
+        lens = Lens(indicators=cols, levels=lens.levels if lens is not None else None)
     space = s_profile(model, data, lens)
     if isinstance(profile, str):
         q = model.predict()[data.geo_ids.index(profile)]

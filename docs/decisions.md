@@ -15,6 +15,9 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D9 | 2026-10-13 | D3.6 gates are **soft** in regsim mode: a triggered gate adds a warning flag with its reason to the pair; scores and rankings are unchanged. Hard exclusion (D3.6 `eligible = 0`) applies only in D3.6 compatibility mode. | M. Zach |
 | D10 | 2026-11-23 | Causal registry: **edges in YAML** (`configs/causal_edges.yaml`, reviewed in git), **claims and estimates in Parquet** (evidence store `causal_evidence.parquet` next to the observation store). The YAML keeps one summary `data_evidence` item per edge. | M. Zach |
 | D11 | 2026-11-23 | Indicator metadata for mechanism classification: optional fields **`numerator`, `denominator`, `survey`** in `IndicatorEntry` of the indicator registry. | M. Zach |
+| D12 | 2026-11-23 | Effect sources in `what_if`: the order of the `queries.py` docstring; the **long-run effect comes from the literature** when no panel long-run estimate exists. | M. Zach |
+| D13 | 2026-11-23 | Panel estimator for short panels: **fixed effects with bias correction** (Nickell bias of the lagged dependent variable) as default; **Arellano–Bond GMM** as an option. | M. Zach |
+| D14 | 2026-11-23 | Region groups for partial pooling and moderators: **typology classes** from `regsim.typology`; **macro-regions** from the config as fallback. | M. Zach |
 
 ## Consequences
 

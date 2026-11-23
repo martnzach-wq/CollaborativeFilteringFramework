@@ -158,11 +158,13 @@ def apply_e1(registry: EdgeRegistry, table: pd.DataFrame, test: str = "c1_region
     return done
 
 
-def write_evidence(table: pd.DataFrame, path: str | Path, run: str, test: str = "c1_region_means") -> Path:
-    """Append the C1 rows to the Parquet evidence store (decision D10), replacing earlier rows of the
-    same run and test."""
+def write_evidence(
+    table: pd.DataFrame, path: str | Path, run: str, test: str = "c1_region_means", tier: str = "E1"
+) -> Path:
+    """Append rows to the Parquet evidence store (decision D10), replacing earlier rows of the same run
+    and test. Tests with different columns share the file; absent columns are null."""
     path = Path(path)
-    rows = table.assign(run=run, test=test, tier="E1")
+    rows = table.assign(run=run, test=test, tier=tier)
     if path.exists():
         old = pd.read_parquet(path)
         old = old[~((old.run == run) & (old.test == test))]

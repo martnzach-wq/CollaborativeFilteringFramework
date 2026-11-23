@@ -138,6 +138,11 @@ class CausalConfig(BaseModel):
     evidence: str | None = None  # Parquet evidence store; default <data.store>/causal_evidence.parquet
     level: int = 2  # level of the regional panels; national-only indicators use level 0
     min_years: int = 5  # years an entity needs in a series to enter a region mean
+    transforms: dict[str, str] = Field(default_factory=dict)  # per-indicator override of the registry
+    macro_regions: dict[str, list[str]] = Field(default_factory=dict)  # group -> country codes (D14 fallback)
+    groups: Literal["typology", "macro"] = "typology"  # region groups for partial pooling (decision D14)
+    estimator: Literal["fe", "gmm"] = "fe"  # decision D13
+    bias_correction: Literal["jackknife", "none"] = "jackknife"  # decision D13, for estimator "fe"
 
 
 class RunConfig(BaseModel):

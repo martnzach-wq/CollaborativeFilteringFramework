@@ -1,0 +1,76 @@
+registry_version: causal_v1
+# NUTS-2 series for the causal panels (M7): copies of NUTS-3 indicators whose NUTS-3 tables start in
+# 2013-2014 (filled from the NUTS-2 tables, which go back to 1990), and S80/S20 for the inequality edges.
+# Copies fill gaps only: the NUTS-3 indicator stays the model column (same_as, source precedence).
+indicators:
+- indicator_id: median_age_n2
+  label: median age (NUTS-2 table)
+  dtype: continuous
+  transform: identity
+  aggregation: none
+  native_levels: [2]
+  same_as: median_age
+  source:
+    connector: eurostat
+    dataset: demo_r_pjanind2
+    filters:
+      indic_de: MEDAGEPOP
+      unit: YR
+- indicator_id: old_age_dependency_n2
+  label: old-age dependency (NUTS-2 table)
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels: [2]
+  same_as: old_age_dependency
+  numerator: population_65plus
+  denominator: population_15_64
+  source:
+    connector: eurostat
+    dataset: demo_r_pjanind2
+    filters:
+      indic_de: OLDDEP1
+      unit: PC
+- indicator_id: share_age_0_14_n2
+  label: "share aged 0–14 (NUTS-2 table)"
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels: [2]
+  same_as: share_age_0_14
+  numerator: population_0_14
+  denominator: population
+  source:
+    connector: eurostat
+    dataset: demo_r_pjanind2
+    filters:
+      indic_de: PC_Y0_14
+      unit: PC
+- indicator_id: fertility_rate_n2
+  label: fertility rate (NUTS-2 table)
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels: [2]
+  same_as: fertility_rate
+  numerator: live_births
+  denominator: women_15_49
+  source:
+    connector: eurostat
+    dataset: demo_r_find2
+    filters:
+      indic_de: TOTFERRT
+      unit: NR
+- indicator_id: s80_s20
+  label: income quintile share ratio S80/S20
+  dtype: continuous
+  transform: log
+  aggregation: none
+  native_levels: [2]
+  survey: EU-SILC
+  note: ratios are not aggregable; income reference period mostly t-1
+  source:
+    connector: eurostat
+    dataset: ilc_di11_r
+    filters:
+      unit: INX

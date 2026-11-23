@@ -50,3 +50,10 @@
 ## Causal layer: consistency checks (C1)
 - C1 correlates region means; agreement with a prior sign is evidence tier E1 (an association in the expected direction), not a causal effect. Between-region correlations mix within- and between-country differences; four edges contradict their prior between regions but agree within countries.
 - `classify_mechanism` knows two composite quantities (labour force, population change); other accounting links (GDP and household income in the national accounts) are not yet described by the metadata.
+
+## Causal layer: panel effects and queries (M7.3)
+- Panel effects describe year-to-year co-movement within regions net of country×year shocks; country×year effects also remove national policies. Long-run effects are the autoregressive transform of these short-run effects unless a literature elasticity is used.
+- `what_if` propagates first-order log changes along the graph; edges that close a cycle are left out, and interactions between causes are not modelled.
+- Group effects depend on the grouping: Estonia belongs to "North" among the macro-regions of the M7 analysis (no GDP effect on car ownership) and to a typology class with a small positive effect.
+- `explain_difference` uses a between-region regression on the causal parents; collinear parents (GDP and household income) give coefficients of opposite sign.
+

@@ -221,6 +221,8 @@ COMPOSITES: dict[str, frozenset[str]] = {
     "labour_force": frozenset({"employed", "unemployed"}),
     "population_change": frozenset({"natural_change", "net_migration"}),
 }
+# Stocks stored without a registry entry (the population is built in, decision D5)
+STOCKS = frozenset({"population"})
 # Denominators shared by most per-capita indicators (the population, also by age group); sharing
 # them alone is not an artefact.
 BROAD_DENOMINATORS = frozenset({"population"})
@@ -254,7 +256,9 @@ def classify_mechanism(cause: str, effect: str, registry_indicators) -> Mechanis
 
     def meta(i: str) -> tuple[str | None, str | None, str | None]:
         e = entries.get(i)
-        return (None, None, None) if e is None else (e.numerator, e.denominator, e.survey)
+        if e is None:  # stocks outside the registry (the built-in `population`) are their own numerator
+            return (i, None, None) if i in STOCKS else (None, None, None)
+        return (e.numerator, e.denominator, e.survey)
 
     (na, da, sa), (nb, db, sb) = meta(cause), meta(effect)
 

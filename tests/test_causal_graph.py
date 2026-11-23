@@ -78,6 +78,7 @@ def test_classify_mechanism():
     assert classify_mechanism("pop_density", "cars_per_1000", ind) == "shared_denominator"  # population stock
     assert classify_mechanism("tertiary_attainment", "lifelong_learning", ind) == "shared_survey_base"
     assert classify_mechanism("poverty_exclusion_risk", "gini", ind) == "shared_survey_base"
+    assert classify_mechanism("population", "pop_growth_rate", ind) == "shared_denominator"  # built-in stock
     assert classify_mechanism("gdp_pps_hab", "cars_per_1000", ind) == "causal"
     assert classify_mechanism("gdp_pps_hab", "unknown", ind) == "causal"
 

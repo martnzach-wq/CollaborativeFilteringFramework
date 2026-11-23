@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.2 (M7.3)
+- Panel estimation: half-panel jackknife against the Nickell bias (default) and Arellano–Bond GMM (decision D13); partial pooling of edge effects over typology classes or macro-regions (D14); `estimate_effects`.
+- `direction_test` with reference-period alignment, lagged Wald tests both ways and event-study profile; `screen` labels artefacts with `classify_mechanism`.
+- Causal queries `what_if`, `explain_difference`, `vision_check` (D12); `s_causal` and causal-lens `analogues`; `graph_forecast_benchmark`.
+- CLI `regsim causal fit`, `regsim causal what-if`, `regsim causal direction`.
+- `configs/indicators_causal_v1.yaml` (NUTS-2 demographic series back to 2008, S80/S20); `causal.transforms`, `causal.macro_regions`, `causal.groups`, `causal.estimator`, `causal.bias_correction` in the config.
+
 ## 0.8.1 (M7.1)
 - Causal edge registry: `descendants`, `update_evidence`, format-preserving `to_yaml`; `classify_mechanism` from the new indicator fields `numerator`, `denominator`, `survey` (decisions D10, D11).
 - C1 consistency checks (`regsim.causal.check`, `regsim causal check --config configs/causal.yaml`) on annual NUTS-0/2 panels 2008–2024 (`configs/causal.yaml`); evidence store in Parquet; E1 items for 10 edges in `configs/causal_edges.yaml`.

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Annotated
+
 import typer
 
 app = typer.Typer(help="regsim: similarity and prediction for multi-level regional indicators")
@@ -22,6 +24,64 @@ def causal_check(
     typer.echo(table.label.value_counts().to_string())
     typer.echo(rates[rates.grade == "all"].to_string(index=False))
     typer.echo(f"written to {folder}")
+
+
+@causal_app.command("fit")
+def causal_fit(
+    config: str = typer.Option(..., "--config", help="run config with a causal section"),
+    write_registry: bool = typer.Option(
+        False, help="write E2 evidence and temporal precedence into the registry"
+    ),
+    direction: bool = typer.Option(True, help="run the direction tests"),
+):
+    """C2: panel effects of all registry edges (pooled and per region group) and direction tests."""
+    from regsim.causal.run import run_fit
+    from regsim.config import RunConfig
+
+    effects, directions, folder = run_fit(RunConfig.from_yaml(config), write_registry, direction)
+    pooled = effects[effects.group == "all"]
+    typer.echo(f"{len(pooled)} edges estimated, {int((pooled.t.abs() > 1.96).sum())} with |t| > 1.96")
+    if len(directions):
+        typer.echo(directions.result.value_counts().to_string())
+    typer.echo(f"written to {folder}")
+
+
+@causal_app.command("what-if")
+def causal_what_if(
+    geo: str,
+    shock: Annotated[
+        list[str], typer.Option("--shock", help="indicator=relative change, e.g. gdp_pps_hab=0.1")
+    ],
+    config: str = typer.Option(..., "--config"),
+    horizon: str = typer.Option("short_run", help="short_run or long_run"),
+):
+    """P8: consequences of relative changes for the descendants of the shocked indicators."""
+    from regsim.causal.run import run_what_if
+    from regsim.config import RunConfig
+
+    shocks = {k: float(v) for k, v in (s.split("=", 1) for s in shock)}
+    out = run_what_if(RunConfig.from_yaml(config), geo, shocks, horizon)
+    cols = ["indicator", "value_now", "change_abs", "change", "lower", "upper", "tier", "sources"]
+    typer.echo(out[cols].to_string(index=False, float_format=lambda x: f"{x:.4g}"))
+
+
+@causal_app.command("direction")
+def causal_direction(
+    a: str,
+    b: str,
+    config: str = typer.Option(..., "--config"),
+    n_tests: int = typer.Option(1, help="number of tests for the Bonferroni threshold"),
+):
+    """Temporal precedence of two indicators (lagged tests both ways, event profile)."""
+    from regsim.causal.panel import direction_test, reference_offsets
+    from regsim.causal.run import panel
+    from regsim.config import RunConfig
+
+    cfg = RunConfig.from_yaml(config)
+    r = direction_test(
+        panel(cfg), a, b, n_tests=n_tests, offsets=reference_offsets(cfg.causal.reference_periods)
+    )
+    typer.echo({k: v for k, v in r.items() if k != "event_profile"})
 
 
 @app.command()

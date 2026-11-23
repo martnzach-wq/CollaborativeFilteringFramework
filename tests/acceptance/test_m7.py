@@ -20,6 +20,36 @@ needs_causal_build = pytest.mark.skipif(
 REGISTRY = "configs/causal_edges.yaml"
 
 
+@pytest.fixture(scope="module")
+def m73():
+    """Annual panel, fitted model, region groups and panel effects of `configs/causal.yaml`."""
+    import warnings
+
+    from regsim.api.runtime import fit
+    from regsim.causal.effects import estimate_effects
+    from regsim.causal.run import groups, panel
+    from regsim.config import RunConfig
+
+    cfg = RunConfig.from_yaml("configs/causal.yaml")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        p = panel(cfg)
+        fitted = fit(cfg)
+        g = groups(cfg, p, fitted)
+        indicators = IndicatorRegistry.from_yaml(*cfg.data.registries)
+        edges = EdgeRegistry.from_yaml(cfg.causal.edges)
+        effects = estimate_effects(edges, p, g, indicators, cfg.causal.transforms)
+    return {
+        "cfg": cfg,
+        "panel": p,
+        "fitted": fitted,
+        "groups": g,
+        "indicators": indicators,
+        "edges": edges,
+        "effects": effects,
+    }
+
+
 # M7.1 registry and consistency checks
 def test_registry_loads_and_validates():
     """configs/causal_edges.yaml validates against EdgeRegistry; every edge has >=1 source."""
@@ -89,36 +119,81 @@ def test_grading_rules():
 
 
 # M7.3 panel module and queries
-@not_started
-def test_fit_edge_reference_value():
+@needs_causal_build
+def test_fit_edge_reference_value(m73):
     """fit_edge(gdp_pps_hab -> cars_per_1000), NUTS-2, country x year FE: beta_std in [0.06, 0.14], t > 2.5."""
+    from regsim.causal.panel import fit_edge
+
+    ref = fit_edge(m73["panel"], "gdp_pps_hab", "cars_per_1000", bias_correction="none")  # M7 estimator
+    assert 0.06 <= ref.beta_std <= 0.14 and ref.t > 2.5, ref
+    jack = fit_edge(m73["panel"], "gdp_pps_hab", "cars_per_1000")  # decision D13 default
+    assert jack.beta_std > 0 and jack.rho > ref.rho  # the jackknife removes the downward Nickell bias
 
 
-@not_started
-def test_heterogeneity_reference_value():
+@needs_causal_build
+def test_heterogeneity_reference_value(m73):
     """heterogeneity by macro-region for GDP -> cars: I2 >= 0.6, p < 0.05."""
+    from regsim.causal.groups import macro_groups
+    from regsim.causal.panel import heterogeneity
+
+    p = m73["panel"]
+    groups = macro_groups(
+        p.drop_duplicates("geo_id").set_index("geo_id").parent_id, m73["cfg"].causal.macro_regions
+    )
+    tab, h = heterogeneity(p, "gdp_pps_hab", "cars_per_1000", groups, bias_correction="none")
+    assert h["I2"] >= 0.6 and h["p"] < 0.05, h
+    assert tab.set_index("group").beta_std.idxmax() == "East"
 
 
-@not_started
-def test_screen_flags_identities():
+@needs_causal_build
+def test_screen_flags_identities(m73):
     """screen() on NUTS-2 flags net migration -> population growth; after classify_mechanism it is
     not passed to the literature module."""
+    from regsim.causal.panel import screen
+
+    pairs = ["net_migration_rate", "pop_growth_rate", "gdp_pps_hab", "cars_per_1000", "employment_rate"]
+    out = screen(m73["panel"], pairs, bias_correction="none", registry_indicators=m73["indicators"])
+    row = out[(out.cause == "net_migration_rate") & (out.effect == "pop_growth_rate")].iloc[0]
+    assert row.discovered and row.mechanism == "accounting_identity" and not row.to_literature
 
 
-@not_started
-def test_what_if_reports_horizon_and_tier():
+@needs_causal_build
+def test_what_if_reports_horizon_and_tier(m73):
     """what_if returns one row per descendant with horizon, tier, edge ids and interval;
     GDP +10 % in EE00 gives cars +0.3 % to +2 % (short run)."""
+    from regsim.api.runtime import resolve_id
+    from regsim.causal.queries import what_if
+
+    ee = resolve_id(m73["fitted"].data, "EE00")
+    out = what_if(
+        m73["fitted"], m73["edges"], ee, {"gdp_pps_hab": 0.10}, effects=m73["effects"], groups=m73["groups"]
+    )
+    assert {"indicator", "change", "lower", "upper", "horizon", "tier", "edge_ids"} <= set(out.columns)
+    assert out.indicator.is_unique and (out.horizon == "short_run").all() and out.tier.notna().all()
+    cars = out.set_index("indicator").loc["cars_per_1000"]
+    assert 0.003 <= cars.change <= 0.02 and cars.tier == "E2" and "E018" in cars.edge_ids, cars
 
 
-@not_started
-def test_s_causal_differs_from_general_similarity():
+@needs_causal_build
+def test_s_causal_differs_from_general_similarity(m73):
     """s_causal(EE00, cars_per_1000, k=10) overlaps general k=10 neighbours by Jaccard <= 0.3."""
+    from regsim.api.runtime import resolve_id
+    from regsim.similarity.causal_lens import s_causal
+
+    ee = resolve_id(m73["fitted"].data, "EE00")
+    out = s_causal(m73["fitted"], m73["edges"], ee, "cars_per_1000", k=10)
+    assert out.attrs["jaccard"] <= 0.3, out.attrs
 
 
-@not_started
-def test_graph_constrained_forecast():
+@needs_causal_build
+def test_graph_constrained_forecast(m73):
     """Graph-constrained VAR beats unconstrained ridge VAR on median relative RMSE (hold-out last two years)."""
+    from regsim.evaluation.benchmark import graph_forecast_benchmark
+
+    p = m73["panel"]
+    indicators = [c for c in p.columns if c not in ("geo_id", "parent_id", "year")]
+    b = graph_forecast_benchmark(p, indicators, m73["edges"])
+    assert b["graph-constrained VAR"].median() < b["unconstrained VAR (ridge)"].median()
 
 
 # M7.4 SD bridge
@@ -139,10 +214,18 @@ def test_event_effect_placebo():
     90 % interval and placebo p-value < 0.1; announcement-year handling shifts the pre-period."""
 
 
-@not_started
-def test_direction_test_reference():
+@needs_causal_build
+def test_direction_test_reference(m73):
     """direction_test on NUTS-2: GDP <-> cars 'undecided' (same-year responses both ways);
     life expectancy -> old-age dependency 'forward'; series aligned by reference period."""
+    from regsim.causal.panel import direction_test, reference_offsets
+
+    off = reference_offsets(m73["cfg"].causal.reference_periods)
+    n = 48  # Bonferroni over both directions of the 24 prior edges of the M7 analysis
+    cars = direction_test(m73["panel"], "gdp_pps_hab", "cars_per_1000", n_tests=n, offsets=off)
+    assert cars["result"] == "undecided", cars
+    le = direction_test(m73["panel"], "life_expectancy", "old_age_dependency", n_tests=n, offsets=off)
+    assert le["result"] == "forward" and le["aligned"], le
 
 
 @not_started

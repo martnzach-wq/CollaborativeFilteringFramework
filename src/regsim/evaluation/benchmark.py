@@ -179,3 +179,75 @@ def level_transfer_benchmark(
         ref = res[res.method == reference].set_index("indicator").rmse
         res["skill"] = 1 - (res.rmse / res.indicator.map(ref)) ** 2
     return res
+
+
+def _rmse(truth: np.ndarray, pred: np.ndarray) -> float:
+    return float(np.sqrt(np.mean((np.asarray(truth) - np.asarray(pred)) ** 2)))
+
+
+def graph_forecast_benchmark(
+    panel: pd.DataFrame,
+    indicators: list[str],
+    registry,
+    holdout: int = 2,
+    alphas: tuple[float, ...] = (0.1, 1.0, 10.0, 100.0, 1000.0),
+    statuses: tuple[str, ...] = ("prior", "supported", "contested", "hypothesis"),
+) -> pd.DataFrame:
+    """Hold-out forecast of annual changes with and without the causal graph (M7.3 baseline).
+
+    For each indicator the standardised annual change in each of the last ``holdout`` years is forecast
+    from the changes of the previous year, trained on earlier years only (pooled over entities):
+
+    - persistence (no change), region trend (mean training change of the entity);
+    - own AR(1); unconstrained VAR (ridge on the lagged changes of all indicators);
+    - graph-constrained VAR (ridge on the own lag and the lagged changes of the indicator's causes in
+      the edge ``registry``).
+
+    Missing lagged changes enter as 0 (the standardised mean). The ridge penalty is chosen by
+    cross-validation on the training years.
+
+    Returns
+    -------
+    DataFrame
+        One row per indicator and hold-out year: RMSE of each model divided by the training standard
+        deviation of the indicator's annual change, and the number of causes used.
+    """
+    from sklearn.linear_model import RidgeCV
+
+    p = panel.sort_values(["geo_id", "year"])
+    cols = [c for c in indicators if c in p.columns]
+    d = p.groupby("geo_id")[cols].diff()
+    d[["geo_id", "year"]] = p[["geo_id", "year"]]
+    years = np.sort(d.year.unique())
+    test_years = years[-holdout:]
+    train = d[d.year < test_years[0]]
+    sd = train[cols].std()
+    z = d.copy()
+    z[cols] = d[cols] / sd
+    lag = z.groupby("geo_id")[cols].shift(1).fillna(0.0).add_suffix("_l1")
+    trend = z[z.year < test_years[0]].groupby("geo_id")[cols].mean()
+    rows = []
+    for k in cols:
+        parents = [c for c in dict.fromkeys(registry.parents(k, statuses=statuses)) if c in cols and c != k]
+        sets = {
+            "own AR(1)": [k],
+            "unconstrained VAR (ridge)": cols,
+            "graph-constrained VAR": [k, *parents],
+        }
+        ok_train = (z.year < test_years[0]) & z[k].notna()
+        fitted = {}
+        for name, feats in sets.items():
+            X = lag.loc[ok_train, [f"{c}_l1" for c in feats]].to_numpy()
+            fitted[name] = (feats, RidgeCV(alphas=alphas).fit(X, z.loc[ok_train, k].to_numpy()))
+        for y in test_years:
+            ok = (z.year == y) & z[k].notna()
+            if ok.sum() < 10:
+                continue
+            truth = z.loc[ok, k].to_numpy()
+            row = {"indicator": k, "year": int(y), "n": int(ok.sum()), "n_parents": len(parents)}
+            row["persistence (no change)"] = _rmse(truth, np.zeros_like(truth))
+            row["region trend"] = _rmse(truth, z.loc[ok, "geo_id"].map(trend[k]).fillna(0.0).to_numpy())
+            for name, (feats, m) in fitted.items():
+                row[name] = _rmse(truth, m.predict(lag.loc[ok, [f"{c}_l1" for c in feats]].to_numpy()))
+            rows.append(row)
+    return pd.DataFrame(rows)

@@ -2,6 +2,7 @@
 data:
   indicator_registry:
     - configs/indicators_eurostat_v1.yaml
+    - configs/indicators_causal_v1.yaml   # NUTS-2 copies back to 2008, S80/S20
   geo_scheme: NUTS2024        # decision D1
   levels: [0, 2]
   periods: ["2008/2024"]      # one window spanning the annual panel
@@ -12,4 +13,14 @@ causal:
   reference_periods: configs/indicator_reference_periods.yaml
   level: 2
   min_years: 5
+  estimator: fe                 # decision D13: within estimator ...
+  bias_correction: jackknife    # ... with half-panel jackknife against the Nickell bias; gmm as option
+  groups: typology              # decision D14: typology classes, macro-regions as fallback
+  transforms:
+    cars_per_1000: log          # elasticities for car ownership (M7 analysis); the main model keeps identity
+  macro_regions:                # country codes per macro-region (M7 analysis, causal_test_notes.md)
+    North: [DK, EE, FI, IE, IS, LT, LV, "NO", SE]
+    West: [AT, BE, CH, DE, FR, LI, LU, NL]
+    South: [CY, EL, ES, HR, IT, MT, PT, SI]
+    East: [AL, BA, BG, CZ, HU, ME, MK, PL, RO, RS, SK, TR, XK]
 output_dir: runs
