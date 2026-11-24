@@ -294,3 +294,36 @@ def effect_map_plotly(
         plot_bgcolor="white",
     )
     return fig
+
+
+def event_plot(
+    panel: pd.DataFrame, outcome: str, effects: pd.DataFrame, names: dict | None = None, label=None
+):
+    """Intervention effect (M7.5): observed series of the treated entity, counterfactual from the
+    announcement year with the placebo interval, anticipation years shaded (``effects`` from
+    `regsim.causal.events.effect`, one event)."""
+    names = names or {}
+    geo = effects.geo_id.iloc[0]
+    obs = panel[panel.geo_id == geo].set_index("year")[outcome].dropna()
+    e = effects.sort_values("year")
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.plot(
+        obs.index, obs.values, "o-", color=CATEGORICAL[0], label=f"observed: {names.get(geo, short_id(geo))}"
+    )
+    cf_lo, cf_hi = e.observed - e.upper, e.observed - e.lower  # counterfactual band from the effect interval
+    ax.fill_between(
+        e.year, cf_lo, cf_hi, color=CATEGORICAL[2], alpha=0.25, label="counterfactual, 90 % placebo interval"
+    )
+    ax.plot(e.year, e.counterfactual, "s--", color=CATEGORICAL[2], label="counterfactual")
+    ant = e[e.phase == "anticipation"].year
+    if len(ant):
+        ax.axvspan(
+            ant.min() - 0.5, ant.max() + 0.5, color=GREY, alpha=0.5, lw=0, label="anticipation (announced)"
+        )
+    ax.axvline(e.pre_end.iloc[0] + 0.5, color="black", lw=0.6)
+    ax.set_xlabel("year")
+    ax.set_ylabel(label or outcome)
+    ax.legend(fontsize=8, loc="best")
+    ax.set_title(f"{e.event.iloc[0]}: effect by counterfactual matrix completion", fontsize=10)
+    fig.tight_layout()
+    return fig
