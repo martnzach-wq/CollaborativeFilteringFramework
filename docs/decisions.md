@@ -21,6 +21,9 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D19 | 2026-11-23 | Practical-equivalence threshold δ for effect similarity: **0.1 SD** of the standardised effect by default, **user-set per link**. | M. Zach |
 | D14a | 2026-11-23 | Region groups as moderators of the effect-similarity model (M7.6): **macro-regions** (`causal.effect_groups: macro`), an exception to D14. With typology classes GDP → unemployment fails the validation gate; the macro-regions reproduce the M7 analysis. Partial pooling of panel effects keeps the typology classes (D14). | M. Zach |
 | D15 | 2026-11-23 | LLM in the literature module: a **configurable callable** (prompt → text); tests use recorded responses and a stub. | M. Zach |
+| D16 | 2026-11-24 | SD review items go to **both** the edge registry (status `model_review`) and an issue in the SD repository. | M. Zach |
+| D20 | 2026-11-24 | Between-region spread for hierarchical priors on SD parameters: **literature first**, other calibrated models where available; never estimated from the demonstrators alone. | M. Zach |
+| D21 | 2026-11-24 | Calibration targets for class-R recalibration without observed mode split: **regsim-imputed mode split with intervals**; absolute levels reported only within the demonstrator domain. | M. Zach |
 
 ## Consequences
 

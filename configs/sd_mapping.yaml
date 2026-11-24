@@ -1,0 +1,27 @@
+# SD model (KNOWING) <-> regsim mapping and expected responses (M7.4).
+# relation: same | proxy | inverse_proxy (inverse proxies flip the sign of an elasticity).
+model: martnzach-wq/KNOWING-integrated-SD-model
+variables:
+  - {sd: fuel car cost per km, regsim: fuel_car_cost, relation: same}
+  - {sd: population, regsim: population, relation: same}
+  - {sd: population (internal), regsim: population, relation: same}
+  - {sd: cooling degree days, regsim: cooling_degree_days, relation: same}
+  - {sd: car_km_cap, regsim: car_km_cap, relation: same}
+  - {sd: active_km_cap, regsim: active_mode_km_cap, relation: same}
+  - {sd: emissions_total, regsim: total_emissions, relation: same}
+  - {sd: emissions_transport, regsim: ghg_transport_cap, relation: proxy}
+  - {sd: car_km_share, regsim: cars_per_1000, relation: proxy}
+# Expected responses of SD outputs (docs/causal/sd_model_review.md, column "Reference"); sign "0" means
+# approximately zero (|elasticity| < tolerance), used for per-capita outputs under population scaling.
+expectations:
+  - {driver: fuel car cost per km, output: car_km_cap, sign: "-", value: -0.3, source: "Goodwin, Dargay and Hanly 2004 (long run)"}
+  - {driver: fuel car cost per km, output: active_km_cap, sign: "+", source: substitution towards active modes}
+  - {driver: cooling degree days, output: car_km_cap, sign: "+", source: heat reduces walking and cycling}
+  - {driver: cooling degree days, output: active_km_cap, sign: "-", source: heat reduces walking and cycling}
+  - {driver: parking cost (base), output: car_km_cap, sign: "-", source: generalised cost}
+  - {driver: value of time, output: car_km_cap, sign: "+", source: generalised cost}
+  - {driver: population (internal), output: car_km_cap, sign: "0", source: per-capita output}
+  - {driver: population, output: car_km_cap, sign: "0", source: per-capita output}
+  - {driver: population (internal), output: emissions_total, sign: "+", source: more residents, more activity}
+  - {driver: population, output: emissions_total, sign: "+", source: more residents, more activity}
+  - {driver: grid emission factor, output: emissions_total, sign: "+", source: emission accounting}

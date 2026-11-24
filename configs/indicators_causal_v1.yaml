@@ -1,6 +1,7 @@
 registry_version: causal_v1
 # NUTS-2 series for the causal panels (M7): copies of NUTS-3 indicators whose NUTS-3 tables start in
-# 2013-2014 (filled from the NUTS-2 tables, which go back to 1990), and S80/S20 for the inequality edges.
+# 2013-2014 (filled from the NUTS-2 tables, which go back to 1990), S80/S20 for the inequality edges, and
+# heating and cooling degree days at NUTS-2/3 (nrg_chddr2_a; the national table nrg_chdd_a has level 0 only).
 # Copies fill gaps only: the NUTS-3 indicator stays the model column (same_as, source precedence).
 indicators:
 - indicator_id: median_age_n2
@@ -74,3 +75,29 @@ indicators:
     dataset: ilc_di11_r
     filters:
       unit: INX
+- indicator_id: heating_degree_days_r
+  label: heating degree days (regional table)
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_area
+  native_levels: [2, 3]
+  same_as: heating_degree_days
+  source:
+    connector: eurostat
+    dataset: nrg_chddr2_a
+    filters:
+      unit: NR
+      indic_nrg: HDD
+- indicator_id: cooling_degree_days_r
+  label: cooling degree days (regional table)
+  dtype: continuous
+  transform: log1p
+  aggregation: wmean_area
+  native_levels: [2, 3]
+  same_as: cooling_degree_days
+  source:
+    connector: eurostat
+    dataset: nrg_chddr2_a
+    filters:
+      unit: NR
+      indic_nrg: CDD

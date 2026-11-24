@@ -5,6 +5,7 @@ on Eurostat NUTS-2 panels 2008-2024; tolerances allow for data revisions.
 """
 
 import copy
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -19,6 +20,30 @@ needs_causal_build = pytest.mark.skipif(
     not (CAUSAL_STORE / "observations").exists(), reason="run `regsim build configs/causal.yaml`"
 )
 REGISTRY = "configs/causal_edges.yaml"
+
+SD_MODEL = Path(os.environ.get("REGSIM_SD_MODEL", "../martnzach-wq/knowing-integrated-sd-model"))
+needs_sd = pytest.mark.skipif(
+    not (SD_MODEL / "city_config.py").exists(),
+    reason="set REGSIM_SD_MODEL to a checkout of the KNOWING SD model",
+)
+
+
+@pytest.fixture(scope="module")
+def sd_runs():
+    """Perturbation protocol (2050), comparison and lever effects for Tallinn and Granollers."""
+    from regsim.causal import sd_knowing
+    from regsim.causal.sd_bridge import compare, load_mapping
+
+    model = sd_knowing.load(SD_MODEL)
+    cities = ["TALLINN", "GRANOLLERS"]
+    protocol = pd.concat([sd_knowing.perturbation_protocol(model, c) for c in cities], ignore_index=True)
+    levers = pd.concat([sd_knowing.lever_table(model, c) for c in cities], ignore_index=True)
+    _, expectations = load_mapping()
+    return {
+        "protocol": protocol,
+        "compare": compare(protocol[protocol.year == 2050], expectations=expectations),
+        "levers": levers,
+    }
 
 
 @pytest.fixture(scope="module")
@@ -242,14 +267,25 @@ def test_graph_constrained_forecast(m73):
 
 
 # M7.4 SD bridge
-@not_started
+@needs_sd
 def test_parse_vensim_edges():
     """parse_vensim_edges on Submodel_Mobility_v10.mdl returns 109 edges; on Submodel_EnergySupply_v4.mdl 69."""
+    from regsim.causal.sd_bridge import parse_vensim_edges
+
+    assert len(parse_vensim_edges(SD_MODEL / "Submodel_Mobility_v10.mdl")) == 109
+    assert len(parse_vensim_edges(SD_MODEL / "Submodel_EnergySupply_v4.mdl")) == 69
 
 
-@not_started
-def test_sd_compare_flags_review():
+@needs_sd
+def test_sd_compare_flags_review(sd_runs):
     """compare() flags fuel car cost -> active-mode km (-0.34) and population -> total emissions (-0.47) as model_review."""
+    review = sd_runs["compare"][sd_runs["compare"].status == "model_review"].set_index(
+        ["city", "driver", "output"]
+    )
+    fuel = review.loc[("TALLINN", "fuel car cost per km", "active_km_cap")]
+    assert round(fuel.elasticity, 2) == -0.34 and fuel.diagnosis.startswith("calibration off")
+    pop = review.loc[("TALLINN", "population (internal)", "emissions_total")]
+    assert round(pop.elasticity, 2) == -0.47 and pop.diagnosis.startswith("population scaled consistently")
 
 
 # M7.5 events
@@ -315,10 +351,18 @@ def test_registry_schema_v02():
     assert by_horizon["short_run"]["sign"] == "-" and by_horizon["long_run"]["sign"] == "+"
 
 
-@not_started
-def test_sd_perturbation_protocol():
+@needs_sd
+def test_sd_perturbation_protocol(sd_runs):
     """Granollers fuel cost -> car-km elasticity -0.28 +/- 0.05; Tallinn CDD response zero with
     calibration and negative on active km without; consistent population scaling |e| < 0.05."""
+    p = sd_runs["protocol"]
+    p = p[p.year == 2050].set_index(["city", "variant", "driver", "output"]).elasticity
+    assert abs(p[("GRANOLLERS", "as configured", "fuel car cost per km", "car_km_cap")] + 0.28) <= 0.05
+    assert abs(p[("TALLINN", "as configured", "cooling degree days", "active_km_cap")]) < 1e-6
+    assert p[("TALLINN", "calibration off", "cooling degree days", "active_km_cap")] < -0.05
+    for city in ("TALLINN", "GRANOLLERS"):
+        for out in ("car_km_cap", "active_km_cap"):
+            assert abs(p[(city, "as configured", "population", out)]) < 0.05
 
 
 # M7.6 effect similarity
@@ -351,27 +395,91 @@ def test_s_effect_equivalence(m76):
 
 
 # M7.4 parameter transfer
-@not_started
+@needs_sd
 def test_parameter_classes_complete():
     """Every CityConfig.mobility field is assigned to exactly one class in configs/sd_parameter_classes.yaml."""
+    import dataclasses
+
+    from regsim.causal import sd_knowing
+    from regsim.causal.sd_bridge import load_parameter_classes
+
+    model = sd_knowing.load(SD_MODEL)
+    fields = {f"mobility.{f.name}" for f in dataclasses.fields(model.city_config.MobilityConfig)}
+    by = load_parameter_classes()["by_parameter"]  # raises if a parameter is in two classes
+    assert fields <= set(by), sorted(fields - set(by))
 
 
-@not_started
+@needs_causal_build
 def test_domain_check_reference():
     """domain_check with demonstrators EE00, ES51, ITF3 and the six-indicator lens: share of NUTS-2 regions
     outside the range on >= 1 dimension in [0.75, 0.9]; median nearest distance in [0.8, 0.95]."""
+    from regsim.causal.run import lens_matrix
+    from regsim.causal.sd_bridge import domain_check, load_parameter_classes
+    from regsim.config import RunConfig
+
+    lens = load_parameter_classes()["domain_lens"]
+    table = domain_check(
+        lens_matrix(RunConfig.from_yaml("configs/causal.yaml"), lens), None, ["EE00", "ES51", "ITF3"], lens
+    )
+    assert 0.75 <= table.outside_any.mean() <= 0.9
+    assert 0.8 <= table.distance_nearest.median() <= 0.95
 
 
-@not_started
+@needs_sd
 def test_residuals_never_copied():
     """transfer_parameters never copies class-R values from donor to follower; it calls recalibrate_residuals."""
+    import numpy as np
+
+    from regsim.causal import sd_bridge, sd_knowing
+
+    model = sd_knowing.load(SD_MODEL)
+    tallinn = model.city("TALLINN").mobility
+    by = sd_bridge.load_parameter_classes()["by_parameter"]
+    params = pd.DataFrame(
+        [
+            {"parameter": f, "class": by[f"mobility.{f}"], "value": getattr(tallinn, f)}
+            for f in ("population_internal", "value_of_time_base", "mode_change_damping", "attr_distinction",
+                      "apply_cdd_baseattr_compensation")
+        ]
+    )  # fmt: skip
+    calls = []
+
+    def recalibrate(names):  # stand-in calibration to a follower target: damping and distinction
+        calls.append(names)
+
+        def run(x):
+            return pd.Series({"car": x["mode_change_damping"] / (1 + x["attr_distinction"])})
+
+        start = dict.fromkeys(names, 1.0)
+        return sd_bridge.recalibrate_residuals(
+            run, start, pd.DataFrame({"quantity": ["car"], "value": [0.42]}), names
+        )
+
+    out = sd_bridge.transfer_parameters(params, "TALLINN", "GRANOLLERS", recalibrate=recalibrate).set_index(
+        "parameter"
+    )
+    residual = out[out["class"] == "R"]
+    assert calls == [list(residual.index)]
+    assert not np.isclose(residual.loc["mode_change_damping", "value"], tallinn.mode_change_damping)
+    assert out.loc["apply_cdd_baseattr_compensation", "value"] == tallinn.apply_cdd_baseattr_compensation
 
 
-@not_started
 def test_report_rules():
     """report_rules('extrapolation', False) allows rankings but not levels; ('moderate', False) allows levels."""
+    from regsim.causal.sd_bridge import report_rules
+
+    assert report_rules("extrapolation", False) == {"rankings": True, "directions": True, "levels": False}
+    assert report_rules("moderate", False)["levels"] and report_rules("extrapolation", True)["levels"]
 
 
-@not_started
-def test_lever_ranking_agreement():
+@needs_sd
+def test_lever_ranking_agreement(sd_runs):
     """lever_ranking on Tallinn and Granollers: road pricing > cycling attractiveness > parking adaptation in both."""
+    from regsim.causal.sd_bridge import lever_ranking
+
+    levers = sd_runs["levers"]
+    ranking = lever_ranking(levers[levers.city.isin(["TALLINN", "GRANOLLERS"])])
+    order = ["policy_road_pricing", "policy_cycling_attractiveness", "policy_parking_cost_adaptation"]
+    for _city, g in ranking.groupby("city"):
+        ranks = g.set_index("lever")["rank"]
+        assert ranks[order[0]] < ranks[order[1]] < ranks[order[2]], g

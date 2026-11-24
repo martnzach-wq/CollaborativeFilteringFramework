@@ -160,6 +160,9 @@ class CausalConfig(BaseModel):
     llm: str | None = None  # literature module (D15): "module:callable", a function prompt -> answer text
     llm_verifier: str | None = None  # stronger model for verification and the strict measure check
     literature_max_results: int = 25
+    sd_model_path: str | None = None  # checkout of the KNOWING SD model (else env REGSIM_SD_MODEL)
+    sd_cities: list[str] = Field(default_factory=lambda: ["TALLINN", "GRANOLLERS", "NAPLES"])
+    sd_demonstrators: list[str] = Field(default_factory=lambda: ["EE00", "ES51", "ITF3"])  # NUTS codes
 
 
 class RunConfig(BaseModel):

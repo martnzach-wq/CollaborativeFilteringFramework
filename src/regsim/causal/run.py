@@ -296,3 +296,94 @@ def run_literature(cfg, edge_ids: list[str], client=None) -> tuple[pd.DataFrame,
     pd.concat(logs, ignore_index=True).to_csv(folder / "prompts.csv", index=False)
     write_evidence(graded, cfg.evidence_path, run=run, test="literature", tier="E1")
     return graded, folder
+
+
+def sd_model_path(cfg) -> Path:
+    """Checkout of the KNOWING SD model: ``causal.sd_model_path`` or the environment variable
+    ``REGSIM_SD_MODEL``."""
+    import os
+
+    path = (cfg.causal.sd_model_path if cfg.causal else None) or os.environ.get("REGSIM_SD_MODEL")
+    if not path:
+        raise SystemExit("set causal.sd_model_path or REGSIM_SD_MODEL to a checkout of the KNOWING SD model")
+    return Path(path)
+
+
+def lens_matrix(cfg, lens: list[str]) -> pd.DataFrame:
+    """Region means of the lens indicators over the config's years (transformed scale), indexed by code
+    without scheme prefix."""
+    from regsim.api.runtime import short_id
+
+    p = panel(cfg)
+    m = p.groupby("geo_id")[[c for c in lens if c in p.columns]].mean()
+    m.index = m.index.map(short_id)
+    return m
+
+
+def run_sd(cfg) -> dict:
+    """SD bridge (M7.4): perturbation protocol and comparison, lever effects and ranking for the cities of
+    ``causal.sd_cities``; domain check and next-demonstrator ranking for ``causal.sd_demonstrators``.
+
+    Writes ``protocol.csv``, ``compare.csv``, ``levers.csv``, ``lever_ranking.csv``, ``domain.csv`` and
+    ``next_demonstrator.csv`` to ``<output_dir>/causal-sd-<hash>``; the comparison and lever effects go to
+    the evidence store (lever effects are intervention effects for M7.5).
+    """
+    from regsim.causal import sd_knowing as K
+    from regsim.causal.sd_bridge import (
+        compare,
+        domain_check,
+        lever_ranking,
+        load_mapping,
+        load_parameter_classes,
+        next_demonstrator,
+    )
+
+    c, _, _ = _setup(cfg)
+    model = K.load(sd_model_path(cfg))
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        protocol = pd.concat(
+            [K.perturbation_protocol(model, city) for city in c.sd_cities], ignore_index=True
+        )
+        levers = pd.concat([K.lever_table(model, city) for city in c.sd_cities], ignore_index=True)
+    _, expectations = load_mapping()
+    comparison = compare(
+        protocol[protocol.year == 2050], EdgeRegistry.from_yaml(c.edges), expectations=expectations
+    )
+    ranking = lever_ranking(levers)
+    lens = load_parameter_classes()["domain_lens"]
+    matrix = lens_matrix(cfg, lens)
+    domain = domain_check(matrix, None, c.sd_demonstrators, lens)
+    candidates = next_demonstrator(matrix.loc[domain.index], c.sd_demonstrators)
+    run = cfg.config_hash()
+    folder = Path(cfg.output_dir) / f"causal-sd-{run}"
+    folder.mkdir(parents=True, exist_ok=True)
+    cfg.write_resolved(folder)
+    for name, t in [
+        ("protocol", protocol),
+        ("compare", comparison),
+        ("levers", levers),
+        ("lever_ranking", ranking),
+        ("domain", domain.reset_index(names="geo")),
+        ("next_demonstrator", candidates),
+    ]:
+        t.to_csv(folder / f"{name}.csv", index=False)
+    write_evidence(
+        comparison.astype({"elasticity": float}), cfg.evidence_path, run=run, test="sd_compare", tier="E4"
+    )
+    write_evidence(  # `effect` names the effect indicator elsewhere in the store
+        levers.rename(columns={"effect": "lever_effect"}),
+        cfg.evidence_path,
+        run=run,
+        test="sd_levers",
+        tier="E4",
+    )
+    return {
+        "protocol": protocol,
+        "compare": comparison,
+        "levers": levers,
+        "ranking": ranking,
+        "domain": domain,
+        "next_demonstrator": candidates,
+        "folder": folder,
+    }

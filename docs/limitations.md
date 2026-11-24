@@ -67,3 +67,8 @@
 - Grades rest on abstracts; magnitudes are rarely reported there. The strict measure check removes proxies that the first passes accept, and with it fewer edges reach grades A and B.
 - The C30 fixture is built from the claim table of the M7 analysis, with titles in place of abstracts; it tests the pipeline mechanics and the grading, not the extraction prompts.
 
+## Causal layer: SD bridge (M7.4)
+- Elasticities are model properties at 2050 for one-sided +10 % steps; Tallinn's level-input elasticities depend on its GC-neutral calibration and are not transferable.
+- The expected responses in `configs/sd_mapping.yaml` are signs from the review and the literature; the comparison does not test magnitudes where no literature value exists.
+- Parameter transfer and cross-calibration are implemented as protocol functions; their application to the KNOWING cities needs observed mode shares and trip lengths as calibration targets.
+

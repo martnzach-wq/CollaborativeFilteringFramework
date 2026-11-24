@@ -106,6 +106,27 @@ def causal_literature(
     typer.echo(f"written to {folder}")
 
 
+@causal_app.command("sd")
+def causal_sd(config: str = typer.Option(..., "--config")):
+    """M7.4: SD perturbation protocol, comparison with expectations, lever ranking, domain check."""
+    from regsim.causal.run import run_sd
+    from regsim.config import RunConfig
+
+    out = run_sd(RunConfig.from_yaml(config))
+    review = out["compare"][out["compare"].status == "model_review"]
+    typer.echo(
+        review[["city", "driver", "output", "elasticity", "reason", "diagnosis"]].to_string(index=False)
+    )
+    r = out["ranking"]
+    typer.echo(f"lever ranking agreement (Spearman): {r.attrs['spearman']}")
+    d = out["domain"]
+    typer.echo(
+        f"domain: median distance {d.distance_nearest.median():.3f}, outside range {d.outside_any.mean():.2f}; "
+        f"best next demonstrator {out['next_demonstrator'].candidate.iloc[0]}"
+    )
+    typer.echo(f"written to {out['folder']}")
+
+
 @causal_app.command("direction")
 def causal_direction(
     a: str,

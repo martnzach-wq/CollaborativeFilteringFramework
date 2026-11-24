@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.5 (M7.4)
+- SD bridge: Vensim parser, perturbation protocol (consistent input groups, calibration on/off), comparison with expected responses and diagnosis, lever effects and ranking, parameter classes, domain check, next demonstrator, residual recalibration, class-based parameter transfer, cross-calibration (decisions D16, D20, D21).
+- Adapter for the KNOWING SD model (`causal.sd_knowing`); `regsim causal sd`.
+- Regional degree days (`nrg_chddr2_a`) for the causal store.
+
 ## 0.8.4 (M7.2)
 - Literature module: propose, search (OpenAlex, Crossref), extract, verify, strict measure check, grade overall and per horizon; LLM as a configurable callable (decision D15); `regsim causal literature`.
 - Grading reproduces the round-1 and round-2 grades of the M7 analysis; offline fixture for C30.

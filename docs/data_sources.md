@@ -42,4 +42,5 @@
 - The NUTS-3 tables of median age, old-age dependency, share aged 0–14 (`demo_r_pjanind3`) and fertility (`demo_r_find3`) start in 2013–2014; the NUTS-2 tables `demo_r_pjanind2` and `demo_r_find2` (from 1990) fill the earlier years as `same_as` copies. Where both exist the values agree (median ratio 1.000).
 - S80/S20 at NUTS-2 from `ilc_di11_r` (EU-SILC, income reference year t−1), more than 100 regions from 2018.
 - Transform override for the causal layer: cars per 1,000 on the log scale (`causal.transforms`), so that its coefficients are elasticities; the model of `configs/example.yaml` keeps the registry transform.
+- Heating and cooling degree days at NUTS-2/3 from `nrg_chddr2_a` (copies of the national-table indicators), used in the domain check of the SD bridge.
 

@@ -43,6 +43,7 @@ regsim causal effects --config configs/causal.yaml # effect similarity: gate and
 regsim causal compare EE00 ES51 --config configs/causal.yaml  # P(practical equivalence) per link
 regsim app configs/example.yaml --effects configs/causal.yaml # explorer with the Effects tab
 regsim causal literature E018 --config configs/causal.yaml  # literature pipeline (needs causal.llm, OPENALEX_API_KEY)
+regsim causal sd --config configs/causal.yaml      # SD bridge (needs REGSIM_SD_MODEL: checkout of the KNOWING SD model)
 ```
 
 The LAU extension uses `configs/lau.yaml` (NUTS-3 → LAU with the D3.6 indicators, store `data/store_lau`).

@@ -1,4 +1,29 @@
 # Progress
+## M7.4 SD bridge (2026-11-24)
+
+**Done**
+- Decisions D16 (review items to the registry and an issue in the SD repository), D20 (between-region spread for SD parameter priors from the literature first) and D21 (class-R recalibration to regsim-imputed mode split with intervals), recorded in `docs/decisions.md`.
+- `causal.sd_bridge`: `parse_vensim_edges` (variables of left-hand sides found in right-hand sides; subscripts, data equations and range definitions left out; stocks and single-number constants flagged), `perturbation_elasticities` (forward or central), `lever_effects`, `load_mapping` / `map_to_registry` (relation same, proxy, inverse proxy), `compare` (expected responses in `configs/sd_mapping.yaml` and registry priors; `model_review` with the diagnosis taken from the protocol variants), `lever_ranking`, `load_parameter_classes`, `domain_check`, `next_demonstrator`, `export_inputs`, `recalibrate_residuals` (Nelder–Mead, over draws of imputed targets), `transfer_parameters` (by class; class R recalibrated, never copied), `cross_calibrate`, `report_rules`.
+- `causal.sd_knowing`: adapter for the KNOWING model (separate checkout, `causal.sd_model_path` or `REGSIM_SD_MODEL`): input groups scaled consistently (constants and series alike), levers held at their 2019 value for removal, runs with and without the Tallinn calibration, `perturbation_protocol`, `lever_table`.
+- CLI `regsim causal sd --config configs/causal.yaml` (5 s): protocol, comparison, levers, ranking, domain check, next demonstrator; results in `runs/causal-sd-<hash>` and the evidence store.
+- Data: regional heating and cooling degree days (`nrg_chddr2_a`) in `configs/indicators_causal_v1.yaml`; the registry entries use the national table only.
+- Draft issue for the SD repository: `docs/causal/sd_review_issue.md` (not posted).
+
+**Results**
+- Vensim parser: 109 edges (mobility) and 69 (energy supply), identical to `sd_dependency_edges.csv` including the stock and constant flags.
+- Perturbation elasticities reproduce `sd_city_elasticities.csv`: 223 of 224 BAU values within 0.005 (one at 0.012), with the mode-specific trip lengths of the M7 runs and car share including car passengers; Granollers fuel and EV cost differ by design (constants perturbed as well: fuel cost → car-km −0.28). Lever effects reproduce with the lever held at its 2019 value (for factor levers this is 1, not 0).
+- `compare` flags Tallinn fuel cost → active km (−0.34, resolved with the calibration off: +0.09), CDD and parking cost (no response, resolved with the calibration off), population (internal) → emissions (−0.47, sign resolved by consistent population scaling; the missing response remains: energy population not linked) and value of time (no response, unexplained: hard-coded constant).
+- Lever ranking on car-km 2050: road pricing > cycling > parking in Tallinn, Granollers and Naples; Spearman Tallinn–Granollers 0.94, sizes differ up to a factor of 4.3.
+- Domain check (EE00, ES51, ITF3; lens of six indicators, means 2008–2024 on the transformed scale): 231 regions, median distance 0.868 (reference 0.868), 81 % outside the range on at least one dimension (82 %), distances correlate 0.997 with `demonstrator_coverage.csv`. Next demonstrator: DED2, NL13, DE94, FRF1 (share within 0.75 from 0.26 to about 0.57–0.60).
+- NAPLES runs now that its workbook is in the repository.
+
+**Tests**: 9 unit tests (`tests/test_sd_bridge.py`); M7.4 acceptance (8 tests) pass with the SD checkout and are skipped without it.
+
+**Open**
+- Post the review issue in the SD repository (needs write access).
+- `cross_calibrate` and `recalibrate_residuals` with the KNOWING model need observed mode shares and trip lengths of the cities as calibration targets.
+- Next: M7.5 (intervention effects).
+
 ## M7.2 Literature module (2026-11-23)
 
 **Done**
