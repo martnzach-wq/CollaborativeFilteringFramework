@@ -1,0 +1,12 @@
+# Interventions for counterfactual effect estimation (M7.5, regsim.causal.events).
+# The pre-treatment window ends before the announcement year (anticipation effects).
+schema_version: "0.1"
+events:
+  - id: EE_vehicle_tax_2025
+    geo_id: NUTS2024:EE00
+    intervention: motor vehicle tax and registration fee
+    announcement_year: 2024   # adopted in 2024; purchases were brought forward into 2024
+    start_year: 2025          # in force from 1 January 2025
+    outcomes: [cars_per_1000]
+    source: Motor Vehicle Tax Act (Estonia), in force 1 January 2025
+    note: first case of the M7 hand-over; needs Eurostat cars per 1,000 for 2025-2026

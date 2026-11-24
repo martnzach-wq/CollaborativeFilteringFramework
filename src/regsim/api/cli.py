@@ -127,6 +127,20 @@ def causal_sd(config: str = typer.Option(..., "--config")):
     typer.echo(f"written to {out['folder']}")
 
 
+@causal_app.command("events")
+def causal_events(
+    config: str = typer.Option(..., "--config"),
+    events: str = typer.Option("configs/events.yaml", help="event table"),
+):
+    """M7.5: intervention effects by counterfactual matrix completion with placebo inference."""
+    from regsim.causal.run import run_events
+    from regsim.config import RunConfig
+
+    summary, folder = run_events(RunConfig.from_yaml(config), events)
+    typer.echo(summary.to_string(index=False))
+    typer.echo(f"written to {folder}")
+
+
 @causal_app.command("direction")
 def causal_direction(
     a: str,

@@ -72,3 +72,7 @@
 - The expected responses in `configs/sd_mapping.yaml` are signs from the review and the literature; the comparison does not test magnitudes where no literature value exists.
 - Parameter transfer and cross-calibration are implemented as protocol functions; their application to the KNOWING cities needs observed mode shares and trip lengths as calibration targets.
 
+## Causal layer: intervention effects (M7.5)
+- Effects are estimated for one treated region at a time against untreated analogues; spill-overs to the analogues and other interventions in the same years are not modelled.
+- Intervals and p-values come from in-space placebos on the analogues; with few untreated regions of similar profile they are wide, and per-year intervals are less reliable than those of the averages.
+

@@ -1,4 +1,5 @@
-"""Acceptance tests for milestone M7 (causal layer). Skipped until the sub-milestone starts.
+"""Acceptance tests for milestone M7 (causal layer). Tests on real data need the causal store
+(`regsim build configs/causal.yaml`) or a checkout of the KNOWING SD model (REGSIM_SD_MODEL).
 
 Reference values come from the M7 analysis (causal_test_notes.md, causal_panel_results.csv)
 on Eurostat NUTS-2 panels 2008-2024; tolerances allow for data revisions.
@@ -14,7 +15,6 @@ import pytest
 from regsim.causal.graph import EdgeRegistry, classify_mechanism
 from regsim.registry import IndicatorRegistry
 
-not_started = pytest.mark.skip(reason="sub-milestone not started")
 CAUSAL_STORE = Path("data/store_causal")
 needs_causal_build = pytest.mark.skipif(
     not (CAUSAL_STORE / "observations").exists(), reason="run `regsim build configs/causal.yaml`"
@@ -289,10 +289,37 @@ def test_sd_compare_flags_review(sd_runs):
 
 
 # M7.5 events
-@not_started
 def test_event_effect_placebo():
     """On synthetic data with a known effect of +0.5 SD from year t0, events.effect recovers it within the
     90 % interval and placebo p-value < 0.1; announcement-year handling shifts the pre-period."""
+    import numpy as np
+
+    from regsim.causal.events import effect
+
+    def panel(seed, size, start=2018, announce=None, anticipation=0.0):
+        rng = np.random.default_rng(seed)
+        G, T = 120, 18
+        U, V = rng.normal(size=(G, 2)), rng.normal(size=(T, 2))
+        Y = rng.normal(size=G)[:, None] + np.cumsum(rng.normal(0, 0.3, T))[None, :] + 0.5 * U @ V.T
+        Y = Y + rng.normal(0, 0.2, (G, T))
+        sd, years = Y.std(), np.arange(2005, 2005 + T)
+        Y[0, years >= start] += size * sd
+        if announce is not None:
+            Y[0, (years >= announce) & (years < start)] += anticipation * sd
+        long = pd.DataFrame([(f"R{g}", int(y), Y[g, i]) for g in range(G) for i, y in enumerate(years)],
+                            columns=["geo_id", "year", "y"])  # fmt: skip
+        return long, size * sd
+
+    ev = pd.DataFrame([{"id": "e", "geo_id": "R0", "announcement_year": 2018, "start_year": 2018}])
+    long, true = panel(1, 0.5)
+    s = effect(None, ev, "y", analogues=20, placebo=100, panel=long).attrs["summary"].iloc[0]
+    assert s.lower <= true <= s.upper and s.p_value < 0.1
+    long, _ = panel(2, 0.5, start=2019, announce=2017, anticipation=0.4)
+    shifted = effect(None, ev.assign(announcement_year=2017, start_year=2019), "y", placebo=40, panel=long)
+    assert shifted.pre_end.iloc[0] == 2016 and set(shifted.year[shifted.phase == "anticipation"]) == {
+        2017,
+        2018,
+    }
 
 
 @needs_causal_build

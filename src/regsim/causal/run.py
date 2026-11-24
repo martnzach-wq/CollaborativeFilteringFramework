@@ -387,3 +387,42 @@ def run_sd(cfg) -> dict:
         "next_demonstrator": candidates,
         "folder": folder,
     }
+
+
+def run_events(
+    cfg, path: str = "configs/events.yaml", analogues: int = 20, placebo: int = 200
+) -> tuple[pd.DataFrame, Path]:
+    """Intervention effects (M7.5) for the events of ``path`` on their outcomes, from the annual panel of
+    the config. Events whose post-period has no data yet are reported as pending."""
+    from regsim.causal.events import effect, load_events
+
+    events = load_events(path)
+    p = panel(cfg)
+    rows, summaries = [], []
+    for ev in events.itertuples():
+        for outcome in ev.outcomes:
+            if outcome not in p.columns:
+                continue
+            one = events[events.id == ev.id]
+            out = effect(None, one, outcome, analogues, placebo, cfg.model.seed, panel=p)
+            rows.append(out.assign(outcome=outcome))
+            s = out.attrs["summary"]
+            if "treatment" not in set(s.get("phase", [])):
+                s = pd.concat(
+                    [s, pd.DataFrame([{"event": ev.id, "geo_id": ev.geo_id, "phase": "treatment",
+                                       "status": "pending: no data after the start year"}])],
+                    ignore_index=True,
+                )  # fmt: skip
+            summaries.append(s.assign(outcome=outcome))
+    run = cfg.config_hash()
+    folder = Path(cfg.output_dir) / f"causal-events-{run}"
+    folder.mkdir(parents=True, exist_ok=True)
+    table = pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
+    summary = pd.concat(summaries, ignore_index=True) if summaries else pd.DataFrame()
+    table.to_csv(folder / "effects.csv", index=False)
+    summary.to_csv(folder / "summary.csv", index=False)
+    if len(summary) and "att" in summary:
+        write_evidence(
+            summary.dropna(subset=["att"]), cfg.evidence_path, run=run, test="intervention", tier="E3"
+        )
+    return summary, folder

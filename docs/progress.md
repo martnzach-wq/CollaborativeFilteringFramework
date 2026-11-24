@@ -1,4 +1,20 @@
 # Progress
+## M7.5 Intervention effects (2026-11-24)
+
+**Done**
+- `causal.events`: event schema and loader (`configs/events.yaml`, pydantic: announcement not after start), `mc_nnm` (matrix completion with entity and year effects fitted on the observed cells and soft-impute of the residuals; Athey et al. 2021), `choose_analogues` (causal lens where given, else the pre-period path), `effect` (post cells from the announcement year masked and imputed from untreated analogues; effect = observed − counterfactual per year; anticipation and treatment phases; averages with intervals and two-sided p-values from in-space placebos). Any imputation callable can replace `mc_nnm`.
+- CLI `regsim causal events --config configs/causal.yaml`; results in `runs/causal-events-<hash>` and the evidence store (tier E3).
+- `configs/events.yaml`: Estonian motor vehicle tax (EE00, announced 2024, in force 2025, outcome cars per 1,000).
+
+**Results**
+- Simulation (120 regions, 18 years, low-rank panel, effect 0.5 SD, 30 runs): 90 % interval of the average effect covers the true effect in 87 % of runs; p < 0.1 in 93 % of runs with the effect and in 10 % without it. The first version of the imputation was biased by about +0.9 (effects alternated with the low-rank update); fitting the two-way effects first removed the bias (RMSE 0.29 against 0.65 for two-way effects alone).
+- Estonia, cars per 1,000: treatment effect pending (no Eurostat data after 2024). Anticipation year 2024: −4.2 % against the counterfactual (90 % interval −11.6 % to −0.4 %, p 0.08, 200 placebos). A plausible reading is deregistration of unused cars before the annual tax (the indicator is the stock on 31 December); purchases brought forward would have raised it.
+
+**Tests**: 5 unit tests (`tests/test_events.py`); M7.5 acceptance (synthetic effect and announcement-year handling). All 26 M7 acceptance tests are implemented.
+
+**Open**
+- Events from the D3.6 Annex A interventions (dates and places) and Eurostat data for 2025–2026 for the Estonian case.
+
 ## M7.4 SD bridge (2026-11-24)
 
 **Done**
@@ -7,7 +23,7 @@
 - `causal.sd_knowing`: adapter for the KNOWING model (separate checkout, `causal.sd_model_path` or `REGSIM_SD_MODEL`): input groups scaled consistently (constants and series alike), levers held at their 2019 value for removal, runs with and without the Tallinn calibration, `perturbation_protocol`, `lever_table`.
 - CLI `regsim causal sd --config configs/causal.yaml` (5 s): protocol, comparison, levers, ranking, domain check, next demonstrator; results in `runs/causal-sd-<hash>` and the evidence store.
 - Data: regional heating and cooling degree days (`nrg_chddr2_a`) in `configs/indicators_causal_v1.yaml`; the registry entries use the national table only.
-- Draft issue for the SD repository: `docs/causal/sd_review_issue.md` (not posted).
+- Review issue posted in the SD repository: martnzach-wq/KNOWING-integrated-SD-model#1 (text in `docs/causal/sd_review_issue.md`).
 
 **Results**
 - Vensim parser: 109 edges (mobility) and 69 (energy supply), identical to `sd_dependency_edges.csv` including the stock and constant flags.
@@ -20,7 +36,6 @@
 **Tests**: 9 unit tests (`tests/test_sd_bridge.py`); M7.4 acceptance (8 tests) pass with the SD checkout and are skipped without it.
 
 **Open**
-- Post the review issue in the SD repository (needs write access).
 - `cross_calibrate` and `recalibrate_residuals` with the KNOWING model need observed mode shares and trip lengths of the cities as calibration targets.
 - Next: M7.5 (intervention effects).
 

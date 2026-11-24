@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.0 (M7 complete)
+- M7.5 intervention effects: event table, counterfactual matrix completion with entity and year effects, analogues on the causal lens or pre-period path, anticipation and treatment phases, placebo intervals and p-values; `regsim causal events`; Estonian vehicle tax as first event.
+- SD review issue posted in the SD repository (martnzach-wq/KNOWING-integrated-SD-model#1).
+- All M7 acceptance tests implemented (M7.1–M7.6).
+
 ## 0.8.5 (M7.4)
 - SD bridge: Vensim parser, perturbation protocol (consistent input groups, calibration on/off), comparison with expected responses and diagnosis, lever effects and ranking, parameter classes, domain check, next demonstrator, residual recalibration, class-based parameter transfer, cross-calibration (decisions D16, D20, D21).
 - Adapter for the KNOWING SD model (`causal.sd_knowing`); `regsim causal sd`.
