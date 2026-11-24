@@ -131,7 +131,8 @@ def load_effects(cfg) -> pd.DataFrame:
 
 
 def run_what_if(cfg, geo: str, shocks: dict[str, float], horizon: str = "short_run", alpha: float = 0.1):
-    """P8 for ``geo`` with the stored panel effects and the config's region groups."""
+    """P8 for ``geo`` with the stored panel effects, the config's region groups and, where
+    `regsim causal effects` has run, the entity-specific effects of the effect-similarity model (D12a)."""
     from regsim.api.runtime import fit, resolve_id
     from regsim.causal.queries import what_if
 
@@ -140,6 +141,7 @@ def run_what_if(cfg, geo: str, shocks: dict[str, float], horizon: str = "short_r
     geo_id = resolve_id(fitted.data, geo)
     effects = load_effects(cfg)
     g = groups(cfg, panel(cfg), fitted)
+    fits_path = Path(cfg.output_dir) / f"causal-effects-{cfg.config_hash()}" / "fits.pkl"
     out = what_if(
         fitted,
         EdgeRegistry.from_yaml(c.edges),
@@ -149,6 +151,7 @@ def run_what_if(cfg, geo: str, shocks: dict[str, float], horizon: str = "short_r
         alpha=alpha,
         effects=effects,
         groups=g,
+        effect_fits=load_fits(cfg) if fits_path.exists() else None,
     )
     return out
 

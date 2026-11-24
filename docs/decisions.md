@@ -24,6 +24,7 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D16 | 2026-11-24 | SD review items go to **both** the edge registry (status `model_review`) and an issue in the SD repository. | M. Zach |
 | D20 | 2026-11-24 | Between-region spread for hierarchical priors on SD parameters: **literature first**, other calibrated models where available; never estimated from the demonstrators alone. | M. Zach |
 | D21 | 2026-11-24 | Calibration targets for class-R recalibration without observed mode split: **regsim-imputed mode split with intervals**; absolute levels reported only within the demonstrator domain. | M. Zach |
+| D12a | 2026-11-24 | Short-run effect source in `what_if` for links that pass the effect-similarity gate (M7.6): the **region-specific effect of the varying-coefficient model** comes first, then the typology-class estimate (D14), the pooled panel estimate, the literature and the sign. Typology classes chosen with an automatic number of types change with refits (8 to 10 classes after the store rebuild of M7.4: EE00 GDP → cars +0.32 % to +0.11 %); the effect model is validated on held-out countries. | M. Zach |
 
 ## Consequences
 

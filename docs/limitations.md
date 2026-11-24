@@ -75,4 +75,5 @@
 ## Causal layer: intervention effects (M7.5)
 - Effects are estimated for one treated region at a time against untreated analogues; spill-overs to the analogues and other interventions in the same years are not modelled.
 - Intervals and p-values come from in-space placebos on the analogues; with few untreated regions of similar profile they are wide, and per-year intervals are less reliable than those of the averages.
+- Typology classes with an automatically chosen number of types change with refits; group estimates of panel effects that use them (D14) are less stable than the effect-similarity model, which `what_if` prefers for gated links (D12a).
 

@@ -232,16 +232,26 @@ def test_what_if_reports_horizon_and_tier(m73):
     """what_if returns one row per descendant with horizon, tier, edge ids and interval;
     GDP +10 % in EE00 gives cars +0.3 % to +2 % (short run)."""
     from regsim.api.runtime import resolve_id
+    from regsim.causal.groups import macro_groups
     from regsim.causal.queries import what_if
+    from regsim.similarity.effect import fit_varying, moderators
 
     ee = resolve_id(m73["fitted"].data, "EE00")
-    out = what_if(
-        m73["fitted"], m73["edges"], ee, {"gdp_pps_hab": 0.10}, effects=m73["effects"], groups=m73["groups"]
+    p = m73["panel"]
+    parents = p.drop_duplicates("geo_id").set_index("geo_id").parent_id
+    types = macro_groups(parents, m73["cfg"].causal.macro_regions)  # effect-model moderators (D14a)
+    gdp_cars = fit_varying(
+        p, "gdp_pps_hab", "cars_per_1000", moderators(p, "cars_per_1000", types), countries=parents
     )
+    out = what_if(
+        m73["fitted"], m73["edges"], ee, {"gdp_pps_hab": 0.10}, effects=m73["effects"], groups=m73["groups"],
+        effect_fits={"gdp_pps_hab->cars_per_1000": gdp_cars},
+    )  # fmt: skip
     assert {"indicator", "change", "lower", "upper", "horizon", "tier", "edge_ids"} <= set(out.columns)
     assert out.indicator.is_unique and (out.horizon == "short_run").all() and out.tier.notna().all()
     cars = out.set_index("indicator").loc["cars_per_1000"]
     assert 0.003 <= cars.change <= 0.02 and cars.tier == "E2" and "E018" in cars.edge_ids, cars
+    assert "effect_model" in cars.sources  # entity-specific effect of the gated effect model (D12a)
 
 
 @needs_causal_build

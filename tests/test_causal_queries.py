@@ -260,3 +260,35 @@ def test_graph_constrained_forecast_beats_unconstrained_var():
     assert (x1["graph-constrained VAR"] < x1["own AR(1)"]).all()  # the true cause adds skill
     others = b[b.indicator != "x1"]
     assert np.allclose(others["graph-constrained VAR"], others["own AR(1)"])  # no parents: own lag only
+
+
+def test_effect_model_comes_first_for_the_short_run(toy):
+    from types import SimpleNamespace
+
+    edges, effects, values = toy
+    e = {x.id: x for x in edges.edges}["A"]
+
+    def effect_of(ids):
+        return np.array([0.3]), np.array([[0.01]])
+
+    fit = SimpleNamespace(heterogeneous=True, moderators=pd.DataFrame(index=["x"]), effect_of=effect_of)
+    short = edge_effect(e, effects, "East", "short_run", values, "x", {"gdp->cars": fit})
+    assert short["source"] == "effect_model" and short["elasticity"] == pytest.approx(0.3)
+    assert short["se"] == pytest.approx(0.1)
+    assert (
+        edge_effect(e, effects, "East", "long_run", values, "x", {"gdp->cars": fit})["source"]
+        == "panel_group"
+    )
+    pooled = SimpleNamespace(heterogeneous=False, moderators=fit.moderators, effect_of=effect_of)
+    assert (
+        edge_effect(e, effects, "East", "short_run", values, "x", {"gdp->cars": pooled})["source"]
+        == "panel_group"
+    )
+    assert (
+        edge_effect(e, effects, "East", "short_run", values, "other", {"gdp->cars": fit})["source"]
+        == "panel_group"
+    )
+    out = what_if(
+        None, edges, "x", {"gdp": 0.1}, effects=effects, values=values, effect_fits={"gdp->cars": fit}
+    )
+    assert "effect_model" in out.set_index("indicator").loc["cars", "sources"]

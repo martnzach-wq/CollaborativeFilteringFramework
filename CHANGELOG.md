@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.9.1
+- `what_if` and `vision_check`: for the short run, the entity-specific effect of the effect-similarity model comes first for links that pass the validation gate (decision D12a); the typology-class estimate depended on the number of classes chosen at each refit.
+
 ## 0.9.0 (M7 complete)
 - M7.5 intervention effects: event table, counterfactual matrix completion with entity and year effects, analogues on the causal lens or pre-period path, anticipation and treatment phases, placebo intervals and p-values; `regsim causal events`; Estonian vehicle tax as first event.
 - SD review issue posted in the SD repository (martnzach-wq/KNOWING-integrated-SD-model#1).

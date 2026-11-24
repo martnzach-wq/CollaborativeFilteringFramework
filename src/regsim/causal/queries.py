@@ -4,7 +4,9 @@ Every result row carries `horizon` (short_run, long_run) and `tier` (E0-E4), and
 the edges and sources used. Effects are propagated along registry edges with status
 `prior` or `supported` and mechanism `causal`; contested edges are reported, not used.
 
-Effect source per edge, in order of preference (decision D12):
+Effect source per edge, in order of preference (decisions D12, D12a):
+0. short run: the entity's own effect from the effect-similarity model (M7.6) where the link passed
+   the validation gate;
 1. region-type-specific panel estimate (short run) or its long-run transform;
 2. pooled panel estimate;
 3. literature elasticity (long run): used for the long run when no panel long-run estimate exists;
@@ -47,12 +49,41 @@ def current_values(model, geo_id: str) -> dict[str, float]:
     return dict(zip(t.indicator, t.value, strict=True))
 
 
-def edge_effect(edge, effects: pd.DataFrame | None, group: str | None, horizon: str, values: dict) -> dict:
-    """Local elasticity of one edge for an entity of ``group`` by the source order of decision D12.
+def edge_effect(
+    edge,
+    effects: pd.DataFrame | None,
+    group: str | None,
+    horizon: str,
+    values: dict,
+    geo_id: str | None = None,
+    effect_fits: dict | None = None,
+) -> dict:
+    """Local elasticity of one edge for an entity of ``group`` by the source order of decisions D12 and
+    D12a: for the short run, the entity's own effect from the effect-similarity model (``effect_fits``,
+    link id -> `VaryingFit`) where the link passed the validation gate; then the group and pooled panel
+    estimates, the literature (long run) and the sign.
 
     Returns a dict with ``elasticity``, ``se`` (NaN when unknown), ``source`` and ``tier``.
     """
     lr = horizon == "long_run"
+    fit = (effect_fits or {}).get(f"{edge.cause}->{edge.effect}")
+    if not lr and fit is not None and fit.heterogeneous and geo_id in fit.moderators.index:
+        mu, cov = fit.effect_of([geo_id])
+        t = (
+            effects[(effects.cause == edge.cause) & (effects.effect == edge.effect)]
+            if effects is not None
+            else None
+        )
+        tc, te = (t.t_cause.iloc[0], t.t_effect.iloc[0]) if t is not None and len(t) else ("log", "log")
+        gc, ge = _g(values.get(edge.cause, np.nan), tc), _g(values.get(edge.effect, np.nan), te)
+        if np.isfinite(gc) and np.isfinite(ge) and ge != 0:
+            factor = gc / ge
+            return {
+                "elasticity": float(mu[0]) * factor,
+                "se": float(np.sqrt(max(cov[0, 0], 0.0))) * abs(factor),
+                "source": "effect_model",
+                "tier": "E2",
+            }
     if effects is not None and len(effects):
         rows = effects[(effects.cause == edge.cause) & (effects.effect == edge.effect)]
         for source, sel in (
@@ -98,6 +129,7 @@ def what_if(
     effects: pd.DataFrame | None = None,
     groups: pd.Series | None = None,
     values: dict[str, float] | None = None,
+    effect_fits: dict | None = None,
 ) -> pd.DataFrame:
     """P8: consequences of relative changes in `shocks` for the descendants of the shocked nodes.
 
@@ -116,6 +148,9 @@ def what_if(
         Panel estimates from :func:`regsim.causal.effects.estimate_effects`.
     groups : Series, optional
         Entity id -> group of the panel estimates (decision D14).
+    effect_fits : dict, optional
+        Varying-coefficient fits of the effect-similarity model (M7.6, `regsim causal effects`); their
+        entity-specific effects come first for the short run (decision D12a).
 
     Returns
     -------
@@ -199,7 +234,7 @@ def what_if(
         }
         for e in incoming.get(node, []):
             src = state[e.cause]
-            eff = edge_effect(e, effects, group, horizon, values)
+            eff = edge_effect(e, effects, group, horizon, values, geo_id, effect_fits)
             if np.isfinite(eff["elasticity"]) and np.isfinite(src["dlog"]):
                 dst["dlog"] += eff["elasticity"] * src["dlog"]
                 se = eff["se"] if np.isfinite(eff["se"]) else 0.0
@@ -309,6 +344,7 @@ def vision_check(
     horizon: str = "long_run",
     values: dict[str, float] | None = None,
     max_change: float = 1.0,
+    effect_fits: dict | None = None,
 ) -> pd.DataFrame:
     """P10: required change in levers for each target given expected driver changes;
     flags conflicts and mismatched target variables (e.g. lever elasticity on car-km
@@ -359,7 +395,7 @@ def vision_check(
             )
             continue
         for e in cands:
-            eff = edge_effect(e, effects, group, horizon, values)
+            eff = edge_effect(e, effects, group, horizon, values, geo_id, effect_fits)
             el = eff["elasticity"]
             req = (
                 float(np.expm1(needed / el))

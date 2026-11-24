@@ -1,4 +1,10 @@
 # Progress
+## M7 follow-up: effect source of `what_if` (2026-11-24)
+
+- After the store rebuild of M7.4 the model was refitted (registry content changed) and the typology chose 10 instead of 8 classes; EE00 moved into a class of 57 regions, and `what_if` (+10 % GDP, cars per 1,000, short run) fell from +0.32 % to +0.11 %, below the acceptance range.
+- Decision D12a: for the short run, `edge_effect` takes the entity's own effect from the effect-similarity model where the link passed the validation gate (M7.6), before the typology-class and pooled estimates. `what_if`, `vision_check` and `regsim causal what-if` use the fits of `regsim causal effects`.
+- EE00: +0.37 % (90 % interval +0.15 to +0.60 %) from the effect model; pooled panel estimate +0.42 %, typology class +0.11 %. All 26 M7 acceptance tests pass.
+
 ## M7.5 Intervention effects (2026-11-24)
 
 **Done**
