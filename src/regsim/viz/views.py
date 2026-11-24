@@ -135,18 +135,27 @@ def biplot_coords(model, data: ModelData, lens=None, level: int = 3):
 
 
 def biplot(
-    model, data: ModelData, lens=None, level: int = 3, colour_by=None, n_arrows: int = 12, interactive=False
+    model,
+    data: ModelData,
+    lens=None,
+    level: int = 3,
+    colour_by=None,
+    n_arrows: int = 12,
+    interactive=False,
+    labels: dict | None = None,
+    colour_names: dict | None = None,
 ):
     """V1: regions and indicator loadings in the first two principal components of the standardised completed
-    profiles (row-principal scaling: point distances approximate region distances)."""
+    profiles (row-principal scaling: point distances approximate region distances). ``labels`` (indicator id ->
+    label) names the arrows; ``colour_names`` (value of ``colour_by`` -> name) labels the legend."""
     rows, cols, X = _standardised(model, data, lens, level)
     scores, loadings, ev = _pca(X)
-    names = [data.column_ids[j] for j in cols]
+    names = [(labels or {}).get(data.column_ids[j], data.column_ids[j]) for j in cols]
     length = np.sqrt((loadings**2).sum(axis=1))
     top = np.argsort(length)[::-1][:n_arrows]
     scale = 0.9 * min(np.abs(scores[:, d]).max() / max(np.abs(loadings[top, d]).max(), 1e-12) for d in (0, 1))
     ids = [data.geo_ids[i] for i in rows]
-    labels = (
+    groups = (
         None if colour_by is None else pd.Series(colour_by).reindex(ids).fillna(-1).astype(int).to_numpy()
     )
     title = f"V1 biplot ({lens_label(data, lens, level)})"
@@ -160,7 +169,7 @@ def biplot(
                 x=scores[:, 0],
                 y=scores[:, 1],
                 mode="markers",
-                marker={"size": 5, "color": None if labels is None else [_hex(c) for c in _colours(labels)]},
+                marker={"size": 5, "color": None if groups is None else [_hex(c) for c in _colours(groups)]},
                 text=ids,
                 customdata=ids,
                 hovertemplate="%{text}<extra></extra>",
@@ -174,8 +183,12 @@ def biplot(
         return fig
     fig, ax = plt.subplots(figsize=(8, 7))
     ax.scatter(
-        scores[:, 0], scores[:, 1], s=6, c="#9ecae1" if labels is None else _colours(labels), alpha=0.7
+        scores[:, 0], scores[:, 1], s=6, c="#9ecae1" if groups is None else _colours(groups), alpha=0.7
     )
+    if groups is not None:
+        for g in sorted(set(groups) - {-1}):
+            ax.scatter([], [], s=20, c=_colours([g]), label=(colour_names or {}).get(g, f"type {g}"))
+        ax.legend(fontsize=7, loc="upper left", framealpha=0.85)
     for i in top:
         x, y = loadings[i] * scale
         ax.annotate("", xy=(x, y), xytext=(0, 0), arrowprops={"arrowstyle": "->", "color": "#444"})
@@ -361,10 +374,12 @@ def maps(
     ncols: int = 2,
     interactive=False,
     names: dict | None = None,
+    legend: dict | None = None,
 ):
     """V4: choropleth panels {title: values by geo id}; integer or string series are drawn as categories,
     floats as a continuous scale. ``flags`` (geo id -> 'edge' / 'outside') outlines regions outside the
-    applicability domain; ``names`` (geo id -> region name) labels the hover texts of the interactive map."""
+    applicability domain; ``names`` (geo id -> region name) labels the hover texts of the interactive map; ``legend``
+    (category -> name) labels the legend of categorical panels."""
     if interactive:
         return _maps_plotly(panels, geometry, names)
     n = len(panels)
@@ -375,6 +390,9 @@ def maps(
         categorical = not pd.api.types.is_float_dtype(s)
         if categorical:
             cats = {c: CATEGORICAL[i % len(CATEGORICAL)] for i, c in enumerate(sorted(s.dropna().unique()))}
+            for c, col in cats.items():
+                ax.scatter([], [], s=40, marker="s", color=col, label=(legend or {}).get(c, str(c)))
+            ax.legend(fontsize=7, loc="upper left", framealpha=0.85)
         else:
             cmap = plt.get_cmap("viridis")
             lo, hi = np.nanmin(s), np.nanmax(s)

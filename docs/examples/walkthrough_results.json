@@ -1,0 +1,491 @@
+{
+ "data": {
+  "entities": 1669,
+  "indicators": 65,
+  "observed_share": 0.7490528644513066,
+  "period": "2018/2022"
+ },
+ "nearest_vienna": [
+  {
+   "region": "Berlin",
+   "code": "DE300",
+   "score": 91.6,
+   "differs_most_in": "broadband_households, d36_transport_infrastructure_rail_lines_density_mean, lifelong_learning"
+  },
+  {
+   "region": "Miasto Wroc\u0142aw",
+   "code": "PL514",
+   "score": 90.7,
+   "differs_most_in": "road_deaths_pmh, d36_transport_infrastructure_rail_lines_density_mean, cars_per_1000"
+  },
+  {
+   "region": "Ludwigshafen am Rhein, Kreisfreie Stadt",
+   "code": "DEB34",
+   "score": 90.6,
+   "differs_most_in": "lifelong_learning, road_deaths_pmh, unemployment_rate"
+  },
+  {
+   "region": "N\u00fcrnberg, Kreisfreie Stadt",
+   "code": "DE254",
+   "score": 90.1,
+   "differs_most_in": "lifelong_learning, road_deaths_pmh, unemployment_rate"
+  },
+  {
+   "region": "Leipzig, Kreisfreie Stadt",
+   "code": "DED51",
+   "score": 89.6,
+   "differs_most_in": "d36_transport_infrastructure_rail_lines_density_mean, road_deaths_pmh, lifelong_learning"
+  },
+  {
+   "region": "Karlsruhe, Stadtkreis",
+   "code": "DE122",
+   "score": 89.3,
+   "differs_most_in": "d36_transport_infrastructure_rail_lines_density_mean, road_deaths_pmh, lifelong_learning"
+  },
+  {
+   "region": "Herne, Kreisfreie Stadt",
+   "code": "DEA55",
+   "score": 88.6,
+   "differs_most_in": "lifelong_learning, road_deaths_pmh, old_age_dependency"
+  },
+  {
+   "region": "Frankfurt am Main, Kreisfreie Stadt",
+   "code": "DE712",
+   "score": 87.2,
+   "differs_most_in": "hh_income_pps, life_expectancy, poverty_exclusion_risk"
+  },
+  {
+   "region": "Arr. de Bruxelles-Capitale/Arr. Brussel-Hoofdstad",
+   "code": "BE100",
+   "score": 84.8,
+   "differs_most_in": "road_deaths_pmh, poverty_exclusion_risk, share_age_0_14"
+  },
+  {
+   "region": "Miasto Krak\u00f3w",
+   "code": "PL213",
+   "score": 84.5,
+   "differs_most_in": "unemployment_rate, road_deaths_pmh, cars_per_1000"
+  }
+ ],
+ "difference_pair": [
+  "Wien",
+  "Berlin"
+ ],
+ "vienna_gaps": {
+  "observed": 42,
+  "predicted": [
+   {
+    "indicator": "broadband_households",
+    "value": 91.418,
+    "lower": 86.536,
+    "upper": 96.299
+   },
+   {
+    "indicator": "cars_per_1000",
+    "value": 350.436,
+    "lower": 205.5,
+    "upper": 495.373
+   },
+   {
+    "indicator": "cooling_degree_days",
+    "value": 45.212,
+    "lower": 19.626,
+    "upper": 102.537
+   },
+   {
+    "indicator": "d36_annual_wind_speed_1990_2020_mean",
+    "value": 3.18,
+    "lower": 2.824,
+    "upper": 3.536
+   },
+   {
+    "indicator": "d36_elevation_max",
+    "value": 381.735,
+    "lower": 185.262,
+    "upper": 785.452
+   },
+   {
+    "indicator": "d36_mountain_type",
+    "value": 1.0,
+    "lower": NaN,
+    "upper": NaN
+   },
+   {
+    "indicator": "d36_transport_infrastructure_pedestrian_lines_density_mean",
+    "value": 13.023,
+    "lower": 9.928,
+    "upper": 16.994
+   },
+   {
+    "indicator": "d36_transport_infrastructure_rail_lines_density_mean",
+    "value": 3.928,
+    "lower": 3.347,
+    "upper": 4.587
+   },
+   {
+    "indicator": "d36_urban_rural_remoteness_type",
+    "value": 0.0,
+    "lower": NaN,
+    "upper": NaN
+   },
+   {
+    "indicator": "ghg_per_capita",
+    "value": 10.63,
+    "lower": 7.91,
+    "upper": 14.286
+   },
+   {
+    "indicator": "gini",
+    "value": 28.003,
+    "lower": 22.313,
+    "upper": 33.693
+   },
+   {
+    "indicator": "heating_degree_days",
+    "value": 2795.228,
+    "lower": 2158.575,
+    "upper": 3431.882
+   },
+   {
+    "indicator": "hh_income_pps",
+    "value": 20541.42,
+    "lower": 17068.411,
+    "upper": 24721.103
+   },
+   {
+    "indicator": "hospital_beds",
+    "value": 692.174,
+    "lower": 485.385,
+    "upper": 987.061
+   },
+   {
+    "indicator": "life_expectancy",
+    "value": 80.528,
+    "lower": 78.58,
+    "upper": 82.476
+   },
+   {
+    "indicator": "lifelong_learning",
+    "value": 19.681,
+    "lower": 12.857,
+    "upper": 29.867
+   },
+   {
+    "indicator": "old_age_dependency",
+    "value": 23.902,
+    "lower": 19.147,
+    "upper": 28.658
+   },
+   {
+    "indicator": "poverty_exclusion_risk",
+    "value": 24.309,
+    "lower": 16.787,
+    "upper": 31.831
+   },
+   {
+    "indicator": "rd_expenditure_gdp",
+    "value": 2.764,
+    "lower": 1.515,
+    "upper": 4.633
+   },
+   {
+    "indicator": "renewables_share",
+    "value": 20.595,
+    "lower": 6.714,
+    "upper": 34.477
+   },
+   {
+    "indicator": "road_deaths_pmh",
+    "value": 7.6,
+    "lower": 5.012,
+    "upper": 11.302
+   },
+   {
+    "indicator": "tertiary_attainment",
+    "value": 44.607,
+    "lower": 35.275,
+    "upper": 53.938
+   },
+   {
+    "indicator": "unemployment_rate",
+    "value": 10.021,
+    "lower": 6.385,
+    "upper": 15.725
+   }
+  ]
+ },
+ "typology": {
+  "k": 3,
+  "stability": 0.46121457129155746,
+  "vienna_type": 1,
+  "types": [
+   {
+    "cluster": "0",
+    "size": "114",
+    "label": "high hospital_beds, low unemployment_rate, low d36_slope_max",
+    "dispersion": "0.5550563906027315",
+    "stability": "0.7841018475392018"
+   },
+   {
+    "cluster": "1",
+    "size": "84",
+    "label": "low road_deaths_pmh, high lifelong_learning, high tertiary_attainment",
+    "dispersion": "1.166314780674341",
+    "stability": "0.5276247848537005"
+   },
+   {
+    "cluster": "2",
+    "size": "97",
+    "label": "high unemployment_rate, high d36_annual_solar_radiation_1990_2020_mean, high d36_annual_solar_radiation_1990_2020_min",
+    "dispersion": "0.786567771176902",
+    "stability": "0.792482817869416"
+   }
+  ]
+ },
+ "vision": {
+  "target": {
+   "tertiary_attainment": [
+    44.60680786640188,
+    60.0
+   ]
+  },
+  "largest_changes": [
+   {
+    "indicator": "cars_per_1000",
+    "present": 350.44,
+    "vision": 531.12,
+    "lower": 347.42,
+    "upper": 714.81,
+    "shift": 1.26
+   },
+   {
+    "indicator": "d36_annual_precipitation_1990_2020_min",
+    "present": 0.0,
+    "vision": 0.0,
+    "lower": -0.0,
+    "upper": 0.0,
+    "shift": 1.1
+   },
+   {
+    "indicator": "gdp_pps_hab",
+    "present": 46560.0,
+    "vision": 66492.27,
+    "lower": 44554.18,
+    "upper": 99232.5,
+    "shift": 0.84
+   },
+   {
+    "indicator": "ghg_per_capita",
+    "present": 10.63,
+    "vision": 8.24,
+    "lower": 5.83,
+    "upper": 11.64,
+    "shift": -0.81
+   },
+   {
+    "indicator": "d36_ice_days_1990_2020_mean",
+    "present": 19.34,
+    "vision": 8.25,
+    "lower": 2.86,
+    "upper": 21.18,
+    "shift": -0.72
+   },
+   {
+    "indicator": "road_deaths_pmh",
+    "present": 7.6,
+    "vision": 10.35,
+    "lower": 6.05,
+    "upper": 17.28,
+    "shift": 0.65
+   }
+  ],
+  "analogues": [
+   "Ludwigshafen am Rhein, Kreisfreie Stadt",
+   "Miasto Wroc\u0142aw",
+   "Karlsruhe, Stadtkreis",
+   "Val-de-Marne",
+   "N\u00fcrnberg, Kreisfreie Stadt"
+  ]
+ },
+ "c1": {
+  "between": {
+   "agree": 40,
+   "n": 53
+  },
+  "within_country": {
+   "agree": 39,
+   "n": 44
+  }
+ },
+ "what_if_absolute": {
+  "net_migration_rate": 3.572
+ },
+ "what_if": [
+  {
+   "indicator": "life_expectancy",
+   "change_pct": -0.01,
+   "lower": -0.04,
+   "upper": 0.03,
+   "sources": "panel_group",
+   "tier": "E2"
+  },
+  {
+   "indicator": "median_age",
+   "change_pct": -0.03,
+   "lower": -0.06,
+   "upper": 0.01,
+   "sources": "panel_group",
+   "tier": "E2"
+  },
+  {
+   "indicator": "hh_income_pps",
+   "change_pct": 0.05,
+   "lower": -0.07,
+   "upper": 0.17,
+   "sources": "panel_group",
+   "tier": "E2"
+  },
+  {
+   "indicator": "poverty_exclusion_risk",
+   "change_pct": 0.15,
+   "lower": -0.52,
+   "upper": 0.83,
+   "sources": "panel_group",
+   "tier": "E2"
+  },
+  {
+   "indicator": "cars_per_1000",
+   "change_pct": 0.38,
+   "lower": 0.15,
+   "upper": 0.61,
+   "sources": "effect_model,panel_group",
+   "tier": "E2"
+  },
+  {
+   "indicator": "employment_rate",
+   "change_pct": 0.46,
+   "lower": -0.45,
+   "upper": 1.38,
+   "sources": "panel_group",
+   "tier": "E2"
+  },
+  {
+   "indicator": "hospital_beds",
+   "change_pct": 0.84,
+   "lower": -1.15,
+   "upper": 2.87,
+   "sources": "panel_group",
+   "tier": "E2"
+  },
+  {
+   "indicator": "unemployment_rate",
+   "change_pct": -1.76,
+   "lower": -3.76,
+   "upper": 0.27,
+   "sources": "effect_model",
+   "tier": "E2"
+  },
+  {
+   "indicator": "road_deaths_pmh",
+   "change_pct": -4.19,
+   "lower": -12.93,
+   "upper": 5.43,
+   "sources": "panel_group",
+   "tier": "E2"
+  }
+ ],
+ "effect_similarity": [
+  {
+   "link": "gdp_pps_hab->life_expectancy",
+   "p_equivalent": 0.05,
+   "status": "heterogeneous"
+  },
+  {
+   "link": "gdp_pps_hab->unemployment_rate",
+   "p_equivalent": 0.19,
+   "status": "heterogeneous"
+  },
+  {
+   "link": "gdp_pps_hab->cars_per_1000",
+   "p_equivalent": 1.0,
+   "status": "heterogeneous"
+  },
+  {
+   "link": "hh_income_pps->cars_per_1000",
+   "p_equivalent": null,
+   "status": "no transferable difference"
+  },
+  {
+   "link": "old_age_dependency->gdp_pps_hab",
+   "p_equivalent": null,
+   "status": "no transferable difference"
+  },
+  {
+   "link": "unemployment_rate->poverty_exclusion_risk",
+   "p_equivalent": null,
+   "status": "no transferable difference"
+  },
+  {
+   "link": "employment_rate->fertility_rate",
+   "p_equivalent": null,
+   "status": "no transferable difference"
+  }
+ ],
+ "event": [
+  {
+   "event": "EE_vehicle_tax_2025",
+   "geo_id": "NUTS2024:EE00",
+   "phase": "anticipation",
+   "att": -0.041592931779959486,
+   "lower": -0.11566743066778028,
+   "upper": -0.003952120454175388,
+   "p_value": 0.07960199004975124,
+   "years": "2024-2024",
+   "pre_end": 2023,
+   "n_placebo": 200
+  }
+ ],
+ "sd_levers": {
+  "GRANOLLERS": {
+   "policy_capacity_adaptation": -0.2,
+   "policy_pt_traveltime_adaptation": -2.2,
+   "policy_parking_cost_adaptation": -1.4,
+   "policy_car_passenger_attractiveness": 18.3,
+   "policy_cycling_attractiveness": -20.9,
+   "policy_street_green": -68.4,
+   "policy_road_pricing": -72.1,
+   "policy_area_toll": null
+  },
+  "NAPLES": {
+   "policy_capacity_adaptation": -0.0,
+   "policy_pt_traveltime_adaptation": -0.2,
+   "policy_parking_cost_adaptation": -0.7,
+   "policy_car_passenger_attractiveness": 0.7,
+   "policy_cycling_attractiveness": -1.0,
+   "policy_street_green": null,
+   "policy_road_pricing": -5.2,
+   "policy_area_toll": -28.0
+  },
+  "TALLINN": {
+   "policy_capacity_adaptation": 0.0,
+   "policy_pt_traveltime_adaptation": -2.1,
+   "policy_parking_cost_adaptation": -3.0,
+   "policy_car_passenger_attractiveness": 4.2,
+   "policy_cycling_attractiveness": -5.3,
+   "policy_street_green": null,
+   "policy_road_pricing": -42.2,
+   "policy_area_toll": -72.6
+  }
+ },
+ "sd_domain": {
+  "distant": 97,
+  "extrapolation": 73,
+  "moderate": 48,
+  "close": 13
+ },
+ "sd_domain_vienna": "extrapolation",
+ "names": {
+  "EE00": "Eesti",
+  "ES51": "Catalu\u00f1a"
+ }
+}

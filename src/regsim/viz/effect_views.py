@@ -12,6 +12,7 @@ import pandas as pd
 from matplotlib.collections import PolyCollection
 from matplotlib.colors import to_rgb
 from matplotlib.patches import Ellipse
+from matplotlib.ticker import MaxNLocator
 
 from regsim.api.runtime import short_id
 from regsim.viz.views import CATEGORICAL, EXTENT, GREY, _rings
@@ -311,16 +312,33 @@ def event_plot(
         obs.index, obs.values, "o-", color=CATEGORICAL[0], label=f"observed: {names.get(geo, short_id(geo))}"
     )
     cf_lo, cf_hi = e.observed - e.upper, e.observed - e.lower  # counterfactual band from the effect interval
-    ax.fill_between(
-        e.year, cf_lo, cf_hi, color=CATEGORICAL[2], alpha=0.25, label="counterfactual, 90 % placebo interval"
-    )
-    ax.plot(e.year, e.counterfactual, "s--", color=CATEGORICAL[2], label="counterfactual")
+    if len(e) > 2:
+        ax.fill_between(
+            e.year,
+            cf_lo,
+            cf_hi,
+            color=CATEGORICAL[2],
+            alpha=0.25,
+            label="counterfactual, 90 % placebo interval",
+        )
+        ax.plot(e.year, e.counterfactual, "s--", color=CATEGORICAL[2], label="counterfactual")
+    else:  # a band over one or two years is too narrow to read
+        ax.errorbar(
+            e.year,
+            e.counterfactual,
+            yerr=[e.counterfactual - cf_lo, cf_hi - e.counterfactual],
+            fmt="s",
+            color=CATEGORICAL[2],
+            capsize=4,
+            label="counterfactual, 90 % placebo interval",
+        )
     ant = e[e.phase == "anticipation"].year
     if len(ant):
         ax.axvspan(
             ant.min() - 0.5, ant.max() + 0.5, color=GREY, alpha=0.5, lw=0, label="anticipation (announced)"
         )
     ax.axvline(e.pre_end.iloc[0] + 0.5, color="black", lw=0.6)
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.set_xlabel("year")
     ax.set_ylabel(label or outcome)
     ax.legend(fontsize=8, loc="best")

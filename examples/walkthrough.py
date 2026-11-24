@@ -48,10 +48,18 @@ def names_of(store_path: str) -> dict:
 
 
 # ----------------------------------------------------------------------------------- part 1: Vienna
+def labels_of(cfg) -> dict:
+    """Indicator id -> readable label from the indicator registry, shortened for axis labels."""
+    from regsim.registry import IndicatorRegistry
+
+    reg = IndicatorRegistry.from_yaml(*cfg.data.registries)
+    return {i: e.label if len(e.label) <= 34 else e.label[:32] + "…" for i, e in reg.entries.items()}
+
+
 def part_similarity() -> None:
     from regsim.api.runtime import fit, resolve_id, short_id
     from regsim.config import RunConfig
-    from regsim.predict.tasks import analogues, fill_gaps, vision_entity
+    from regsim.predict.tasks import _to_model, analogues, fill_gaps, vision_entity
     from regsim.schema import Lens
     from regsim.similarity.entities import nearest, s_profile
     from regsim.typology.run import TypologyRun, run_typology
@@ -61,6 +69,7 @@ def part_similarity() -> None:
     f = fit(cfg)
     model, data = f.model, f.data
     names = names_of(cfg.data.store)
+    ind = labels_of(cfg)
     wien = resolve_id(data, "AT130")
 
     # 1 data coverage
@@ -81,7 +90,7 @@ def part_similarity() -> None:
 
     # 3 difference profile Vienna - nearest region
     partner = nb.geo_id.iloc[0]
-    save(V.difference_profile(model, data, wien, partner), "02_difference_profile")
+    save(V.difference_profile(model, data, wien, partner, labels=ind), "02_difference_profile")
     RESULTS["difference_pair"] = [names.get(wien), names.get(partner)]
 
     # 4 gap filling for Vienna: predicted values with 90 % intervals
@@ -101,7 +110,11 @@ def part_similarity() -> None:
     labels = pd.Series(ty.labels, index=ty.geo_ids)
     geometry = V.load_geometry(Path(cfg.data.raw_dir) / "gisco" / "NUTS_RG_01M_2024_3035.parquet", level=2)
     title = f"NUTS-2 typology: k = {ty.k}, bootstrap stability (ARI) {ty.stability:.2f}"
-    save(V.maps({title: labels.rename(index=short_id)}, geometry, ncols=1), "03_typology_map")
+    type_names = {t: f"type {t}" for t in sorted(labels.unique())}
+    save(
+        V.maps({title: labels.rename(index=short_id)}, geometry, ncols=1, legend=type_names),
+        "03_typology_map",
+    )
     save(V.type_profiles(ty), "04_type_profiles")
     RESULTS["typology"] = {
         "k": int(ty.k),
@@ -111,22 +124,32 @@ def part_similarity() -> None:
     }
 
     # 6 biplot (V1) at NUTS-2, coloured by type
-    save(V.biplot(f.base, data, level=2, colour_by=labels), "05_biplot")
+    save(V.biplot(f.base, data, level=2, colour_by=labels, labels=ind, colour_names=type_names), "05_biplot")
 
     # 7 vision: Vienna with 60 % tertiary attainment, and real analogues of that vision
     vision = vision_entity(model, wien, {"tertiary_attainment": 60.0})
-    profile = dict(zip(vision.indicator, vision.value, strict=True))
-    ana = analogues(model, profile, k=5, level=3)
-    moved = vision.assign(base=vision.indicator.map(dict(zip(gaps.indicator, gaps.value, strict=True))))
-    moved["change"] = moved.value / moved.base - 1
-    top = moved.reindex(moved.change.abs().sort_values(ascending=False).index).head(6)
+    profile = dict(zip(vision.indicator, vision.vision, strict=True))
+    ana = analogues(model, profile, k=6, level=3)
+    ana = ana[ana.geo_id != wien]  # the vision stays close to Vienna itself
+    # compare changes on the model scale (transformed, robust-scaled), not relative to near-zero values
+    col = {c: j for j, c in enumerate(data.column_ids)}
+    vision["shift"] = [
+        float(_to_model(data, col[i], v) - _to_model(data, col[i], p))
+        if i in col and np.isfinite(v)
+        else np.nan
+        for i, v, p in zip(vision.indicator, vision.vision, vision.present, strict=True)
+    ]
+    top = vision[~vision.target].dropna(subset=["shift"])
+    top = top.reindex(top["shift"].abs().sort_values(ascending=False).index).head(6)
     RESULTS["vision"] = {
+        "target": {"tertiary_attainment": [float(vision.set_index("indicator").present["tertiary_attainment"]), 60.0]},
         "largest_changes": [
-            {"indicator": r.indicator, "from": round(float(r.base), 2), "to": round(float(r.value), 2)}
+            {"indicator": r.indicator, "present": round(float(r.present), 2), "vision": round(float(r.vision), 2),
+             "lower": round(float(r.lower), 2), "upper": round(float(r.upper), 2), "shift": round(float(r.shift), 2)}
             for r in top.itertuples()
         ],
         "analogues": [names.get(g, g) for g in ana.geo_id],
-    }
+    }  # fmt: skip
 
 
 # ----------------------------------------------------------------------------------- part 2: Estonia
@@ -144,17 +167,7 @@ def part_causal() -> None:
 
     cfg = RunConfig.from_yaml("configs/causal.yaml")
     names = names_of(cfg.data.store)
-    labels = {
-        "gdp_pps_hab": "GDP per inhabitant",
-        "life_expectancy": "life expectancy",
-        "unemployment_rate": "unemployment",
-        "cars_per_1000": "cars per 1,000",
-        "hh_income_pps": "household income",
-        "employment_rate": "employment rate",
-        "old_age_dependency": "old-age dependency",
-        "poverty_exclusion_risk": "poverty risk",
-        "fertility_rate": "fertility",
-    }
+    labels = labels_of(cfg)
 
     # 8 consistency of the edge registry with the data (C1)
     _, rates, _ = run_check(cfg)
@@ -162,18 +175,28 @@ def part_causal() -> None:
     RESULTS["c1"] = {k: {"agree": int(r.loc[k, "agree"]), "n": int(r.loc[k, "n"])} for k in r.index}
 
     # 9 what-if: +10 % GDP in Estonia (short run)
-    w = run_what_if(cfg, "EE00", {"gdp_pps_hab": 0.10})
-    w = w[w.change.notna()].copy()
+    w_all = run_what_if(cfg, "EE00", {"gdp_pps_hab": 0.10})
+    rates = {"net_migration_rate"}  # rates around zero: absolute change, not a relative one
+    RESULTS["what_if_absolute"] = {
+        i: round(float(c), 3) for i, c in zip(w_all.indicator, w_all.change_abs, strict=True) if i in rates
+    }
+    w = w_all[w_all.change.notna() & ~w_all.indicator.isin(rates)].copy()
     w = w.reindex(w.change.abs().sort_values().index)
     fig, ax = plt.subplots(figsize=(7, 0.45 * len(w) + 1.2))
     y = np.arange(len(w))
-    ax.barh(y, 100 * w.change, color=["#1f5fa8" if s == "effect_model" else "#8aa9cf" for s in w.sources])
+    ax.barh(y, 100 * w.change, color=["#1f5fa8" if "effect_model" in s else "#8aa9cf" for s in w.sources])
     ax.errorbar(100 * w.change, y, xerr=[100 * (w.change - w.lower), 100 * (w.upper - w.change)], fmt="none",
                 color="black", capsize=2)  # fmt: skip
     ax.set_yticks(y, [labels.get(i, i) for i in w.indicator])
     ax.axvline(0, color="black", lw=0.6)
     ax.set_xlabel("change in % (short run, 90 % interval)")
     ax.set_title("What if GDP per inhabitant in Estonia rises by 10 %?", fontsize=10)
+    from matplotlib.patches import Patch
+
+    ax.legend(
+        handles=[Patch(color="#1f5fa8", label="path uses the region-varying effect model"), Patch(color="#8aa9cf", label="pooled panel estimates (country group) only")],
+        fontsize=8, loc="lower right",
+    )  # fmt: skip
     save(fig, "06_what_if_estonia")
     RESULTS["what_if"] = [
         {"indicator": i, "change_pct": round(100 * c, 2), "lower": round(100 * lo, 2), "upper": round(100 * hi, 2),
@@ -228,7 +251,13 @@ def part_causal() -> None:
         lens = load_parameter_classes()["domain_lens"]
         dom = domain_check(lens_matrix(cfg, lens), None, cfg.causal.sd_demonstrators, lens)
         title = "Distance to the nearest SD demonstrator (Tallinn, Granollers, Naples)"
-        save(V.maps({title: dom.domain_class}, geometry, ncols=1), "11_sd_domain")
+        order = {
+            "close": "1 close",
+            "moderate": "2 moderate",
+            "distant": "3 distant",
+            "extrapolation": "4 extrapolation",
+        }
+        save(V.maps({title: dom.domain_class.map(order)}, geometry, ncols=1), "11_sd_domain")
         RESULTS["sd_domain"] = dom.domain_class.value_counts().to_dict()
         RESULTS["sd_domain_vienna"] = dom.loc["AT13"].domain_class if "AT13" in dom.index else None
     RESULTS["names"] = {"EE00": names.get("NUTS2024:EE00"), "ES51": names.get("NUTS2024:ES51")}

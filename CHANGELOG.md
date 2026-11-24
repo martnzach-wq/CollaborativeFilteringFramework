@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.2
+- Worked example `examples/walkthrough.py` with guide `docs/examples/walkthrough.md` (Vienna: similarity, gap filling, typology, biplot, vision; Estonia: C1 check, what-if, effect similarity, vehicle-tax event, SD levers and domain).
+- Visualisation: legends for categorical maps and for the biplot colours, indicator labels in the biplot, integer year ticks and an interval marker for short counterfactuals in `event_plot`.
+
 ## 0.9.1
 - `what_if` and `vision_check`: for the short run, the entity-specific effect of the effect-similarity model comes first for links that pass the validation gate (decision D12a); the typology-class estimate depended on the number of classes chosen at each refit.
 

@@ -11,6 +11,7 @@ Similarity and prediction for indicators observed on geo-entities at several lev
 | `docs/design.md` | Framework specification |
 | `docs/prototype.md` | Feasibility benchmark on Eurostat data |
 | `docs/visualisation.md` | Visualisation catalogue with rendered examples |
+| `docs/examples/walkthrough.md` | Worked example (Vienna, Estonia): similarity, typology, vision, what-if, effect similarity, events, SD bridge |
 | `docs/data_sources.md` | Data sources, known pitfalls, D3.6 database caveats |
 | `docs/decisions.md`, `docs/progress.md`, `docs/limitations.md` | Decisions D1–D9, milestone results, limitations |
 
