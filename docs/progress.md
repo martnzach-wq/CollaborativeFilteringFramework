@@ -1,4 +1,10 @@
 # Progress
+## SD calibration inputs from the demonstrator deliverables (2026-11-25)
+
+- Calibration targets extracted from D1.3, D3.3, D3.4a/b and D3.5: `configs/sd_calibration_targets.csv`, `docs/causal/demonstrator_calibration_targets.md`. Decisions D22–D25.
+- SD repository, branch `claude/demonstrator-calibration`: South Westphalia as fourth demonstrator (MAED-City and IESopt inputs reconstructed from D3.5), Naples policy paths from D3.4a, regional Coping Types; fixes for the double-counted manufacturing total and the zero wind/hydro generation.
+- Open: class-R recalibration of all four demonstrators to the 2019 targets; city-specific transport energy factors; populations of the OD zones; MAED-City and IESopt inputs for Naples from D3.4a.
+
 ## M7 follow-up: effect source of `what_if` (2026-11-24)
 
 - After the store rebuild of M7.4 the model was refitted (registry content changed) and the typology chose 10 instead of 8 classes; EE00 moved into a class of 57 regions, and `what_if` (+10 % GDP, cars per 1,000, short run) fell from +0.32 % to +0.11 %, below the acceptance range.

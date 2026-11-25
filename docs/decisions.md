@@ -25,6 +25,10 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D20 | 2026-11-24 | Between-region spread for hierarchical priors on SD parameters: **literature first**, other calibrated models where available; never estimated from the demonstrators alone. | M. Zach |
 | D21 | 2026-11-24 | Calibration targets for class-R recalibration without observed mode split: **regsim-imputed mode split with intervals**; absolute levels reported only within the demonstrator domain. | M. Zach |
 | D12a | 2026-11-24 | Short-run effect source in `what_if` for links that pass the effect-similarity gate (M7.6): the **region-specific effect of the varying-coefficient model** comes first, then the typology-class estimate (D14), the pooled panel estimate, the literature and the sign. Typology classes chosen with an automatic number of types change with refits (8 to 10 classes after the store rebuild of M7.4: EE00 GDP → cars +0.32 % to +0.11 %); the effect model is validated on held-out countries. | M. Zach |
+| D22 | 2026-11-25 | Passenger-km in the SD model: **centroid method** (length-class centroids) as default of `sd_knowing.runner`; it reproduces the ABM light base year of Tallinn (55.3 % car + passenger share of pkm against 53.3 %), the mode-specific method gives 65.7 %. | M. Zach |
+| D23 | 2026-11-25 | Lever comparison with the ABM light measure effects: **no add-one SD runs**; lever effects stay leave-one-out from the full package (`lever_table`). | M. Zach |
+| D24 | 2026-11-25 | SD policy paths: **set from the measure tables of the deliverables** (D3.3 Table 1, D3.4a Table A-27, D3.5 Table 23), mapped as Tallinn's existing series; measures without a one-to-one mapping keep their previous series and are marked in `city_config.py`. | M. Zach |
+| D25 | 2026-11-25 | South Westphalia becomes the fourth SD demonstrator. Its MAED-City and IESopt inputs are **reconstructed from D3.5** (`build_southwestphalia_xlsx.py`), since no CETS export is available. | M. Zach |
 
 ## Consequences
 

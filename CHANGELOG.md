@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.3
+- Calibration targets for the SD model from the KNOWING deliverables D1.3, D3.3, D3.4a/b and D3.5 (`configs/sd_calibration_targets.csv`, `docs/causal/demonstrator_calibration_targets.md`): ABM light trips and passenger-km by mode 2019–2050, single-measure effects, Coping Types, CDD, energy supply and microclimate coverage.
+- `sd_knowing.runner` uses the centroid method for passenger-km by default (D22).
+- Decisions D22–D25.
+
 ## 0.9.2
 - Worked example `examples/walkthrough.py` with guide `docs/examples/walkthrough.md` (Vienna: similarity, gap filling, typology, biplot, vision; Estonia: C1 check, what-if, effect similarity, vehicle-tax event, SD levers and domain).
 - Visualisation: legends for categorical maps and for the biplot colours, indicator labels in the biplot, integer year ticks and an interval marker for short counterfactuals in `event_plot`.

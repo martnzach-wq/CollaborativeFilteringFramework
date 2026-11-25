@@ -119,13 +119,13 @@ def runner(
     city: str,
     pi_scenario: float = 0.0,
     calibration: bool | None = None,
-    pkm_method: str = "mode_specific",
+    pkm_method: str = "centroid",
 ):
     """``run(scales) -> DataFrame`` (index year 2019-2050) with car_km_cap, active_km_cap, car_km_share
     (car and car passenger), ev_share, final_energy, elec_demand, emissions_total and emissions_transport.
 
-    ``pkm_method`` "mode_specific" (the model derives mode-specific trip lengths where a city gives none;
-    used in the M7 runs) or "centroid"."""
+    ``pkm_method`` "centroid" (length-class centroids; matches the ABM light passenger-km of the
+    demonstrators, decision D22) or "mode_specific" (mode-specific trip lengths; used in the M7 runs)."""
     base = model.city(city)
     method = pkm_method
 

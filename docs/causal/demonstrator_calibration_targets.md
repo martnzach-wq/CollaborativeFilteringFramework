@@ -14,7 +14,9 @@ with source page per value). Chart values are read from the data labels of the p
 | Single-measure effects, 2040 intensity (car share, CO₂) | 9 measures + all | 9 measures + all | – | 8 measures + all (no area toll) |
 | Measure intensities 2030/2040/2050 | Table 1 | Table A-27 | – | Table 23 |
 | Coping Types, current | metropolitan, Estonia | metropolitan, Italy | urban, Spain | rural, Germany |
-| Energy demand (MAED-City) | input file in SD repository | model run in D3.4a; input file not in SD repository | not modelled (insufficient data) | model run in D3.5; input file not in SD repository |
+| Energy demand (MAED-City) | input file in SD repository | balance (Table A-13), projections (Fig. A-60/A-62); SD file is an estimate from public data | not modelled (insufficient data) | reconstructed from D3.5 (`build_southwestphalia_xlsx.py`) |
+| Energy supply (IESopt), 2019 and 2050 | Tables 9–14; SD file `Supply_Data_Tallinn.xlsx` | Tables A-19–A-24; SD uses synthetic values | not modelled | Tables 15–22; SD file built from them |
+| Microclimate (PALM-4U, WRF) | CDD reduction by measures 0.8/1.0/1.2 % (2030/40/50) | local cooling up to 2.8 °C (day), 5.2 °C (night) | local cooling up to 0.8 °C (day), 1.0 °C (night) | CDD/HDD trend from WRF only |
 
 The ABM light base year is calibrated on observed data: the Tallinn Strategic Transport Model (2022) and a
 household travel survey (TNS Kantar 2015) for Tallinn; the Landesverkehrsmodell NRW and MiD 2017 for South
@@ -73,3 +75,34 @@ If the behaviour-model runs in D3.4a and D3.5 used the tables, their type-specif
    reference.
 4. `cross_calibrate` across the three ABM demonstrators; Granollers is a transfer target with trip shares
    as its only observed check.
+
+## Energy supply and microclimate
+
+The SD supply module reads capacities and generation for 2019 and 2050 (`ES_inputs`); the IESopt tables
+of the deliverables report exactly these two years, so Tallinn, Naples and South Westphalia can be filled
+from them. The supply module used to set wind and hydro generation to zero; it now reads them where a city
+file lists them (South Westphalia: wind 2.2 TWh in 2019, 13.0 TWh in 2050).
+
+The SD model receives the microclimate only through the cooling degree days (CDD, attractiveness of active
+modes and PT) and the street-greening lever. The MAED-City heat-wave tables give CDD for the base year, the
+CETS 2050 and the heat-wave year:
+
+| | 2019 | CETS 2050 | heat wave 2050 | SD configuration |
+|---|---|---|---|---|
+| Tallinn | 8.6 | 15 | 38 | 100 (Vensim default) |
+| Naples | 326 | 610 | 685 | 120 |
+| South Westphalia | 21 | 37 | 74 | 21 |
+| Granollers | – | – | – | 380 |
+
+The PALM-4U runs report local temperature changes of the greening measures, not a CDD change for the city,
+except for Tallinn (CDD −0.8/−1.0/−1.2 % in 2030/2040/2050). They do not quantify the effect of street
+greening on mode choice, so the street-greening lever has no calibration target.
+
+## Energy demand check (2019)
+
+With the centroid method and the corrected industry total (manufacturing was counted twice when the file
+contains the `Industry_*` carrier rows), the SD model gives for South Westphalia 57.7 TWh final energy
+against 49.3 TWh in D3.5. The difference is passenger transport (23.0 against 14.6 TWh): the SD model
+converts car and car-passenger kilometres with the Tallinn factor (0.749 kWh/km), while MAED-City uses
+vehicle kilometres (load factor 1.13) and German fleet values. City-specific conversion factors are class-O
+inputs still missing for Naples, Granollers and South Westphalia.
