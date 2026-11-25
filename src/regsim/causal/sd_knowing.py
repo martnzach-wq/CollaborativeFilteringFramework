@@ -480,3 +480,89 @@ def recalibrate_levers(
             {"measure": measure, "key": key, "factor": float(f), "abm": target_pct, "sd": 100 * eff(f)}
         )
     return pd.DataFrame(rows)
+
+
+def recalibrate_joint(
+    model: Knowing,
+    city: str,
+    pathway_targets: pd.DataFrame,
+    abm_effects: pd.Series,
+    effect_weight: float = 1.0,
+    year: int = 2040,
+    factor_bounds: tuple[float, float] = (0.01, 100.0),
+    offset_bounds: tuple[float, float] = (-15.0, 15.0),
+    damping_bounds: tuple[float, float] = (0.005, 2.0),
+) -> pd.DataFrame:
+    """Joint fit of the per-intervention factors (log scale), the attractiveness offsets and the
+    damping to both the ABM light pathway pkm shares (`class_r_targets`) and the single-measure
+    effects (``abm_effects``, % change of car share; weighted by ``effect_weight``), since effects
+    fitted one by one overshoot in the full package. Bounded least squares from the configured values."""
+    from scipy.optimize import least_squares
+
+    base = model.city(city)
+    measures = [
+        ms
+        for ms in abm_effects.index
+        if ms in MEASURE_LEVERS and getattr(base.mobility, MEASURE_LEVERS[ms][0], None)
+    ]
+    keys = [MEASURE_LEVERS[ms][1] for ms in measures]
+    goal = pathway_targets.set_index("quantity").value
+    cal0 = base.mobility.lever_calibration
+    x0 = np.concatenate(
+        [
+            np.log(np.clip([cal0.get(k, 1.0) for k in keys], *factor_bounds)),
+            np.clip([base.mobility.attr_offset.get(m, 0.0) for m in MODES[1:]], *offset_bounds),
+            [np.clip(base.mobility.mode_change_damping, *damping_bounds)],
+        ]
+    )
+    lo = np.concatenate([[np.log(factor_bounds[0])] * len(keys), [offset_bounds[0]] * 4, [damping_bounds[0]]])
+    hi = np.concatenate([[np.log(factor_bounds[1])] * len(keys), [offset_bounds[1]] * 4, [damping_bounds[1]]])
+
+    def unpack(x):
+        cal = dict(zip(keys, np.exp(x[: len(keys)]), strict=True))
+        offsets = dict(zip(MODES[1:], x[len(keys) : len(keys) + 4], strict=True))
+        return cal, offsets, float(x[-1])
+
+    def city_with(x):
+        cal, offsets, damping = unpack(x)
+        mob = copy.deepcopy(base.mobility)
+        mob.lever_calibration = {**cal0, **cal}
+        mob.attr_offset = offsets
+        mob.mode_change_damping = damping
+        return dataclasses.replace(base, mobility=mob)
+
+    def resid(x):
+        c = city_with(x)
+        out = {}
+        for key, pi in (("ref", 0.0), ("opt", 1.0)):
+            split = model.mobility.run_mobility(c, pi_scenario=pi)["centroid"]["modal_split"]
+            for y in CLASS_R_YEARS:
+                for m in MODES:
+                    out[f"{key}_{y}_{m}"] = split[m][y - 2019]
+        r_path = pd.Series(out).reindex(goal.index).to_numpy() - goal.to_numpy()
+        r_eff = [
+            effect_weight
+            * (single_measure_effect(model, c, MEASURE_LEVERS[ms][0], year=year) - abm_effects[ms] / 100)
+            for ms in measures
+        ]
+        return np.concatenate([r_path, r_eff])
+
+    res = least_squares(resid, x0, bounds=(lo, hi), diff_step=1e-3, max_nfev=400)
+    cal, offsets, damping = unpack(res.x)
+    r = res.fun
+    rows = [{"parameter": f"cal:{k}", "value": v} for k, v in cal.items()]
+    rows += [{"parameter": f"offset:{m}", "value": float(v)} for m, v in offsets.items()]
+    rows.append({"parameter": "mode_change_damping", "value": damping})
+    out = pd.DataFrame(rows)
+    out.attrs.update(
+        loss_pathway=float((r[: len(goal)] ** 2).sum()),
+        loss_effects=float((r[len(goal) :] ** 2).sum()),
+        effects=dict(
+            zip(
+                measures,
+                (100 * (r[len(goal) :] / effect_weight) + abm_effects[measures].to_numpy()).tolist(),
+                strict=True,
+            )
+        ),
+    )
+    return out
