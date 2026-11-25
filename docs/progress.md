@@ -1,4 +1,9 @@
 # Progress
+## SD checks against IESopt and MAED-City (2026-11-25)
+
+- Energy supply fixed (district-heating gap, electrolyser demand) and checked against IESopt 2050; fuel-specific CO2 factors and other passenger transport fuels (D37); direct CO2 within 0–8 % of MAED-City for Naples and South Westphalia up to 2035 and for Tallinn from 2030.
+- Tests: 181 unit tests pass (1 skipped); 43 acceptance tests pass (1 skipped) with the SD model's `main` checkout, to which the M7 criteria refer.
+
 ## SD class-R recalibration (2026-11-25)
 
 - OD traffic counted with 0.5 in the energy balance (D31), MAED industry convention (D33), class-R calibration of Tallinn, Naples and South Westphalia against the ABM light trajectories (D32); SD branch `claude/demonstrator-calibration`.
