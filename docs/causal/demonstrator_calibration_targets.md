@@ -158,24 +158,35 @@ each such trip; trips within the city count fully). Car energy 2019 against MAED
 1.23 TWh, South Westphalia 16.8 against 13.8 TWh, Naples 4.2 against 2.5 TWh. The remaining gap in Naples and
 South Westphalia points to an OD share above the placeholders (the OD-zone populations are not yet known).
 
-## Class-R recalibration (D32)
+## Class-R recalibration (D32, D35)
 
-Attractiveness offsets per mode (car as reference) and the mode-change damping, fitted to the passenger-km
-shares of the ABM light reference and optimised pathways (30 targets per city) with
-`sd_knowing.recalibrate_class_r`, which wraps `sd_bridge.recalibrate_residuals`:
+The climate effect on active modes and PT no longer enters the attractiveness (−CDD/100, −CDD/200): per cooling
+degree day 0.02/365 of active trips and 0.01/365 of PT trips move to car and car passenger, relative to the 2019
+climate. Evidence: cycling rises with temperature up to about 20–25 °C and falls on hot days ([Böcker et al.
+2019](https://consensus.app/papers/details/w:ec6e3df7-9807-4977-ab41-117b49d6d467/); [Hogeweij et al.
+2026](https://consensus.app/papers/details/w:76fbf6e4-09ed-4150-bd52-741fddbce06f/): decline above UTCI 32 °C);
+very hot days move walking and transit trips to the car ([Belloc et al.
+2025](https://consensus.app/papers/details/w:00984244-138d-4b99-a97c-97264058f0b5/)); mobility falls by up to 10 %
+on hot days ([Renninger et al. 2026](https://consensus.app/papers/details/w:702fc3fb-ef05-4cc6-93a9-a2911889d175/)).
+
+Attractiveness offsets per mode (car as reference) and the mode-change damping are then fitted with bounded
+least squares (offsets ±15, several starts; `sd_knowing.recalibrate_class_r`) to the passenger-km shares of the
+ABM light reference and optimised pathways 2030/2040/2050; Granollers, without ABM light, to its previous model
+trajectories.
 
 | | damping | offsets car passenger / PT / bicycle / walk | squared error |
 |---|---|---|---|
-| Tallinn | 0.099 | −1.86 / +5.53 / +0.50 / −3.19 | 0.012 |
-| Naples | 0.085 | +0.33 / −1.29 / −14.85 / −15.81 | 0.005 |
-| South Westphalia | 0.479 | −1.40 / +7.93 / +1.10 / +3.57 | 0.015 |
+| Tallinn | 0.101 | −2.24 / +5.45 / +0.54 / +10.69 | 0.011 |
+| Naples | 0.080 | +0.51 / −1.22 / −15.0 / −15.0 | 0.006 |
+| South Westphalia | 0.466 | −1.08 / +2.68 / −0.68 / −3.57 | 0.008 |
+| Granollers | 0.840 | 0.00 / −1.90 / −3.80 / −3.80 | 0.000 |
 
 | car share of pkm, 2050 | SD reference | ABM reference | SD optimised | ABM optimised |
 |---|---|---|---|---|
-| Tallinn | 0.42 | 0.44 | 0.22 | 0.24 |
-| Naples | 0.45 | 0.46 | 0.26 | 0.25 |
-| South Westphalia | 0.62 | 0.66 | 0.55 | 0.51 |
+| Tallinn | 0.42 | 0.44 | 0.21 | 0.24 |
+| Naples | 0.44 | 0.46 | 0.24 | 0.25 |
+| South Westphalia | 0.65 | 0.66 | 0.50 | 0.51 |
 
-The large negative active-mode offsets of Naples compensate the higher CDD (326 instead of 120), which enters
-the attractiveness of walking and cycling with −CDD/100. Granollers has no ABM light trajectory and keeps its
-calibration.
+For Granollers the fit returns exactly the former terms −CDD/200 and −CDD/100 (CDD 380) as constant offsets: in
+the original model they acted as calibration constants, not as a climate response. Naples reaches the lower bound
+for walking and cycling; the generalised-cost dynamics overstate the growth of active modes there.
