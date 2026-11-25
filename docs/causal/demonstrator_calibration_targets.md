@@ -308,3 +308,26 @@ car energy per vehicle-km ±10 %, load factor ±5 %, CDD ±10 %), 100 draws, 90 
 
 The walking offset is poorly identified (standard deviation 4–8), since walking carries 1–3 % of pkm; the damping is
 well determined. The uncertainty of the 2050 direct CO2 under the full package is about ±15 % (Naples ±7 %).
+
+## Per-intervention calibration (D38–D40)
+
+Each intervention has its own calibration factor, as the `TR Cal` constants of the Vensim model. Fitted one by
+one to the ABM light single-measure effects, the factors reproduce every effect, but the full package then
+overshoots (car share of pkm 2050 optimised: 0.10 / 0.14 / 0.24 against 0.24 / 0.25 / 0.51 for Tallinn / Naples /
+South Westphalia): the SD model adds the measures up over time, while ABM light shows that they overlap. The
+factors are therefore fitted jointly with the class-R offsets and the damping (`sd_knowing.recalibrate_joint`).
+
+| | squared error pathways | squared error effects | car share 2050 opt. SD / ABM |
+|---|---|---|---|
+| Tallinn | 0.0057 | 0.0021 | 0.22 / 0.24 |
+| Naples | 0.0009 | 0.0010 | 0.25 / 0.25 |
+| South Westphalia | 0.0069 | 0.0015 | 0.49 / 0.51 |
+
+Single-measure effects after the joint fit (% change of car share 2040, SD against ABM light): pricing measures
+within 1 point (Tallinn area toll −20.3 / −20.9, road pricing −6.6 / −6.1; Naples road pricing −12.1 / −12.3, area
+toll −4.8 / −5.1; South Westphalia road pricing −12.9 / −12.7). The cycling factor goes to its lower bound in all
+three cities: the SD cycling lever cannot reproduce its small single effect and the pathways at the same time.
+The value of time now follows D39 (Tallinn 3.79, Naples 3.24, South Westphalia 5.11 EUR/h).
+
+Tallinn's EV fleet share follows its fixed trajectory (8 / 55 / 85 % in 2030 / 2040 / 2050) against ABM light's ZEV
+share 18 / 45 / 80 %.
