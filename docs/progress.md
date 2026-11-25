@@ -1,4 +1,10 @@
 # Progress
+## SD active modes and EV fleet (2026-11-25)
+
+- Perceived-time levers for cycling, traffic calming and the 15-minute city (D41), held with their lever in single-measure runs; Tallinn EV 18 / 45 / 80 % linked to the sales-ban compliance by coping type (D42); joint recalibration of Tallinn, Naples and South Westphalia (car share of pkm 2050 optimised 0.22 / 0.25 / 0.49).
+- Tests: `tests/test_sd_knowing.py` and `tests/test_sd_bridge.py` pass (10).
+- Open: cycling factor at its lower bound, since the push measures already raise the bicycle share to the ABM light pathway level.
+
 ## SD checks against IESopt and MAED-City (2026-11-25)
 
 - Energy supply fixed (district-heating gap, electrolyser demand) and checked against IESopt 2050; fuel-specific CO2 factors and other passenger transport fuels (D37); direct CO2 within 0–8 % of MAED-City for Naples and South Westphalia up to 2035 and for Tallinn from 2030.

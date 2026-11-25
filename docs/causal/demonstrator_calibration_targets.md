@@ -319,9 +319,9 @@ factors are therefore fitted jointly with the class-R offsets and the damping (`
 
 | | squared error pathways | squared error effects | car share 2050 opt. SD / ABM |
 |---|---|---|---|
-| Tallinn | 0.0057 | 0.0021 | 0.22 / 0.24 |
-| Naples | 0.0009 | 0.0010 | 0.25 / 0.25 |
-| South Westphalia | 0.0069 | 0.0015 | 0.49 / 0.51 |
+| Tallinn | 0.0058 | 0.0021 | 0.22 / 0.24 |
+| Naples | 0.0010 | 0.0010 | 0.25 / 0.25 |
+| South Westphalia | 0.0073 | 0.0015 | 0.49 / 0.51 |
 
 Single-measure effects after the joint fit (% change of car share 2040, SD against ABM light): pricing measures
 within 1 point (Tallinn area toll −20.3 / −20.9, road pricing −6.6 / −6.1; Naples road pricing −12.1 / −12.3, area
@@ -329,5 +329,21 @@ toll −4.8 / −5.1; South Westphalia road pricing −12.9 / −12.7). The cycl
 three cities: the SD cycling lever cannot reproduce its small single effect and the pathways at the same time.
 The value of time now follows D39 (Tallinn 3.79, Naples 3.24, South Westphalia 5.11 EUR/h).
 
-Tallinn's EV fleet share follows its fixed trajectory (8 / 55 / 85 % in 2030 / 2040 / 2050) against ABM light's ZEV
-share 18 / 45 / 80 %.
+Values after the revision of D41 and D42 (pathway and effect errors above).
+
+### Active modes and EV fleet (D41, D42)
+
+Cycling optimisation, traffic calming and the 15-minute city reduce the perceived travel time of walking and
+cycling as in ABM light. The single-measure runs hold these series with their lever; before that, reference and
+measure run both carried them and the cycling effect read 0 at any factor. With the factor at 1 the cycling effect
+is now −0.9 % (Tallinn), −0.04 % (Naples) and −0.3 % (South Westphalia).
+
+The joint fit still sets the cycling factor to its lower bound in all three cities. Without the cycling lever, the
+SD bicycle share of pkm in the optimised pathway already reaches or exceeds ABM light (Tallinn 2040 3.3 % against
+2.0 %, South Westphalia 2050 7.5 % against 5.9 %, Naples 2050 4.3 % against 3.7 %): the push measures (capacity,
+pricing, parking) divert car trips to the bicycle, while in ABM light the bicycle gains mainly from cycling
+optimisation. Any cycling effect then overshoots the pathway shares by more than it reduces the effect error.
+
+Tallinn's EV fleet share at PI = 1 is 18 / 45 / 80 % (2030 / 2040 / 2050), BAU 12.3 / 25.8 / 43.3 %. The
+sales-ban compliance by coping type scales the gap relative to the 2019 coping-type distribution; with the static
+distribution the factor is 1.
