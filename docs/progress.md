@@ -1,4 +1,9 @@
 # Progress
+## SD microclimate and demonstrator inputs (2026-11-25)
+
+- SD repository (branch `claude/demonstrator-calibration`): microclimate submodel calibrated on the Tallinn PALM-4U table and coupled through the CDD; CDD from MAED-City; Naples demand and supply from D3.4a; city transport energy factors; trip-length classes for Naples and South Westphalia. Decisions D26–D30.
+- Open: OD-zone populations (commuter statistics not reachable from this environment), class-R recalibration of base attractiveness and damping to the ABM reference trajectories (BAU drift in Tallinn and South Westphalia), boundary between OD traffic and resident energy.
+
 ## SD calibration inputs from the demonstrator deliverables (2026-11-25)
 
 - Calibration targets extracted from D1.3, D3.3, D3.4a/b and D3.5: `configs/sd_calibration_targets.csv`, `docs/causal/demonstrator_calibration_targets.md`. Decisions D22–D25.

@@ -106,3 +106,47 @@ against 49.3 TWh in D3.5. The difference is passenger transport (23.0 against 14
 converts car and car-passenger kilometres with the Tallinn factor (0.749 kWh/km), while MAED-City uses
 vehicle kilometres (load factor 1.13) and German fleet values. City-specific conversion factors are class-O
 inputs still missing for Naples, Granollers and South Westphalia.
+
+## Microclimate submodel (D26)
+
+`microclimate.py` in the SD repository translates `Submodel_MicroClimate_v4.mdl` (monthly time step,
+Time 120/252/372/492 = 2019/2030/2040/2050) to the annual grid. Hot-day 2 m temperature per Corine land-cover
+class is linear in four urban features (sealed area, building volume, young and mature trees; D2.4 section
+4.2.4).
+
+| Calibration on `mc4_cal_tallinn.csv` (19 classes × 4 years) | tmax | tmin |
+|---|---|---|
+| sealed area (K per %) | +0.045 | +0.036 |
+| building area × height / 10 | −0.065 | −0.052 |
+| young trees per % of city area | −0.0002 | −0.0003 |
+| mature trees per % of city area / 100 | −0.005 | −0.014 |
+| city-average change 2019–2050, PALM-4U | −0.23 K | −0.21 K |
+| city-average change 2019–2050, submodel | −0.16 K | −0.14 K |
+
+The coefficients come from the changes within each class, which is the response to interventions the SD
+model needs; a pooled fit across classes reproduces the class levels (weighted R² 0.72 and 0.91) but only a
+quarter of the temporal response. The relative CDD change per K of city-average cooling, cross-calibrated to
+the D3.3 reductions (−0.8/−1.0/−1.2 % in 2030/2040/2050), is 0.09 per K. Without measures (PI = 0) Tallinn's
+CDD in 2050 is 15.2 instead of 15.0. Naples, Granollers and South Westphalia have no class-level PALM-4U
+table; their CDD follow MAED-City only.
+
+## Naples reconstruction against the draft MAED-City export (D28)
+
+Rows of the reconstruction from D3.4a against the draft export (not final): totals of households (−1 %),
+services (−2 to +1 %), manufacturing (±1 % except 2030) and freight agree; the mean absolute deviation over all
+rows and keyframes is 15 %. The largest differences are end-use splits that D3.4a does not publish: the draft
+puts a quarter of household firewood into "other" uses (the rule puts all of it into space heating) and
+reports industry fossil fuels about twice the manufacturing row of Table A-13.
+
+## Base year after the trip-class estimate (D30)
+
+| pkm shares 2019 car / car passenger / PT / bicycle / walk | SD model | ABM light |
+|---|---|---|
+| Tallinn | 46 / 9 / 42 / 0 / 3 | 45 / 9 / 45 / 0 / 2 |
+| Naples | 46 / 14 / 36 / 3 / 2 | 47 / 14 / 36 / 2 / 1 |
+| South Westphalia | 64 / 12 / 17 / 6 / 1 | 68 / 12 / 15 / 5 / 1 |
+
+Car energy 2019 against MAED-City (D29): Tallinn 1.9 against 1.2 TWh, Naples 4.7 against 2.5 TWh, South
+Westphalia 19.1 against 13.8 TWh. The ABM light trips include OD traffic, which the SD model divides by the
+resident population, while MAED-City counts the residents' consumption; aligning the boundaries is part of the
+class-R recalibration.

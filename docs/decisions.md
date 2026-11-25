@@ -29,6 +29,11 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D23 | 2026-11-25 | Lever comparison with the ABM light measure effects: **no add-one SD runs**; lever effects stay leave-one-out from the full package (`lever_table`). | M. Zach |
 | D24 | 2026-11-25 | SD policy paths: **set from the measure tables of the deliverables** (D3.3 Table 1, D3.4a Table A-27, D3.5 Table 23), mapped as Tallinn's existing series; measures without a one-to-one mapping keep their previous series and are marked in `city_config.py`. | M. Zach |
 | D25 | 2026-11-25 | South Westphalia becomes the fourth SD demonstrator. Its MAED-City and IESopt inputs are **reconstructed from D3.5** (`build_southwestphalia_xlsx.py`), since no CETS export is available. | M. Zach |
+| D26 | 2026-11-25 | Microclimate submodel of the SD model: urban-feature coefficients **estimated within land-cover classes** (class fixed effects) from the Tallinn PALM-4U table; greening and unsealing **scaled with the coupled capacity and active-mode levers** (no separate mobility effect); effect on mobility and energy **only through the CDD**, with the relative CDD change per K cross-calibrated to the D3.3 CDD reductions. | M. Zach |
+| D27 | 2026-11-25 | CDD of the SD demonstrators from **MAED-City** (base year and CETS 2050; Granollers unchanged). | M. Zach |
+| D28 | 2026-11-25 | Naples energy demand **reconstructed from D3.4a** like South Westphalia (D25); the draft MAED-City export serves only as a check. Energy supply from the **IESopt tables** where published (Tallinn, Naples, South Westphalia); Granollers keeps its previous data. | M. Zach |
+| D29 | 2026-11-25 | Passenger-car energy per city: car + passenger km converted to vehicle km with the **MAED-City load factor** and **national fleet consumption**; not fitted to the MAED-City base year, since the mismatch comes from the mobility side (OD traffic per resident). | M. Zach |
+| D30 | 2026-11-25 | OD-zone populations and length-class structure of trips **estimated externally**; the length classes from exponential trip-length distributions with the ABM light mean per mode, the OD populations remain placeholders until commuter statistics can be read. | M. Zach |
 
 ## Consequences
 
