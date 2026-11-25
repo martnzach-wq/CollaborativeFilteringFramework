@@ -1,4 +1,9 @@
 # Progress
+## SD destination-weighted mode change and coping sensitivity (2026-11-25)
+
+- Mode change weighted by destination share (D43); cycling factor now identified (Tallinn 1.85, Naples 10.7, South Westphalia 0.75); Tallinn coping-type sensitivity 2050 (D44, off by default).
+- Open: coping types share one 2019 mode split, so the sensitivity is driven by the attractiveness profiles alone.
+
 ## SD active modes and EV fleet (2026-11-25)
 
 - Perceived-time levers for cycling, traffic calming and the 15-minute city (D41), held with their lever in single-measure runs; Tallinn EV 18 / 45 / 80 % linked to the sales-ban compliance by coping type (D42); joint recalibration of Tallinn, Naples and South Westphalia (car share of pkm 2050 optimised 0.22 / 0.25 / 0.49).

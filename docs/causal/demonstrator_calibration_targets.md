@@ -347,3 +347,21 @@ optimisation. Any cycling effect then overshoots the pathway shares by more than
 Tallinn's EV fleet share at PI = 1 is 18 / 45 / 80 % (2030 / 2040 / 2050), BAU 12.3 / 25.8 / 43.3 %. The
 sales-ban compliance by coping type scales the gap relative to the 2019 coping-type distribution; with the static
 distribution the factor is 1.
+
+### Destination-weighted mode change (D43) and coping sensitivity (D44)
+
+With the mode change weighted by the destination share, the cycling factor leaves its lower bound:
+
+| | a | squared error pathways | squared error effects | cycling factor | cycling effect SD / ABM (%) | car share 2050 opt. |
+|---|---|---|---|---|---|---|
+| Tallinn | 0.25 | 0.0065 | 0.0014 | 1.85 | −1.9 / −3.1 | 0.22 |
+| Naples | 1 | 0.0005 | 0.0007 | 10.7 | −0.9 / −1.7 | 0.24 |
+| South Westphalia | 1 | 0.0082 | 0.0011 | 0.75 | −0.4 / −1.2 | 0.49 |
+
+With pure share weighting (a = 1) Tallinn's cycling factor rose to 84, since the bicycle starts from a share near
+0; a = 0.25 and a = 0.5 give nearly equal fits. Tallinn's factor of 1.85 reduces the perceived cycling time by 83 %
+in 2040, beyond the measure table's mean of 45 %.
+
+Tallinn coping sensitivity (D44), 2050: car share of pkm 0.425 → 0.360 (PI = 0) and 0.215 → 0.179 (PI = 1), EV
+share at PI = 1 80 → 82 %. The effect follows from the coping-type attractiveness profiles: all types start
+from the same mode split in 2019 and diverge to car trip shares of 0.77 (type A) to 0.14 (type D) by 2050.
