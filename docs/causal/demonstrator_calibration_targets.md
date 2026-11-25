@@ -365,3 +365,14 @@ in 2040, beyond the measure table's mean of 45 %.
 Tallinn coping sensitivity (D44), 2050: car share of pkm 0.425 → 0.360 (PI = 0) and 0.215 → 0.179 (PI = 1), EV
 share at PI = 1 80 → 82 %. The effect follows from the coping-type attractiveness profiles: all types start
 from the same mode split in 2019 and diverge to car trip shares of 0.77 (type A) to 0.14 (type D) by 2050.
+
+### Coping-type initial splits (D45)
+
+Joint fit with type-specific initial splits (squared error pathways / effects): Tallinn 0.0067 / 0.0022, Naples
+0.0005 / 0.0007, South Westphalia 0.0078 / 0.0009; cycling factor 1.68 / 9.9 / 0.61, cycling effect −1.2 / −0.9 /
+−0.2 % against ABM light −3.1 / −1.7 / −1.2 %. Car share of pkm 2050 optimised 0.21 / 0.24 / 0.49.
+
+The odds ratio of car use of type A stays near its 2019 value in Naples and South Westphalia (1.74 and 1.81 in
+2050 BAU) but grows to 3.13 in Tallinn, whose branch applies the attractiveness profile with strength 1 instead of
+0.22. Tallinn coping sensitivity (D44) with these splits, 2050: car share of pkm 0.428 → 0.338 (PI = 0) and 0.213 →
+0.163 (PI = 1), EV share 80 → 82 %.
