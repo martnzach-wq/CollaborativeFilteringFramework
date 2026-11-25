@@ -238,12 +238,49 @@ def class_r_run_model(model: Knowing, city: str, years=CLASS_R_YEARS):
     return run
 
 
-def recalibrate_class_r(model: Knowing, city: str, targets: pd.DataFrame) -> pd.DataFrame:
+def recalibrate_class_r(
+    model: Knowing,
+    city: str,
+    targets: pd.DataFrame,
+    offset_bounds: tuple[float, float] = (-15.0, 15.0),
+    damping_bounds: tuple[float, float] = (0.005, 2.0),
+    starts: int = 4,
+    seed: int = 0,
+) -> pd.DataFrame:
     """Fit attractiveness offsets (car is the reference mode) and the mode-change damping of a
-    city to the ABM light pkm shares (`sd_bridge.recalibrate_residuals`)."""
-    from regsim.causal.sd_bridge import recalibrate_residuals
+    city to the ABM light pkm shares: bounded least squares (``scipy.optimize.least_squares``)
+    from the configured values and ``starts - 1`` random starts; the best fit is returned in the
+    format of `sd_bridge.recalibrate_residuals` (``parameter``, ``value``, ``lower``, ``upper``,
+    ``draws``, ``loss``)."""
+    from scipy.optimize import least_squares
 
     params = [f"offset:{m}" for m in MODES[1:]] + ["mode_change_damping"]
-    start = {f"offset:{m}": 0.0 for m in MODES[1:]}
-    start["mode_change_damping"] = model.city(city).mobility.mode_change_damping
-    return recalibrate_residuals(class_r_run_model(model, city), start, targets, params)
+    run = class_r_run_model(model, city)
+    goal = targets.set_index("quantity").value
+    mob = model.city(city).mobility
+    lo = np.array([offset_bounds[0]] * 4 + [damping_bounds[0]])
+    hi = np.array([offset_bounds[1]] * 4 + [damping_bounds[1]])
+
+    def resid(x):
+        out = run(dict(zip(params, x, strict=True)))
+        return (out.reindex(goal.index) - goal).to_numpy()
+
+    x_conf = np.clip([mob.attr_offset.get(m, 0.0) for m in MODES[1:]] + [mob.mode_change_damping], lo, hi)
+    rng = np.random.default_rng(seed)
+    best = None
+    for k in range(starts):
+        x0 = x_conf if k == 0 else rng.uniform(lo, hi)
+        res = least_squares(resid, x0, bounds=(lo, hi), diff_step=1e-3)
+        if best is None or res.cost < best.cost:
+            best = res
+    loss = float((best.fun**2).sum())
+    return pd.DataFrame(
+        {
+            "parameter": params,
+            "value": best.x,
+            "lower": best.x,
+            "upper": best.x,
+            "draws": starts,
+            "loss": loss,
+        }
+    )
