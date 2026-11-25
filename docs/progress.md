@@ -1,4 +1,9 @@
 # Progress
+## SD class-R recalibration (2026-11-25)
+
+- OD traffic counted with 0.5 in the energy balance (D31), MAED industry convention (D33), class-R calibration of Tallinn, Naples and South Westphalia against the ABM light trajectories (D32); SD branch `claude/demonstrator-calibration`.
+- Open: OD-zone populations; Naples and South Westphalia car energy above MAED-City by 70 % and 22 %.
+
 ## SD microclimate and demonstrator inputs (2026-11-25)
 
 - SD repository (branch `claude/demonstrator-calibration`): microclimate submodel calibrated on the Tallinn PALM-4U table and coupled through the CDD; CDD from MAED-City; Naples demand and supply from D3.4a; city transport energy factors; trip-length classes for Naples and South Westphalia. Decisions D26–D30.
