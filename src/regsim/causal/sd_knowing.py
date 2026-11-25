@@ -47,6 +47,7 @@ LEVERS = (
     "policy_pt_traveltime_adaptation",
     "policy_capacity_adaptation",
     "policy_street_green",
+    "policy_distance_adaptation",
 )
 
 
@@ -400,3 +401,81 @@ def propagate_uncertainty(
     q = d.groupby("pi")[["car_share", "final_energy", "co2_direct", "co2_total"]].quantile([0.05, 0.5, 0.95])
     q.attrs.update(city=city, year=year, n_draws=n_draws, class_r_sd=np.sqrt(np.diag(cov)).tolist())
     return q
+
+
+# ---- per-intervention calibration factors (TR Cal <lever>, decision D38) ---------------------
+
+# ABM light measure -> (SD lever series, TR Cal key)
+MEASURE_LEVERS = {
+    "traffic calming": ("policy_capacity_adaptation", "capacity"),
+    "parking management": ("policy_parking_cost_adaptation", "parking"),
+    "area toll": ("policy_area_toll", "area_toll"),
+    "road pricing": ("policy_road_pricing", "road_pricing"),
+    "cycling optimisation": ("policy_cycling_attractiveness", "cycling"),
+    "public transport optimisation": ("policy_pt_traveltime_adaptation", "pt_traveltime"),
+    "15-minute city": ("policy_distance_adaptation", "distance"),
+    "car occupancy incentives": ("policy_car_passenger_attractiveness", "car_passenger"),
+}
+
+
+def single_measure_effect(
+    model: Knowing, city, lever: str, calibration: dict | None = None, year: int = 2040
+) -> float:
+    """Relative change of the car (driver) share of pkm in ``year`` when only ``lever`` is applied
+    (PI = 1, all other levers held at their 2019 value) against the reference (PI = 0): the
+    experiment of the ABM light single-measure results. ``city`` is a name or a CityConfig."""
+    base = model.city(city) if isinstance(city, str) else city
+    mob = copy.deepcopy(base.mobility)
+    if calibration is not None:
+        mob.lever_calibration = calibration
+    c = dataclasses.replace(base, mobility=mob)
+    others = [lv for lv in LEVERS if lv != lever and getattr(c.mobility, lv, None)]
+    single = configure(c, {}, removed=others)
+    i = year - 2019
+    ref = model.mobility.run_mobility(c, pi_scenario=0.0)["centroid"]["modal_split"]["car"][i]
+    one = model.mobility.run_mobility(single, pi_scenario=1.0)["centroid"]["modal_split"]["car"][i]
+    return float(one / ref - 1)
+
+
+def recalibrate_levers(
+    model: Knowing,
+    city: str,
+    abm_effects: pd.Series,
+    bounds: tuple[float, float] = (0.01, 100.0),
+    year: int = 2040,
+) -> pd.DataFrame:
+    """One calibration factor per intervention: for each ABM light measure mapped in
+    `MEASURE_LEVERS`, the factor (log bisection within ``bounds``) at which the SD single-measure
+    effect equals the ABM light effect (``abm_effects``: measure -> % change of car share).
+    Measures whose target lies outside the reachable range get the nearest bound."""
+    base = model.city(city)
+    cal = dict(base.mobility.lever_calibration)
+    rows = []
+    for measure, target_pct in abm_effects.items():
+        if measure not in MEASURE_LEVERS:
+            continue
+        lever, key = MEASURE_LEVERS[measure]
+        if not getattr(base.mobility, lever, None):
+            continue
+        target = target_pct / 100
+
+        def eff(f, lever=lever, key=key):
+            return single_measure_effect(model, city, lever, {**cal, key: f}, year)
+
+        lo, hi = np.log(bounds[0]), np.log(bounds[1])
+        e_lo, e_hi = eff(np.exp(lo)), eff(np.exp(hi))
+        if (e_lo - target) * (e_hi - target) > 0:
+            f = np.exp(lo) if abs(e_lo - target) < abs(e_hi - target) else np.exp(hi)
+        else:
+            for _ in range(30):
+                mid = (lo + hi) / 2
+                if (eff(np.exp(mid)) - target) * (e_lo - target) > 0:
+                    lo = mid
+                else:
+                    hi = mid
+            f = float(np.exp((lo + hi) / 2))
+        cal[key] = float(f)
+        rows.append(
+            {"measure": measure, "key": key, "factor": float(f), "abm": target_pct, "sd": 100 * eff(f)}
+        )
+    return pd.DataFrame(rows)
