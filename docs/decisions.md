@@ -34,6 +34,9 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D28 | 2026-11-25 | Naples energy demand **reconstructed from D3.4a** like South Westphalia (D25); the draft MAED-City export serves only as a check. Energy supply from the **IESopt tables** where published (Tallinn, Naples, South Westphalia); Granollers keeps its previous data. | M. Zach |
 | D29 | 2026-11-25 | Passenger-car energy per city: car + passenger km converted to vehicle km with the **MAED-City load factor** and **national fleet consumption**; not fitted to the MAED-City base year, since the mismatch comes from the mobility side (OD traffic per resident). | M. Zach |
 | D30 | 2026-11-25 | OD-zone populations and length-class structure of trips **estimated externally**; the length classes from exponential trip-length distributions with the ABM light mean per mode, the OD populations remain placeholders until commuter statistics can be read. | M. Zach |
+| D31 | 2026-11-25 | Passenger transport in the city energy balance: trips within the city count fully, trips crossing the boundary (OD zone) **with 0.5** (GPC induced-activity method, origin and destination share each trip); through traffic is not represented. OD populations stay placeholders. | M. Zach |
+| D32 | 2026-11-25 | Class-R recalibration of the mobility submodel: **attractiveness offsets per mode** (car as reference) and the **mode-change damping**, fitted by least squares to the ABM light passenger-km shares of the reference (PI = 0) and optimised (PI = 1) pathways 2030/2040/2050 (Tallinn, Naples, South Westphalia). | M. Zach |
+| D33 | 2026-11-25 | MAED-City industry rows: the industry sector covers agriculture, construction, mining and manufacturing (IAEA MAED-2); **sector rows give the total**, the `Industry_*` rows its carrier split. | M. Zach |
 
 ## Consequences
 

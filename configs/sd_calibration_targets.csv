@@ -1,273 +1,303 @@
 demonstrator,quantity,mode,scenario,year,value,unit,source,note
-Tallinn,trips,bicycle,reference,2019,0.009,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
-Tallinn,trips,car,reference,2019,0.481,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
-Tallinn,trips,car passenger,reference,2019,0.104,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
-Tallinn,trips,public transport,reference,2019,0.434,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
-Tallinn,trips,walk,reference,2019,0.23,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
-Tallinn,trips,bicycle,reference,2050,0.011,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,car,reference,2050,0.554,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,car passenger,reference,2050,0.119,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,public transport,reference,2050,0.524,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,walk,reference,2050,0.277,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,bicycle,optimised,2030,0.016,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,car,optimised,2030,0.397,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,car passenger,optimised,2030,0.085,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,public transport,optimised,2030,0.553,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,walk,optimised,2030,0.277,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,bicycle,optimised,2040,0.049,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,car,optimised,2040,0.34,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,car passenger,optimised,2040,0.083,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,public transport,optimised,2040,0.66,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,walk,optimised,2040,0.308,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,bicycle,optimised,2050,0.089,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,car,optimised,2050,0.295,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,car passenger,optimised,2050,0.083,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,public transport,optimised,2050,0.759,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,trips,walk,optimised,2050,0.337,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,bicycle,reference,2019,0.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
-Tallinn,pkm,car,reference,2019,6.1,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
-Tallinn,pkm,car passenger,reference,2019,1.2,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
-Tallinn,pkm,public transport,reference,2019,6.1,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
-Tallinn,pkm,walk,reference,2019,0.3,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
-Tallinn,pkm,bicycle,reference,2050,0.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,car,reference,2050,7.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,car passenger,reference,2050,1.4,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,public transport,reference,2050,7.4,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,walk,reference,2050,0.3,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,bicycle,optimised,2030,0.1,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,car,optimised,2030,5.2,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,car passenger,optimised,2030,1.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,public transport,optimised,2030,7.6,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,walk,optimised,2030,0.3,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,bicycle,optimised,2040,0.3,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,car,optimised,2040,4.5,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,car passenger,optimised,2040,1.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,public transport,optimised,2040,9.1,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,walk,optimised,2040,0.4,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,bicycle,optimised,2050,0.8,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,car,optimised,2050,4.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,car passenger,optimised,2050,0.9,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,public transport,optimised,2050,10.5,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Tallinn,pkm,walk,optimised,2050,0.4,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
-Naples,trips,bicycle,reference,2019,0.156,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
-Naples,trips,car,reference,2019,1.187,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
-Naples,trips,car passenger,reference,2019,0.376,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
-Naples,trips,public transport,reference,2019,1.072,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
-Naples,trips,walk,reference,2019,0.337,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
-Naples,trips,bicycle,reference,2050,0.139,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,car,reference,2050,1.08,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,car passenger,reference,2050,0.341,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,public transport,reference,2050,1.073,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,walk,reference,2050,0.307,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,bicycle,optimised,2030,0.165,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,car,optimised,2030,1.018,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,car passenger,optimised,2030,0.352,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,public transport,optimised,2030,1.186,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,walk,optimised,2030,0.34,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,bicycle,optimised,2040,0.186,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,car,optimised,2040,0.836,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,car passenger,optimised,2040,0.347,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,public transport,optimised,2040,1.306,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,walk,optimised,2040,0.342,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,bicycle,optimised,2050,0.207,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,car,optimised,2050,0.674,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,car passenger,optimised,2050,0.341,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,public transport,optimised,2050,1.416,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,trips,walk,optimised,2050,0.342,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,bicycle,reference,2019,0.8,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car,reference,2019,17.6,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car passenger,reference,2019,5.1,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,public transport,reference,2019,13.2,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,walk,reference,2019,0.5,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,bicycle,reference,2050,0.7,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car,reference,2050,15.9,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car passenger,reference,2050,4.6,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,public transport,reference,2050,13.3,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,walk,reference,2050,0.4,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,bicycle,optimised,2030,0.9,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car,optimised,2030,14.8,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car passenger,optimised,2030,4.8,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,public transport,optimised,2030,15.4,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,walk,optimised,2030,0.5,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,bicycle,optimised,2040,1.1,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car,optimised,2040,11.6,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car passenger,optimised,2040,4.7,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,public transport,optimised,2040,17.9,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,walk,optimised,2040,0.5,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,bicycle,optimised,2050,1.3,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car,optimised,2050,8.9,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,car passenger,optimised,2050,4.6,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,public transport,optimised,2050,20.1,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-Naples,pkm,walk,optimised,2050,0.5,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
-South Westphalia,trips,bicycle,reference,2019,0.46,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
-South Westphalia,trips,car,reference,2019,2.917,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
-South Westphalia,trips,car passenger,reference,2019,0.595,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
-South Westphalia,trips,public transport,reference,2019,0.872,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
-South Westphalia,trips,walk,reference,2019,0.759,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
-South Westphalia,trips,bicycle,reference,2050,0.419,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,car,reference,2050,2.752,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,car passenger,reference,2050,0.527,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,public transport,reference,2050,0.81,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,walk,reference,2050,0.7,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,bicycle,optimised,2030,0.486,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,car,optimised,2030,2.583,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,car passenger,optimised,2030,0.558,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,public transport,optimised,2030,0.959,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,walk,optimised,2030,0.895,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,bicycle,optimised,2040,0.529,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,car,optimised,2040,2.35,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,car passenger,optimised,2040,0.568,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,public transport,optimised,2040,0.998,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,walk,optimised,2040,0.96,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,bicycle,optimised,2050,0.463,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,car,optimised,2050,2.206,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,car passenger,optimised,2050,0.592,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,public transport,optimised,2050,1.01,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,trips,walk,optimised,2050,1.012,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,bicycle,reference,2019,5.1,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car,reference,2019,75.3,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car passenger,reference,2019,13.0,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,public transport,reference,2019,16.9,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,walk,reference,2019,0.7,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,bicycle,reference,2050,5.6,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car,reference,2050,68.3,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car passenger,reference,2050,9.7,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,public transport,reference,2050,19.1,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,walk,reference,2050,0.6,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,bicycle,optimised,2030,5.5,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car,optimised,2030,65.7,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car passenger,optimised,2030,12.0,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,public transport,optimised,2030,24.7,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,walk,optimised,2030,0.8,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,bicycle,optimised,2040,6.4,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car,optimised,2040,58.5,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car passenger,optimised,2040,11.9,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,public transport,optimised,2040,29.5,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,walk,optimised,2040,0.8,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,bicycle,optimised,2050,6.2,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car,optimised,2050,53.4,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,car passenger,optimised,2050,12.0,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,public transport,optimised,2050,32.3,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
-South Westphalia,pkm,walk,optimised,2050,0.8,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+Tallinn,trips,bicycle,reference,2019.0,0.009,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
+Tallinn,trips,car,reference,2019.0,0.481,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
+Tallinn,trips,car passenger,reference,2019.0,0.104,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
+Tallinn,trips,public transport,reference,2019.0,0.434,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
+Tallinn,trips,walk,reference,2019.0,0.23,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",internal + OD traffic Tallinn city; ABM light calibrated on TSTM 2022 and TNS Kantar 2015 survey
+Tallinn,trips,bicycle,reference,2050.0,0.011,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,car,reference,2050.0,0.554,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,car passenger,reference,2050.0,0.119,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,public transport,reference,2050.0,0.524,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,walk,reference,2050.0,0.277,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,bicycle,optimised,2030.0,0.016,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,car,optimised,2030.0,0.397,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,car passenger,optimised,2030.0,0.085,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,public transport,optimised,2030.0,0.553,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,walk,optimised,2030.0,0.277,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,bicycle,optimised,2040.0,0.049,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,car,optimised,2040.0,0.34,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,car passenger,optimised,2040.0,0.083,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,public transport,optimised,2040.0,0.66,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,walk,optimised,2040.0,0.308,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,bicycle,optimised,2050.0,0.089,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,car,optimised,2050.0,0.295,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,car passenger,optimised,2050.0,0.083,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,public transport,optimised,2050.0,0.759,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,trips,walk,optimised,2050.0,0.337,Mio trips/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,bicycle,reference,2019.0,0.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
+Tallinn,pkm,car,reference,2019.0,6.1,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
+Tallinn,pkm,car passenger,reference,2019.0,1.2,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
+Tallinn,pkm,public transport,reference,2019.0,6.1,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
+Tallinn,pkm,walk,reference,2019.0,0.3,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",labels rounded to 0.1
+Tallinn,pkm,bicycle,reference,2050.0,0.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,car,reference,2050.0,7.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,car passenger,reference,2050.0,1.4,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,public transport,reference,2050.0,7.4,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,walk,reference,2050.0,0.3,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,bicycle,optimised,2030.0,0.1,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,car,optimised,2030.0,5.2,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,car passenger,optimised,2030.0,1.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,public transport,optimised,2030.0,7.6,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,walk,optimised,2030.0,0.3,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,bicycle,optimised,2040.0,0.3,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,car,optimised,2040.0,4.5,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,car passenger,optimised,2040.0,1.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,public transport,optimised,2040.0,9.1,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,walk,optimised,2040.0,0.4,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,bicycle,optimised,2050.0,0.8,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,car,optimised,2050.0,4.0,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,car passenger,optimised,2050.0,0.9,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,public transport,optimised,2050.0,10.5,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Tallinn,pkm,walk,optimised,2050.0,0.4,Mio pkm/day,"D3.3 Fig. 11/12 (p. 12 of report, PDF p. 31)",
+Naples,trips,bicycle,reference,2019.0,0.156,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
+Naples,trips,car,reference,2019.0,1.187,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
+Naples,trips,car passenger,reference,2019.0,0.376,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
+Naples,trips,public transport,reference,2019.0,1.072,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
+Naples,trips,walk,reference,2019.0,0.337,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),car includes motorcycles; internal + OD traffic Naples city
+Naples,trips,bicycle,reference,2050.0,0.139,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,car,reference,2050.0,1.08,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,car passenger,reference,2050.0,0.341,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,public transport,reference,2050.0,1.073,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,walk,reference,2050.0,0.307,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,bicycle,optimised,2030.0,0.165,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,car,optimised,2030.0,1.018,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,car passenger,optimised,2030.0,0.352,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,public transport,optimised,2030.0,1.186,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,walk,optimised,2030.0,0.34,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,bicycle,optimised,2040.0,0.186,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,car,optimised,2040.0,0.836,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,car passenger,optimised,2040.0,0.347,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,public transport,optimised,2040.0,1.306,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,walk,optimised,2040.0,0.342,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,bicycle,optimised,2050.0,0.207,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,car,optimised,2050.0,0.674,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,car passenger,optimised,2050.0,0.341,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,public transport,optimised,2050.0,1.416,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,trips,walk,optimised,2050.0,0.342,Mio trips/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,bicycle,reference,2019.0,0.8,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car,reference,2019.0,17.6,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car passenger,reference,2019.0,5.1,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,public transport,reference,2019.0,13.2,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,walk,reference,2019.0,0.5,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,bicycle,reference,2050.0,0.7,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car,reference,2050.0,15.9,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car passenger,reference,2050.0,4.6,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,public transport,reference,2050.0,13.3,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,walk,reference,2050.0,0.4,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,bicycle,optimised,2030.0,0.9,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car,optimised,2030.0,14.8,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car passenger,optimised,2030.0,4.8,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,public transport,optimised,2030.0,15.4,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,walk,optimised,2030.0,0.5,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,bicycle,optimised,2040.0,1.1,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car,optimised,2040.0,11.6,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car passenger,optimised,2040.0,4.7,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,public transport,optimised,2040.0,17.9,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,walk,optimised,2040.0,0.5,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,bicycle,optimised,2050.0,1.3,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car,optimised,2050.0,8.9,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,car passenger,optimised,2050.0,4.6,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,public transport,optimised,2050.0,20.1,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+Naples,pkm,walk,optimised,2050.0,0.5,Mio pkm/day,D3.4a Fig. A-87/A-88 (PDF p. 131),
+South Westphalia,trips,bicycle,reference,2019.0,0.46,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
+South Westphalia,trips,car,reference,2019.0,2.917,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
+South Westphalia,trips,car passenger,reference,2019.0,0.595,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
+South Westphalia,trips,public transport,reference,2019.0,0.872,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
+South Westphalia,trips,walk,reference,2019.0,0.759,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),ABM light calibrated on Landesverkehrsmodell NRW and MiD 2017
+South Westphalia,trips,bicycle,reference,2050.0,0.419,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,car,reference,2050.0,2.752,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,car passenger,reference,2050.0,0.527,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,public transport,reference,2050.0,0.81,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,walk,reference,2050.0,0.7,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,bicycle,optimised,2030.0,0.486,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,car,optimised,2030.0,2.583,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,car passenger,optimised,2030.0,0.558,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,public transport,optimised,2030.0,0.959,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,walk,optimised,2030.0,0.895,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,bicycle,optimised,2040.0,0.529,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,car,optimised,2040.0,2.35,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,car passenger,optimised,2040.0,0.568,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,public transport,optimised,2040.0,0.998,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,walk,optimised,2040.0,0.96,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,bicycle,optimised,2050.0,0.463,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,car,optimised,2050.0,2.206,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,car passenger,optimised,2050.0,0.592,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,public transport,optimised,2050.0,1.01,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,trips,walk,optimised,2050.0,1.012,Mio trips/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,bicycle,reference,2019.0,5.1,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car,reference,2019.0,75.3,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car passenger,reference,2019.0,13.0,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,public transport,reference,2019.0,16.9,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,walk,reference,2019.0,0.7,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,bicycle,reference,2050.0,5.6,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car,reference,2050.0,68.3,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car passenger,reference,2050.0,9.7,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,public transport,reference,2050.0,19.1,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,walk,reference,2050.0,0.6,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,bicycle,optimised,2030.0,5.5,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car,optimised,2030.0,65.7,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car passenger,optimised,2030.0,12.0,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,public transport,optimised,2030.0,24.7,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,walk,optimised,2030.0,0.8,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,bicycle,optimised,2040.0,6.4,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car,optimised,2040.0,58.5,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car passenger,optimised,2040.0,11.9,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,public transport,optimised,2040.0,29.5,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,walk,optimised,2040.0,0.8,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,bicycle,optimised,2050.0,6.2,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car,optimised,2050.0,53.4,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,car passenger,optimised,2050.0,12.0,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,public transport,optimised,2050.0,32.3,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
+South Westphalia,pkm,walk,optimised,2050.0,0.8,Mio pkm/day,D3.5 Fig. 47/48 (PDF p. 87),
 Granollers,trip share,private vehicle,observed,,36.2,% of trips,D3.4b section 4.1 (Granollers city data),"251,674 trips/day; 56 % internal, 21 % generated, 23 % attracted; year not stated (PMUS)"
 Granollers,trip share,public transport,observed,,11.83,% of trips,D3.4b section 4.1 (Granollers city data),"251,674 trips/day; 56 % internal, 21 % generated, 23 % attracted; year not stated (PMUS)"
 Granollers,trip share,walk + bicycle,observed,,51.97,% of trips,D3.4b section 4.1 (Granollers city data),"251,674 trips/day; 56 % internal, 21 % generated, 23 % attracted; year not stated (PMUS)"
 Granollers,trip share,walk (internal trips),observed,,72.0,% of trips,D3.4b section 4.1 (Granollers city data),internal journeys: walk + bicycle about 80 %; generated/attracted: private vehicle about 60 %
-Tallinn,measure effect on car share,traffic calming,single measure vs reference,2040,-3.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,traffic calming,single measure vs reference,2040,-2.1,% change,D3.3 Fig. 17 (PDF p. 35),
-Tallinn,measure effect on car share,parking management,single measure vs reference,2040,-2.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,parking management,single measure vs reference,2040,-4.0,% change,D3.3 Fig. 17 (PDF p. 35),
-Tallinn,measure effect on car share,area toll,single measure vs reference,2040,-20.9,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,area toll,single measure vs reference,2040,-29.1,% change,D3.3 Fig. 17 (PDF p. 35),
-Tallinn,measure effect on car share,road pricing,single measure vs reference,2040,-6.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,road pricing,single measure vs reference,2040,-10.9,% change,D3.3 Fig. 17 (PDF p. 35),
-Tallinn,measure effect on car share,cycling optimisation,single measure vs reference,2040,-3.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,cycling optimisation,single measure vs reference,2040,-1.6,% change,D3.3 Fig. 17 (PDF p. 35),
-Tallinn,measure effect on car share,public transport optimisation,single measure vs reference,2040,-2.6,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,public transport optimisation,single measure vs reference,2040,-3.3,% change,D3.3 Fig. 17 (PDF p. 35),
-Tallinn,measure effect on car share,15-minute city,single measure vs reference,2040,-2.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,15-minute city,single measure vs reference,2040,-1.7,% change,D3.3 Fig. 17 (PDF p. 35),
-Tallinn,measure effect on car share,car occupancy incentives,single measure vs reference,2040,-0.3,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,car occupancy incentives,single measure vs reference,2040,-0.4,% change,D3.3 Fig. 17 (PDF p. 35),
-Tallinn,measure effect on car share,fleet transformation,single measure vs reference,2040,0.8,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,fleet transformation,single measure vs reference,2040,-52.9,% change,D3.3 Fig. 17 (PDF p. 35),
-Tallinn,measure effect on car share,all measures,single measure vs reference,2040,-37.3,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Tallinn,measure effect on direct CO2,all measures,single measure vs reference,2040,-72.4,% change,D3.3 Fig. 17 (PDF p. 35),
-Naples,measure effect on car share,traffic calming,single measure vs reference,2040,-1.2,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,traffic calming,single measure vs reference,2040,-0.5,% change,D3.4a Fig. A-93 (PDF p. 134),
-Naples,measure effect on car share,parking management,single measure vs reference,2040,-3.6,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,parking management,single measure vs reference,2040,-4.3,% change,D3.4a Fig. A-93 (PDF p. 134),
-Naples,measure effect on car share,area toll,single measure vs reference,2040,-5.1,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,area toll,single measure vs reference,2040,-15.3,% change,D3.4a Fig. A-93 (PDF p. 134),
-Naples,measure effect on car share,road pricing,single measure vs reference,2040,-12.3,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,road pricing,single measure vs reference,2040,-26.1,% change,D3.4a Fig. A-93 (PDF p. 134),
-Naples,measure effect on car share,cycling optimisation,single measure vs reference,2040,-1.7,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,cycling optimisation,single measure vs reference,2040,-0.9,% change,D3.4a Fig. A-93 (PDF p. 134),
-Naples,measure effect on car share,public transport optimisation,single measure vs reference,2040,-4.5,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,public transport optimisation,single measure vs reference,2040,-5.8,% change,D3.4a Fig. A-93 (PDF p. 134),
-Naples,measure effect on car share,15-minute city,single measure vs reference,2040,-0.5,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,15-minute city,single measure vs reference,2040,-0.4,% change,D3.4a Fig. A-93 (PDF p. 134),
-Naples,measure effect on car share,car occupancy incentives,single measure vs reference,2040,-2.2,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,car occupancy incentives,single measure vs reference,2040,-3.2,% change,D3.4a Fig. A-93 (PDF p. 134),
-Naples,measure effect on car share,fleet transformation,single measure vs reference,2040,2.3,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,fleet transformation,single measure vs reference,2040,-58.9,% change,D3.4a Fig. A-93 (PDF p. 134),
-Naples,measure effect on car share,all measures,single measure vs reference,2040,-24.6,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-Naples,measure effect on direct CO2,all measures,single measure vs reference,2040,-77.6,% change,D3.4a Fig. A-93 (PDF p. 134),
-South Westphalia,measure effect on car share,traffic calming,single measure vs reference,2040,-0.7,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-South Westphalia,measure effect on direct CO2,traffic calming,single measure vs reference,2040,-0.8,% change,D3.5 Fig. 53 (PDF p. 90),
-South Westphalia,measure effect on car share,parking management,single measure vs reference,2040,-3.4,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-South Westphalia,measure effect on direct CO2,parking management,single measure vs reference,2040,-2.6,% change,D3.5 Fig. 53 (PDF p. 90),
-South Westphalia,measure effect on car share,road pricing,single measure vs reference,2040,-12.7,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-South Westphalia,measure effect on direct CO2,road pricing,single measure vs reference,2040,-12.3,% change,D3.5 Fig. 53 (PDF p. 90),
-South Westphalia,measure effect on car share,cycling optimisation,single measure vs reference,2040,-1.2,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-South Westphalia,measure effect on direct CO2,cycling optimisation,single measure vs reference,2040,-0.7,% change,D3.5 Fig. 53 (PDF p. 90),
-South Westphalia,measure effect on car share,public transport optimisation,single measure vs reference,2040,-3.6,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-South Westphalia,measure effect on direct CO2,public transport optimisation,single measure vs reference,2040,-3.7,% change,D3.5 Fig. 53 (PDF p. 90),
-South Westphalia,measure effect on car share,15-minute city,single measure vs reference,2040,-1.9,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-South Westphalia,measure effect on direct CO2,15-minute city,single measure vs reference,2040,-1.6,% change,D3.5 Fig. 53 (PDF p. 90),
-South Westphalia,measure effect on car share,car occupancy incentives,single measure vs reference,2040,0.6,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-South Westphalia,measure effect on direct CO2,car occupancy incentives,single measure vs reference,2040,-0.1,% change,D3.5 Fig. 53 (PDF p. 90),
-South Westphalia,measure effect on car share,fleet transformation,single measure vs reference,2040,4.9,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-South Westphalia,measure effect on direct CO2,fleet transformation,single measure vs reference,2040,-66.9,% change,D3.5 Fig. 53 (PDF p. 90),
-South Westphalia,measure effect on car share,all measures,single measure vs reference,2040,-17.1,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
-South Westphalia,measure effect on direct CO2,all measures,single measure vs reference,2040,-67.8,% change,D3.5 Fig. 53 (PDF p. 90),
-Tallinn,coping type share,A active antagonists,current,2023,9,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
-Tallinn,coping type share,B beneficent believers,current,2023,17,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
-Tallinn,coping type share,C concerned compliers,current,2023,32,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
-Tallinn,coping type share,D doubting distressed,current,2023,13,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
-Tallinn,coping type share,E emphatic engagers,current,2023,13,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
-Tallinn,coping type share,F fierce forerunners,current,2023,17,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
-Naples,coping type share,A active antagonists,current,2023,1,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
-Naples,coping type share,B beneficent believers,current,2023,6,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
-Naples,coping type share,C concerned compliers,current,2023,14,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
-Naples,coping type share,D doubting distressed,current,2023,29,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
-Naples,coping type share,E emphatic engagers,current,2023,37,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
-Naples,coping type share,F fierce forerunners,current,2023,14,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
-Granollers,coping type share,A active antagonists,current,2023,3,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
-Granollers,coping type share,B beneficent believers,current,2023,9,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
-Granollers,coping type share,C concerned compliers,current,2023,9,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
-Granollers,coping type share,D doubting distressed,current,2023,37,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
-Granollers,coping type share,E emphatic engagers,current,2023,33,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
-Granollers,coping type share,F fierce forerunners,current,2023,10,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
-South Westphalia,coping type share,A active antagonists,current,2023,12,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
-South Westphalia,coping type share,B beneficent believers,current,2023,21,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
-South Westphalia,coping type share,C concerned compliers,current,2023,27,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
-South Westphalia,coping type share,D doubting distressed,current,2023,12,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
-South Westphalia,coping type share,E emphatic engagers,current,2023,14,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
-South Westphalia,coping type share,F fierce forerunners,current,2023,15,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
-national: Austria,coping type share,A active antagonists,current,2023,11,%,D1.3 Fig. 8,national sample
-national: Austria,coping type share,B beneficent believers,current,2023,12,%,D1.3 Fig. 8,national sample
-national: Austria,coping type share,C concerned compliers,current,2023,27,%,D1.3 Fig. 8,national sample
-national: Austria,coping type share,D doubting distressed,current,2023,14,%,D1.3 Fig. 8,national sample
-national: Austria,coping type share,E emphatic engagers,current,2023,17,%,D1.3 Fig. 8,national sample
-national: Austria,coping type share,F fierce forerunners,current,2023,20,%,D1.3 Fig. 8,national sample
-national: Estonia,coping type share,A active antagonists,current,2023,12,%,D1.3 Fig. 8,national sample
-national: Estonia,coping type share,B beneficent believers,current,2023,16,%,D1.3 Fig. 8,national sample
-national: Estonia,coping type share,C concerned compliers,current,2023,33,%,D1.3 Fig. 8,national sample
-national: Estonia,coping type share,D doubting distressed,current,2023,14,%,D1.3 Fig. 8,national sample
-national: Estonia,coping type share,E emphatic engagers,current,2023,12,%,D1.3 Fig. 8,national sample
-national: Estonia,coping type share,F fierce forerunners,current,2023,13,%,D1.3 Fig. 8,national sample
-national: Germany,coping type share,A active antagonists,current,2023,11,%,D1.3 Fig. 8,national sample
-national: Germany,coping type share,B beneficent believers,current,2023,14,%,D1.3 Fig. 8,national sample
-national: Germany,coping type share,C concerned compliers,current,2023,22,%,D1.3 Fig. 8,national sample
-national: Germany,coping type share,D doubting distressed,current,2023,16,%,D1.3 Fig. 8,national sample
-national: Germany,coping type share,E emphatic engagers,current,2023,21,%,D1.3 Fig. 8,national sample
-national: Germany,coping type share,F fierce forerunners,current,2023,17,%,D1.3 Fig. 8,national sample
-national: Italy,coping type share,A active antagonists,current,2023,2,%,D1.3 Fig. 8,national sample
-national: Italy,coping type share,B beneficent believers,current,2023,5,%,D1.3 Fig. 8,national sample
-national: Italy,coping type share,C concerned compliers,current,2023,14,%,D1.3 Fig. 8,national sample
-national: Italy,coping type share,D doubting distressed,current,2023,27,%,D1.3 Fig. 8,national sample
-national: Italy,coping type share,E emphatic engagers,current,2023,36,%,D1.3 Fig. 8,national sample
-national: Italy,coping type share,F fierce forerunners,current,2023,16,%,D1.3 Fig. 8,national sample
-national: Spain,coping type share,A active antagonists,current,2023,4,%,D1.3 Fig. 8,national sample
-national: Spain,coping type share,B beneficent believers,current,2023,9,%,D1.3 Fig. 8,national sample
-national: Spain,coping type share,C concerned compliers,current,2023,10,%,D1.3 Fig. 8,national sample
-national: Spain,coping type share,D doubting distressed,current,2023,37,%,D1.3 Fig. 8,national sample
-national: Spain,coping type share,E emphatic engagers,current,2023,31,%,D1.3 Fig. 8,national sample
-national: Spain,coping type share,F fierce forerunners,current,2023,9,%,D1.3 Fig. 8,national sample
-national: Croatia,coping type share,A active antagonists,current,2023,4,%,D1.3 Fig. 8,national sample
-national: Croatia,coping type share,B beneficent believers,current,2023,8,%,D1.3 Fig. 8,national sample
-national: Croatia,coping type share,C concerned compliers,current,2023,16,%,D1.3 Fig. 8,national sample
-national: Croatia,coping type share,D doubting distressed,current,2023,29,%,D1.3 Fig. 8,national sample
-national: Croatia,coping type share,E emphatic engagers,current,2023,35,%,D1.3 Fig. 8,national sample
-national: Croatia,coping type share,F fierce forerunners,current,2023,8,%,D1.3 Fig. 8,national sample
+Tallinn,measure effect on car share,traffic calming,single measure vs reference,2040.0,-3.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,traffic calming,single measure vs reference,2040.0,-2.1,% change,D3.3 Fig. 17 (PDF p. 35),
+Tallinn,measure effect on car share,parking management,single measure vs reference,2040.0,-2.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,parking management,single measure vs reference,2040.0,-4.0,% change,D3.3 Fig. 17 (PDF p. 35),
+Tallinn,measure effect on car share,area toll,single measure vs reference,2040.0,-20.9,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,area toll,single measure vs reference,2040.0,-29.1,% change,D3.3 Fig. 17 (PDF p. 35),
+Tallinn,measure effect on car share,road pricing,single measure vs reference,2040.0,-6.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,road pricing,single measure vs reference,2040.0,-10.9,% change,D3.3 Fig. 17 (PDF p. 35),
+Tallinn,measure effect on car share,cycling optimisation,single measure vs reference,2040.0,-3.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,cycling optimisation,single measure vs reference,2040.0,-1.6,% change,D3.3 Fig. 17 (PDF p. 35),
+Tallinn,measure effect on car share,public transport optimisation,single measure vs reference,2040.0,-2.6,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,public transport optimisation,single measure vs reference,2040.0,-3.3,% change,D3.3 Fig. 17 (PDF p. 35),
+Tallinn,measure effect on car share,15-minute city,single measure vs reference,2040.0,-2.1,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,15-minute city,single measure vs reference,2040.0,-1.7,% change,D3.3 Fig. 17 (PDF p. 35),
+Tallinn,measure effect on car share,car occupancy incentives,single measure vs reference,2040.0,-0.3,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,car occupancy incentives,single measure vs reference,2040.0,-0.4,% change,D3.3 Fig. 17 (PDF p. 35),
+Tallinn,measure effect on car share,fleet transformation,single measure vs reference,2040.0,0.8,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,fleet transformation,single measure vs reference,2040.0,-52.9,% change,D3.3 Fig. 17 (PDF p. 35),
+Tallinn,measure effect on car share,all measures,single measure vs reference,2040.0,-37.3,% change,D3.3 Fig. 17 (PDF p. 35),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Tallinn,measure effect on direct CO2,all measures,single measure vs reference,2040.0,-72.4,% change,D3.3 Fig. 17 (PDF p. 35),
+Naples,measure effect on car share,traffic calming,single measure vs reference,2040.0,-1.2,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,traffic calming,single measure vs reference,2040.0,-0.5,% change,D3.4a Fig. A-93 (PDF p. 134),
+Naples,measure effect on car share,parking management,single measure vs reference,2040.0,-3.6,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,parking management,single measure vs reference,2040.0,-4.3,% change,D3.4a Fig. A-93 (PDF p. 134),
+Naples,measure effect on car share,area toll,single measure vs reference,2040.0,-5.1,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,area toll,single measure vs reference,2040.0,-15.3,% change,D3.4a Fig. A-93 (PDF p. 134),
+Naples,measure effect on car share,road pricing,single measure vs reference,2040.0,-12.3,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,road pricing,single measure vs reference,2040.0,-26.1,% change,D3.4a Fig. A-93 (PDF p. 134),
+Naples,measure effect on car share,cycling optimisation,single measure vs reference,2040.0,-1.7,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,cycling optimisation,single measure vs reference,2040.0,-0.9,% change,D3.4a Fig. A-93 (PDF p. 134),
+Naples,measure effect on car share,public transport optimisation,single measure vs reference,2040.0,-4.5,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,public transport optimisation,single measure vs reference,2040.0,-5.8,% change,D3.4a Fig. A-93 (PDF p. 134),
+Naples,measure effect on car share,15-minute city,single measure vs reference,2040.0,-0.5,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,15-minute city,single measure vs reference,2040.0,-0.4,% change,D3.4a Fig. A-93 (PDF p. 134),
+Naples,measure effect on car share,car occupancy incentives,single measure vs reference,2040.0,-2.2,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,car occupancy incentives,single measure vs reference,2040.0,-3.2,% change,D3.4a Fig. A-93 (PDF p. 134),
+Naples,measure effect on car share,fleet transformation,single measure vs reference,2040.0,2.3,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,fleet transformation,single measure vs reference,2040.0,-58.9,% change,D3.4a Fig. A-93 (PDF p. 134),
+Naples,measure effect on car share,all measures,single measure vs reference,2040.0,-24.6,% change,D3.4a Fig. A-93 (PDF p. 134),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+Naples,measure effect on direct CO2,all measures,single measure vs reference,2040.0,-77.6,% change,D3.4a Fig. A-93 (PDF p. 134),
+South Westphalia,measure effect on car share,traffic calming,single measure vs reference,2040.0,-0.7,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+South Westphalia,measure effect on direct CO2,traffic calming,single measure vs reference,2040.0,-0.8,% change,D3.5 Fig. 53 (PDF p. 90),
+South Westphalia,measure effect on car share,parking management,single measure vs reference,2040.0,-3.4,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+South Westphalia,measure effect on direct CO2,parking management,single measure vs reference,2040.0,-2.6,% change,D3.5 Fig. 53 (PDF p. 90),
+South Westphalia,measure effect on car share,road pricing,single measure vs reference,2040.0,-12.7,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+South Westphalia,measure effect on direct CO2,road pricing,single measure vs reference,2040.0,-12.3,% change,D3.5 Fig. 53 (PDF p. 90),
+South Westphalia,measure effect on car share,cycling optimisation,single measure vs reference,2040.0,-1.2,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+South Westphalia,measure effect on direct CO2,cycling optimisation,single measure vs reference,2040.0,-0.7,% change,D3.5 Fig. 53 (PDF p. 90),
+South Westphalia,measure effect on car share,public transport optimisation,single measure vs reference,2040.0,-3.6,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+South Westphalia,measure effect on direct CO2,public transport optimisation,single measure vs reference,2040.0,-3.7,% change,D3.5 Fig. 53 (PDF p. 90),
+South Westphalia,measure effect on car share,15-minute city,single measure vs reference,2040.0,-1.9,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+South Westphalia,measure effect on direct CO2,15-minute city,single measure vs reference,2040.0,-1.6,% change,D3.5 Fig. 53 (PDF p. 90),
+South Westphalia,measure effect on car share,car occupancy incentives,single measure vs reference,2040.0,0.6,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+South Westphalia,measure effect on direct CO2,car occupancy incentives,single measure vs reference,2040.0,-0.1,% change,D3.5 Fig. 53 (PDF p. 90),
+South Westphalia,measure effect on car share,fleet transformation,single measure vs reference,2040.0,4.9,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+South Westphalia,measure effect on direct CO2,fleet transformation,single measure vs reference,2040.0,-66.9,% change,D3.5 Fig. 53 (PDF p. 90),
+South Westphalia,measure effect on car share,all measures,single measure vs reference,2040.0,-17.1,% change,D3.5 Fig. 53 (PDF p. 90),add-one measure at 2040 intensity; car share measure (trips or pkm) not stated
+South Westphalia,measure effect on direct CO2,all measures,single measure vs reference,2040.0,-67.8,% change,D3.5 Fig. 53 (PDF p. 90),
+Tallinn,coping type share,A active antagonists,current,2023.0,9.0,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
+Tallinn,coping type share,B beneficent believers,current,2023.0,17.0,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
+Tallinn,coping type share,C concerned compliers,current,2023.0,32.0,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
+Tallinn,coping type share,D doubting distressed,current,2023.0,13.0,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
+Tallinn,coping type share,E emphatic engagers,current,2023.0,13.0,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
+Tallinn,coping type share,F fierce forerunners,current,2023.0,17.0,%,D3.3 Table 28 = Fig. 73 metropolitan column,survey Nov 2023
+Naples,coping type share,A active antagonists,current,2023.0,1.0,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
+Naples,coping type share,B beneficent believers,current,2023.0,6.0,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
+Naples,coping type share,C concerned compliers,current,2023.0,14.0,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
+Naples,coping type share,D doubting distressed,current,2023.0,29.0,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
+Naples,coping type share,E emphatic engagers,current,2023.0,37.0,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
+Naples,coping type share,F fierce forerunners,current,2023.0,14.0,%,D3.4a Fig. A-94 metropolitan column,Table A-29 lists the same values in reverse order of types
+Granollers,coping type share,A active antagonists,current,2023.0,3.0,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
+Granollers,coping type share,B beneficent believers,current,2023.0,9.0,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
+Granollers,coping type share,C concerned compliers,current,2023.0,9.0,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
+Granollers,coping type share,D doubting distressed,current,2023.0,37.0,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
+Granollers,coping type share,E emphatic engagers,current,2023.0,33.0,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
+Granollers,coping type share,F fierce forerunners,current,2023.0,10.0,%,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,figure legend of Spain is in reverse order
+South Westphalia,coping type share,A active antagonists,current,2023.0,12.0,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
+South Westphalia,coping type share,B beneficent believers,current,2023.0,21.0,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
+South Westphalia,coping type share,C concerned compliers,current,2023.0,27.0,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
+South Westphalia,coping type share,D doubting distressed,current,2023.0,12.0,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
+South Westphalia,coping type share,E emphatic engagers,current,2023.0,14.0,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
+South Westphalia,coping type share,F fierce forerunners,current,2023.0,15.0,%,D3.5 Fig. 56 (Germany) rural column,Table 25 lists the same values in reverse order and is headed 'Naples'
+national: Austria,coping type share,A active antagonists,current,2023.0,11.0,%,D1.3 Fig. 8,national sample
+national: Austria,coping type share,B beneficent believers,current,2023.0,12.0,%,D1.3 Fig. 8,national sample
+national: Austria,coping type share,C concerned compliers,current,2023.0,27.0,%,D1.3 Fig. 8,national sample
+national: Austria,coping type share,D doubting distressed,current,2023.0,14.0,%,D1.3 Fig. 8,national sample
+national: Austria,coping type share,E emphatic engagers,current,2023.0,17.0,%,D1.3 Fig. 8,national sample
+national: Austria,coping type share,F fierce forerunners,current,2023.0,20.0,%,D1.3 Fig. 8,national sample
+national: Estonia,coping type share,A active antagonists,current,2023.0,12.0,%,D1.3 Fig. 8,national sample
+national: Estonia,coping type share,B beneficent believers,current,2023.0,16.0,%,D1.3 Fig. 8,national sample
+national: Estonia,coping type share,C concerned compliers,current,2023.0,33.0,%,D1.3 Fig. 8,national sample
+national: Estonia,coping type share,D doubting distressed,current,2023.0,14.0,%,D1.3 Fig. 8,national sample
+national: Estonia,coping type share,E emphatic engagers,current,2023.0,12.0,%,D1.3 Fig. 8,national sample
+national: Estonia,coping type share,F fierce forerunners,current,2023.0,13.0,%,D1.3 Fig. 8,national sample
+national: Germany,coping type share,A active antagonists,current,2023.0,11.0,%,D1.3 Fig. 8,national sample
+national: Germany,coping type share,B beneficent believers,current,2023.0,14.0,%,D1.3 Fig. 8,national sample
+national: Germany,coping type share,C concerned compliers,current,2023.0,22.0,%,D1.3 Fig. 8,national sample
+national: Germany,coping type share,D doubting distressed,current,2023.0,16.0,%,D1.3 Fig. 8,national sample
+national: Germany,coping type share,E emphatic engagers,current,2023.0,21.0,%,D1.3 Fig. 8,national sample
+national: Germany,coping type share,F fierce forerunners,current,2023.0,17.0,%,D1.3 Fig. 8,national sample
+national: Italy,coping type share,A active antagonists,current,2023.0,2.0,%,D1.3 Fig. 8,national sample
+national: Italy,coping type share,B beneficent believers,current,2023.0,5.0,%,D1.3 Fig. 8,national sample
+national: Italy,coping type share,C concerned compliers,current,2023.0,14.0,%,D1.3 Fig. 8,national sample
+national: Italy,coping type share,D doubting distressed,current,2023.0,27.0,%,D1.3 Fig. 8,national sample
+national: Italy,coping type share,E emphatic engagers,current,2023.0,36.0,%,D1.3 Fig. 8,national sample
+national: Italy,coping type share,F fierce forerunners,current,2023.0,16.0,%,D1.3 Fig. 8,national sample
+national: Spain,coping type share,A active antagonists,current,2023.0,4.0,%,D1.3 Fig. 8,national sample
+national: Spain,coping type share,B beneficent believers,current,2023.0,9.0,%,D1.3 Fig. 8,national sample
+national: Spain,coping type share,C concerned compliers,current,2023.0,10.0,%,D1.3 Fig. 8,national sample
+national: Spain,coping type share,D doubting distressed,current,2023.0,37.0,%,D1.3 Fig. 8,national sample
+national: Spain,coping type share,E emphatic engagers,current,2023.0,31.0,%,D1.3 Fig. 8,national sample
+national: Spain,coping type share,F fierce forerunners,current,2023.0,9.0,%,D1.3 Fig. 8,national sample
+national: Croatia,coping type share,A active antagonists,current,2023.0,4.0,%,D1.3 Fig. 8,national sample
+national: Croatia,coping type share,B beneficent believers,current,2023.0,8.0,%,D1.3 Fig. 8,national sample
+national: Croatia,coping type share,C concerned compliers,current,2023.0,16.0,%,D1.3 Fig. 8,national sample
+national: Croatia,coping type share,D doubting distressed,current,2023.0,29.0,%,D1.3 Fig. 8,national sample
+national: Croatia,coping type share,E emphatic engagers,current,2023.0,35.0,%,D1.3 Fig. 8,national sample
+national: Croatia,coping type share,F fierce forerunners,current,2023.0,8.0,%,D1.3 Fig. 8,national sample
+Tallinn,pkm,bicycle,reference,2030.0,0.0,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Tallinn,pkm,car,reference,2030.0,6.3,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Tallinn,pkm,car passenger,reference,2030.0,1.2,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Tallinn,pkm,public transport,reference,2030.0,6.5,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Tallinn,pkm,walk,reference,2030.0,0.3,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Tallinn,pkm,bicycle,reference,2040.0,0.0,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Tallinn,pkm,car,reference,2040.0,6.6,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Tallinn,pkm,car passenger,reference,2040.0,1.3,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Tallinn,pkm,public transport,reference,2040.0,6.9,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Tallinn,pkm,walk,reference,2040.0,0.3,Mio pkm/day,D3.3 Fig. 12 (PDF p. 31),
+Naples,pkm,bicycle,reference,2030.0,0.7,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+Naples,pkm,car,reference,2030.0,16.7,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+Naples,pkm,car passenger,reference,2030.0,4.8,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+Naples,pkm,public transport,reference,2030.0,13.7,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+Naples,pkm,walk,reference,2030.0,0.4,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+Naples,pkm,bicycle,reference,2040.0,0.7,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+Naples,pkm,car,reference,2040.0,16.2,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+Naples,pkm,car passenger,reference,2040.0,4.7,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+Naples,pkm,public transport,reference,2040.0,13.6,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+Naples,pkm,walk,reference,2040.0,0.4,Mio pkm/day,D3.4a Fig. A-88 (PDF p. 131),
+South Westphalia,pkm,bicycle,reference,2030.0,5.0,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),
+South Westphalia,pkm,car,reference,2030.0,72.9,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),
+South Westphalia,pkm,car passenger,reference,2030.0,11.5,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),
+South Westphalia,pkm,public transport,reference,2030.0,17.2,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),
+South Westphalia,pkm,walk,reference,2030.0,0.7,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),
+South Westphalia,pkm,bicycle,reference,2040.0,5.2,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),
+South Westphalia,pkm,car,reference,2040.0,70.4,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),
+South Westphalia,pkm,car passenger,reference,2040.0,10.5,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),
+South Westphalia,pkm,public transport,reference,2040.0,17.8,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),
+South Westphalia,pkm,walk,reference,2040.0,0.6,Mio pkm/day,D3.5 Fig. 48 (PDF p. 87),

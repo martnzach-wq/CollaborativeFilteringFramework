@@ -194,3 +194,56 @@ def lever_table(
 
     configured = [lv for lv in levers if getattr(model.city(city).mobility, lv)]
     return lever_effects(runner(model, city, 1.0, pkm_method=pkm_method), configured, year).assign(city=city)
+
+
+# ---- class-R recalibration against the ABM light trajectories (decision D32) --------------
+
+CLASS_R_YEARS = (2030, 2040, 2050)
+MODES = ("car", "car passenger", "public transport", "bicycle", "walk")
+
+
+def class_r_targets(path: str | Path, demonstrator: str, years=CLASS_R_YEARS) -> pd.DataFrame:
+    """Passenger-km shares by mode of the ABM light reference and optimised pathways
+    (`configs/sd_calibration_targets.csv`) as ``quantity``, ``value`` for `recalibrate_residuals`."""
+    t = pd.read_csv(path)
+    t = t[(t.demonstrator == demonstrator) & (t.quantity == "pkm") & t.year.isin(years)]
+    rows = []
+    for (scen, year), g in t.groupby(["scenario", "year"]):
+        key = "ref" if scen == "reference" else "opt"
+        share = g.set_index("mode").value / g.value.sum()
+        rows += [{"quantity": f"{key}_{int(year)}_{m}", "value": float(share.get(m, 0.0))} for m in MODES]
+    return pd.DataFrame(rows)
+
+
+def class_r_run_model(model: Knowing, city: str, years=CLASS_R_YEARS):
+    """``run_model(values)`` for `recalibrate_residuals`: attractiveness offsets per mode
+    (``offset:<mode>``) and ``mode_change_damping``; returns pkm shares of the BAU (PI = 0)
+    and full-policy (PI = 1) runs as ``ref_<year>_<mode>`` and ``opt_<year>_<mode>``."""
+    base = model.city(city)
+
+    def run(values: dict) -> pd.Series:
+        mob = copy.deepcopy(base.mobility)
+        mob.attr_offset = {m: float(values[f"offset:{m}"]) for m in MODES if f"offset:{m}" in values}
+        if "mode_change_damping" in values:
+            mob.mode_change_damping = max(float(values["mode_change_damping"]), 1e-4)
+        c = dataclasses.replace(base, mobility=mob)
+        out = {}
+        for key, pi in (("ref", 0.0), ("opt", 1.0)):
+            split = model.mobility.run_mobility(c, pi_scenario=pi)["centroid"]["modal_split"]
+            for y in years:
+                for m in MODES:
+                    out[f"{key}_{y}_{m}"] = float(split[m][y - 2019])
+        return pd.Series(out)
+
+    return run
+
+
+def recalibrate_class_r(model: Knowing, city: str, targets: pd.DataFrame) -> pd.DataFrame:
+    """Fit attractiveness offsets (car is the reference mode) and the mode-change damping of a
+    city to the ABM light pkm shares (`sd_bridge.recalibrate_residuals`)."""
+    from regsim.causal.sd_bridge import recalibrate_residuals
+
+    params = [f"offset:{m}" for m in MODES[1:]] + ["mode_change_damping"]
+    start = {f"offset:{m}": 0.0 for m in MODES[1:]}
+    start["mode_change_damping"] = model.city(city).mobility.mode_change_damping
+    return recalibrate_residuals(class_r_run_model(model, city), start, targets, params)
