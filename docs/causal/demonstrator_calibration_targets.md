@@ -204,3 +204,40 @@ Class R refitted: Naples squared error 0.005 (car share 2050 reference 0.44 agai
 The Naples transport model covers the metropolitan area (D3.4a Fig. A-84) but its totals count only trips
 with one end in the city ("internal + OD traffic Naples city"), so through traffic is not included. D3.2 gives
 more than 3.5 million inhabitants for the metropolitan city and 914,758 for the municipality.
+
+## Checks against IESopt and MAED-City (2026-11-25)
+
+**Energy supply 2050 (NY) against IESopt.** Two errors in `energy_supply.py` were fixed: the district-heating
+gap was computed before the heat pumps, so electric boilers delivered the heat-pump heat a second time (Tallinn
+2050: 865 instead of 38 GWh boiler heat), and the electrolyser demand was not read. After the fixes:
+
+| 2050 | DH electricity SD / IESopt | net import SD / IESopt |
+|---|---|---|
+| Tallinn | 234 / 233 GWh | 4,431 / 4,516 GWh |
+| Naples | 58 / 58 GWh | 2,475 / 2,387 GWh |
+| South Westphalia | 625 / 625 GWh | 613 / −221 GWh |
+
+South Westphalia's remaining difference comes from the core electricity demand (SD +4 %, passenger EVs from
+the mobility submodel).
+
+**Direct CO2 against the MAED-City KPI tables** (ratio SD / MAED-City, 2019, 2030, 2035, 2040, 2045, 2050), after
+D37:
+
+| | 2019 | 2030 | 2035 | 2040 | 2045 | 2050 |
+|---|---|---|---|---|---|---|
+| Tallinn | 0.72 | 0.98 | 1.01 | 1.03 | 1.03 | 1.07 |
+| Naples | 1.02 | 1.06 | 1.04 | 1.07 | 1.00 | 0.94 |
+| South Westphalia | 1.00 | 1.08 | 1.11 | 1.18 | 1.56 | 1.19 |
+
+Before D37 the ratios were 0.81/0.96/1.07 in 2019 and Naples fell to 0.30 by 2050 (no aviation). Tallinn 2019:
+the MAED-City value (2.06 t/cap) is higher than the fossil fuels of its own balance give (about 0.65 Mt), most
+likely because it includes the district-heating gas boilers, which the SD model reports separately (em_dh).
+South Westphalia 2045: the SD model treats all non-electric car energy as fossil, while MAED-City blends
+biofuels and hydrogen into transport.
+
+**Final energy 2019:** Tallinn 7,963 against 7,936 GWh, Naples 9,326 against 9,165 GWh, South Westphalia 49,372
+against 49,329 GWh.
+
+**Tallinn industry rows:** the carrier rows sum to 1,354 GWh against 1,552 GWh of the sector rows; the
+difference is manufacturing biofuel (211 GWh, D3.3 Table 3), which the carrier rows omit. No emissions are
+missing.
