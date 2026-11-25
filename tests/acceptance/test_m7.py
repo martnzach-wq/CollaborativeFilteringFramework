@@ -36,8 +36,13 @@ def sd_runs():
 
     model = sd_knowing.load(SD_MODEL)
     cities = ["TALLINN", "GRANOLLERS"]
-    protocol = pd.concat([sd_knowing.perturbation_protocol(model, c) for c in cities], ignore_index=True)
-    levers = pd.concat([sd_knowing.lever_table(model, c) for c in cities], ignore_index=True)
+    # M7 runs used mode-specific trip lengths; the centroid default (D22) came later
+    protocol = pd.concat(
+        [sd_knowing.perturbation_protocol(model, c, pkm_method="mode_specific") for c in cities], ignore_index=True
+    )
+    levers = pd.concat(
+        [sd_knowing.lever_table(model, c, pkm_method="mode_specific") for c in cities], ignore_index=True
+    )
     _, expectations = load_mapping()
     return {
         "protocol": protocol,

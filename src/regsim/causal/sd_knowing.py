@@ -156,7 +156,12 @@ def runner(
 
 
 def perturbation_protocol(
-    model: Knowing, city: str, drivers: list[str] | None = None, rel_step: float = 0.1, years=(2030, 2050)
+    model: Knowing,
+    city: str,
+    drivers: list[str] | None = None,
+    rel_step: float = 0.1,
+    years=(2030, 2050),
+    pkm_method: str = "centroid",
 ) -> pd.DataFrame:
     """Driver elasticities by the perturbation protocol: BAU, with the city's calibration as configured,
     and, where the city has the GC-neutral calibration, also without it; population both as internal
@@ -173,17 +178,19 @@ def perturbation_protocol(
         variants.append(("calibration off", False))
     out = []
     for label, cal in variants:
-        run = runner(model, city, 0.0, calibration=cal)
+        run = runner(model, city, 0.0, calibration=cal, pkm_method=pkm_method)
         for year in years:
             e = perturbation_elasticities(run, {}, drivers, None, rel_step, year)
             out.append(e.assign(city=city, variant=label, year=year))
     return pd.concat(out, ignore_index=True)
 
 
-def lever_table(model: Knowing, city: str, levers=LEVERS, year: int = 2050) -> pd.DataFrame:
+def lever_table(
+    model: Knowing, city: str, levers=LEVERS, year: int = 2050, pkm_method: str = "centroid"
+) -> pd.DataFrame:
     """Lever effects under full policy (PI = 1): relative change of each output with the lever against
     the lever held at its 2019 value. Levers the city does not configure are left out."""
     from regsim.causal.sd_bridge import lever_effects
 
     configured = [lv for lv in levers if getattr(model.city(city).mobility, lv)]
-    return lever_effects(runner(model, city, 1.0), configured, year).assign(city=city)
+    return lever_effects(runner(model, city, 1.0, pkm_method=pkm_method), configured, year).assign(city=city)
