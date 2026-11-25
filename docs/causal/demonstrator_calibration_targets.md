@@ -190,3 +190,17 @@ trajectories.
 For Granollers the fit returns exactly the former terms −CDD/200 and −CDD/100 (CDD 380) as constant offsets: in
 the original model they acted as calibration constants, not as a climate response. Naples reaches the lower bound
 for walking and cycling; the generalised-cost dynamics overstate the growth of active modes there.
+
+## Longer OD trips (D36)
+
+Tallinn's transport model has its own trip lengths for the OD zone (centroids 1.65/6.79/26.4 km against
+0.99/5.72/13.7 km internally); per mode its OD trips are 2.7 to 4.5 times as long as internal ones. Naples and
+South Westphalia now use these ratios: the internal and OD mean lengths per mode are set so that their
+trip-weighted mean equals the ABM light mean. Car energy 2019 against MAED-City: Naples 2.66 against 2.49 TWh
+(+7 %), South Westphalia 13.77 against 13.75 TWh with an OD population of 551,000 (OD share of car pkm 56 %).
+Class R refitted: Naples squared error 0.005 (car share 2050 reference 0.44 against 0.46, optimised 0.24 against
+0.25), South Westphalia 0.008 (0.66 against 0.66, 0.50 against 0.51).
+
+The Naples transport model covers the metropolitan area (D3.4a Fig. A-84) but its totals count only trips
+with one end in the city ("internal + OD traffic Naples city"), so through traffic is not included. D3.2 gives
+more than 3.5 million inhabitants for the metropolitan city and 914,758 for the municipality.
