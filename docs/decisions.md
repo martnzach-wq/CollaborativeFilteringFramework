@@ -37,6 +37,8 @@ Record answers to HANDOVER.md §4 here (date, decision, by whom).
 | D31 | 2026-11-25 | Passenger transport in the city energy balance: trips within the city count fully, trips crossing the boundary (OD zone) **with 0.5** (GPC induced-activity method, origin and destination share each trip); through traffic is not represented. OD populations stay placeholders. | M. Zach |
 | D32 | 2026-11-25 | Class-R recalibration of the mobility submodel: **attractiveness offsets per mode** (car as reference) and the **mode-change damping**, fitted by least squares to the ABM light passenger-km shares of the reference (PI = 0) and optimised (PI = 1) pathways 2030/2040/2050 (Tallinn, Naples, South Westphalia). | M. Zach |
 | D33 | 2026-11-25 | MAED-City industry rows: the industry sector covers agriculture, construction, mining and manufacturing (IAEA MAED-2); **sector rows give the total**, the `Industry_*` rows its carrier split. | M. Zach |
+| D34 | 2026-11-25 | Provisional OD-zone populations: South Westphalia **1.738 M**, derived so that the 2019 car energy matches MAED-City under the 50 % OD rule; Naples **2.05 M** (metropolitan city of Naples minus the city), since a match with MAED-City would need an OD share of 95 % of car pkm. Tallinn keeps 113,320. | M. Zach |
+| D35 | 2026-11-25 | Climate effect on active modes and PT: the attractiveness terms −CDD/100 and −CDD/200 are **replaced by a heat transfer**: per cooling degree day 0.02/365 of active trips and 0.01/365 of PT trips move to car and car passenger, relative to the 2019 climate (Böcker et al. 2019; Hogeweij et al. 2026; Belloc et al. 2025; Renninger et al. 2026). Class R recalibrated afterwards; Granollers against its previous model trajectories. | M. Zach |
 
 ## Consequences
 
