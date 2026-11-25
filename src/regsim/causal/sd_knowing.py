@@ -50,6 +50,24 @@ LEVERS = (
     "policy_distance_adaptation",
 )
 
+# perceived-time series of the active modes that act through a lever's PI and calibration factor
+# (decision D41); held together with their lever
+LEVER_COMPANIONS = {
+    "policy_cycling_attractiveness": ("cycling_resistance_reduction",),
+    "policy_capacity_adaptation": ("traffic_calming_time_bonus",),
+    "policy_distance_adaptation": ("fifteen_minute_time_bonus",),
+}
+
+
+def _hold_at_start(series):
+    """Series held at its 2019 value; per-mode series (dict of dicts) mode by mode."""
+    if not series:
+        return series
+    if isinstance(next(iter(series.values())), dict):
+        return {k: _hold_at_start(v) for k, v in series.items()}
+    start = series.get(2019, series[min(series)])
+    return dict.fromkeys(series, start)
+
 
 @dataclasses.dataclass
 class Knowing:
@@ -95,10 +113,9 @@ def configure(city, scales: dict[str, float], calibration: bool | None = None, r
     mob = copy.deepcopy(city.mobility)
     sup = copy.deepcopy(city.energy_supply)
     for lever in removed:
-        series = getattr(mob, lever)
-        if series:
-            start = series.get(2019, series[min(series)])
-            setattr(mob, lever, dict.fromkeys(series, start))
+        for field in (lever, *LEVER_COMPANIONS.get(lever, ())):
+            if hasattr(mob, field):
+                setattr(mob, field, _hold_at_start(getattr(mob, field)))
     for name, factor in scales.items():
         if name in INPUT_GROUPS:
             for f in INPUT_GROUPS[name]:
