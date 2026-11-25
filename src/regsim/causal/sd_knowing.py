@@ -422,8 +422,8 @@ def single_measure_effect(
     model: Knowing, city, lever: str, calibration: dict | None = None, year: int = 2040
 ) -> float:
     """Relative change of the car (driver) share of pkm in ``year`` when only ``lever`` is applied
-    (PI = 1, all other levers held at their 2019 value) against the reference (PI = 0): the
-    experiment of the ABM light single-measure results. ``city`` is a name or a CityConfig."""
+    (PI = 1, all other levers held at their 2019 value) against the same run without any lever:
+    the experiment of the ABM light single-measure results. ``city`` is a name or a CityConfig."""
     base = model.city(city) if isinstance(city, str) else city
     mob = copy.deepcopy(base.mobility)
     if calibration is not None:
@@ -432,7 +432,8 @@ def single_measure_effect(
     others = [lv for lv in LEVERS if lv != lever and getattr(c.mobility, lv, None)]
     single = configure(c, {}, removed=others)
     i = year - 2019
-    ref = model.mobility.run_mobility(c, pi_scenario=0.0)["centroid"]["modal_split"]["car"][i]
+    none = configure(c, {}, removed=[lv for lv in LEVERS if getattr(c.mobility, lv, None)])
+    ref = model.mobility.run_mobility(none, pi_scenario=1.0)["centroid"]["modal_split"]["car"][i]
     one = model.mobility.run_mobility(single, pi_scenario=1.0)["centroid"]["modal_split"]["car"][i]
     return float(one / ref - 1)
 
