@@ -284,3 +284,119 @@ def recalibrate_class_r(
             "loss": loss,
         }
     )
+
+
+# ---- validation: cross-calibration and uncertainty propagation (protocol steps 5 and validation) ----
+
+
+def class_r_parameters(model: Knowing, city: str) -> pd.DataFrame:
+    """The configured class-R parameters of a city (offsets per mode, damping) as ``parameter``,
+    ``class``, ``value`` for `sd_bridge.cross_calibrate`."""
+    mob = model.city(city).mobility
+    rows = [
+        {"parameter": f"offset:{m}", "class": "R", "value": mob.attr_offset.get(m, 0.0)} for m in MODES[1:]
+    ]
+    rows.append({"parameter": "mode_change_damping", "class": "R", "value": mob.mode_change_damping})
+    return pd.DataFrame(rows)
+
+
+def cross_calibrate_class_r(model: Knowing, cities: dict[str, pd.DataFrame]) -> pd.DataFrame:
+    """Leave-one-city-out transfer of the class-R parameters (`sd_bridge.cross_calibrate`): for each
+    directed pair the root mean square error of the target's ABM light pkm shares with the donor's
+    parameters, against the target's own calibration. ``cities``: city -> targets of `class_r_targets`."""
+    from regsim.causal.sd_bridge import cross_calibrate
+
+    params = {c: class_r_parameters(model, c) for c in cities}
+    observed = {c: t.set_index("quantity").value for c, t in cities.items()}
+
+    def run_model(target: str, values: dict) -> pd.Series:
+        own = class_r_parameters(model, target).set_index("parameter").value.to_dict()
+        return class_r_run_model(model, target)({**own, **values})
+
+    return cross_calibrate(params, run_model, observed)
+
+
+def propagate_uncertainty(
+    model: Knowing,
+    city: str,
+    targets: pd.DataFrame,
+    n_draws: int = 200,
+    seed: int = 0,
+    input_sd: dict[str, float] | None = None,
+    year: int = 2050,
+) -> pd.DataFrame:
+    """Protocol step 5: joint draws of the class-R parameters (normal approximation from the
+    least-squares fit to ``targets``: covariance s^2 (J'J)^-1) and of class-O inputs (relative
+    standard deviations ``input_sd``: OD population, car energy per vehicle-km, load factor, CDD), run
+    under PI = 0 and PI = 1. Returns quantiles (5/50/95 %) of the car share of pkm, the final energy
+    and the direct and total CO2 emissions in ``year``."""
+    input_sd = input_sd or {
+        "population_od": 0.25,
+        "car_fossil_kwh_per_vkm": 0.10,
+        "load_factor": 0.05,
+        "cdd": 0.10,
+    }
+    base = model.city(city)
+    params = [f"offset:{m}" for m in MODES[1:]] + ["mode_change_damping"]
+    x0 = np.array(
+        [base.mobility.attr_offset.get(m, 0.0) for m in MODES[1:]] + [base.mobility.mode_change_damping]
+    )
+    run = class_r_run_model(model, city)
+    goal = targets.set_index("quantity").value
+
+    def resid(x):
+        return (run(dict(zip(params, x, strict=True))).reindex(goal.index) - goal).to_numpy()
+
+    r0 = resid(x0)
+    jac = np.column_stack(
+        [
+            (resid(x0 + np.eye(len(x0))[k] * 1e-3 * max(1.0, abs(x0[k]))) - r0)
+            / (1e-3 * max(1.0, abs(x0[k])))
+            for k in range(len(x0))
+        ]
+    )
+    s2 = float(r0 @ r0) / max(len(r0) - len(x0), 1)
+    cov = s2 * np.linalg.pinv(jac.T @ jac)
+    rng = np.random.default_rng(seed)
+    rows = []
+    for k in range(n_draws):
+        x = rng.multivariate_normal(x0, cov) if k else x0
+        x[-1] = max(x[-1], 1e-3)
+        mob = copy.deepcopy(base.mobility)
+        mob.attr_offset = {m: float(v) for m, v in zip(MODES[1:], x[:-1], strict=True)}
+        mob.mode_change_damping = float(x[-1])
+        f = {n: (1.0 if k == 0 else float(np.exp(rng.normal(0.0, sd)))) for n, sd in input_sd.items()}
+        mob.population_od = mob.population_od * f["population_od"]
+        mob.cooling_degree_days = mob.cooling_degree_days * f["cdd"]
+        if mob.cooling_degree_days_trajectory:
+            mob.cooling_degree_days_trajectory = {
+                y: v * f["cdd"] for y, v in mob.cooling_degree_days_trajectory.items()
+            }
+        te = base.transport_energy
+        if te is not None:
+            te = dataclasses.replace(
+                te,
+                car_fossil_kwh_per_vkm=te.car_fossil_kwh_per_vkm * f["car_fossil_kwh_per_vkm"],
+                load_factor=te.load_factor * f["load_factor"],
+            )
+        c = dataclasses.replace(base, mobility=mob, transport_energy=te)
+        for pi in (0.0, 1.0):
+            mo = model.mobility.run_mobility(c, pi_scenario=pi)
+            ed = model.energy_demand.run_energy_demand(c, mo)
+            es = model.energy_supply.run_energy_supply(c, ed)
+            i = year - 2019
+            split = mo["centroid"]["modal_split"]
+            rows.append(
+                {
+                    "draw": k,
+                    "pi": pi,
+                    "car_share": float(split["car"][i]),
+                    "final_energy": float(ed["total_final_energy"][i]),
+                    "co2_direct": float(es["emissions_direct_combustion_kt"][i]),
+                    "co2_total": float(es["total_emissions_kt"][i]),
+                }
+            )
+    d = pd.DataFrame(rows)
+    q = d.groupby("pi")[["car_share", "final_energy", "co2_direct", "co2_total"]].quantile([0.05, 0.5, 0.95])
+    q.attrs.update(city=city, year=year, n_draws=n_draws, class_r_sd=np.sqrt(np.diag(cov)).tolist())
+    return q

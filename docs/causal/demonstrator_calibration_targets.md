@@ -241,3 +241,70 @@ against 49,329 GWh.
 **Tallinn industry rows:** the carrier rows sum to 1,354 GWh against 1,552 GWh of the sector rows; the
 difference is manufacturing biofuel (211 GWh, D3.3 Table 3), which the carrier rows omit. No emissions are
 missing.
+
+## Biofuel and hydrogen in car fuels
+
+The non-electric car fuels carry a non-fossil share read from MAED-City: Naples 3.1 % (2019), 6 % (2030), 15 %
+(2040), 22 % (2045), 32 % (2050); South Westphalia 4.2 %, 5 %, 10 %, 26 %, 30 %; Tallinn 0 (no transport biofuel in
+D3.3 Table 3). Aviation ("other" fuels) stays fossil. Fitting the shares to the MAED-City CO2 instead would give
+erratic paths (Naples 2045/2050: 0), since the fit absorbs every other difference.
+
+Direct CO2, ratio SD / MAED-City (2019, 2030, 2035, 2040, 2045, 2050): Tallinn 0.72, 0.98, 1.01, 1.03, 1.03, 1.07;
+Naples 1.00, 1.03, 0.99, 1.00, 0.91, 0.86; South Westphalia 0.99, 1.05, 1.07, 1.13, 1.29, 0.89.
+
+## Lever ranking against the ABM light single-measure effects
+
+SD lever effects (leave-one-out from the full package, PI = 1, car share of pkm, 2040; D23) against the ABM light
+effects of single measures at 2040 intensity (change of car share against the reference):
+
+| | Spearman | measures |
+|---|---|---|
+| Tallinn | 0.81 | 7 |
+| South Westphalia | 0.83 | 6 |
+| Naples | 0.50 | 7 |
+
+| measure (% change of car share) | Tallinn ABM / SD | Naples ABM / SD | South Westphalia ABM / SD |
+|---|---|---|---|
+| area toll | -20.9 / -20.7 | -5.1 / -16.3 | – |
+| road pricing | -6.1 / -6.7 | -12.3 / -6.7 | -12.7 / -10.2 |
+| parking management | -2.1 / -0.5 | -3.6 / -0.3 | -3.4 / -0.6 |
+| public transport optimisation | -2.6 / -0.3 | -4.5 / -0.2 | -3.6 / -0.3 |
+| cycling optimisation | -3.1 / -0.6 | -1.7 / -0.5 | -1.2 / -0.5 |
+| traffic calming | -3.1 / -0.0 | -1.2 / -0.2 | -0.7 / 0.0 |
+| car occupancy incentives | -0.3 / 0.4 | -2.2 / 0.5 | 0.6 / 0.5 |
+
+Pricing levers agree in size where the SD model and ABM light share the policy units (area toll Tallinn −20.9 /
+−20.7 %, road pricing Tallinn −6.1 / −6.7 %, South Westphalia −12.7 / −10.2 %). The Naples area toll is three
+times too strong in the SD model (−16.3 against −5.1 %): the same charge (10/15/20 EUR) meets a lower value of
+time. Parking, PT, cycling and traffic calming act five to twenty times more weakly in the SD model than in
+ABM light. The car-occupancy lever has the opposite sign because the SD car share includes car passengers.
+
+## Cross-calibration and uncertainty (protocol validation and step 5)
+
+Class-R parameters of one city transferred to another (`sd_knowing.cross_calibrate_class_r`, wrapping
+`sd_bridge.cross_calibrate`), root mean square error of the 30 pkm shares:
+
+| donor → target | transferred | own calibration |
+|---|---|---|
+| Tallinn → Naples | 0.080 | 0.013 |
+| Tallinn → South Westphalia | 0.028 | 0.016 |
+| Naples → Tallinn | 0.058 | 0.019 |
+| Naples → South Westphalia | 0.051 | 0.016 |
+| South Westphalia → Tallinn | 0.055 | 0.019 |
+| South Westphalia → Naples | 0.119 | 0.013 |
+
+Transferred class-R parameters raise the error two to nine times; Tallinn → South Westphalia transfers best. Class R
+is therefore city-specific and has to be recalibrated for every new region (protocol rule), not copied.
+
+Joint draws of class R (normal approximation of the least-squares fit) and class-O inputs (OD population ±25 %,
+car energy per vehicle-km ±10 %, load factor ±5 %, CDD ±10 %), 100 draws, 90 % intervals in 2050
+(`sd_knowing.propagate_uncertainty`):
+
+| 2050, PI = 1 | car share of pkm | final energy (GWh) | direct CO2 (kt) |
+|---|---|---|---|
+| Tallinn | 0.211 (0.193–0.231) | 6916 (6850–7020) | 49 (43–59) |
+| Naples | 0.244 (0.230–0.261) | 5914 (5736–6136) | 170 (159–183) |
+| South Westphalia | 0.500 (0.465–0.535) | 30717 (30203–31322) | 223 (188–263) |
+
+The walking offset is poorly identified (standard deviation 4–8), since walking carries 1–3 % of pkm; the damping is
+well determined. The uncertainty of the 2050 direct CO2 under the full package is about ±15 % (Naples ±7 %).
