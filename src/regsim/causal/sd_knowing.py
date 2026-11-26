@@ -864,18 +864,15 @@ def transfer_effects_weighted(
     model: Knowing, target, donors: dict, year: int = 2040, band=TRANSFER_BAND, **kw
 ) -> dict:
     """Similarity-weighted single-measure effects of ``target``: ``effects`` (weighted mean of the donors'
-    semi-elasticities times the target intensity), ``low`` / ``high`` (the weaker and stronger end of the
-    empirical transfer band ``band`` around the effect, widened to the single-donor transfers), ``weights``
+    semi-elasticities times the target intensity), ``weak`` / ``strong`` (the ends of the empirical transfer
+    band ``band`` around the effect, widened to the single-donor transfers), ``weights``
     and the single-donor transfers ``single``."""
     names = list(donors)
     w = donor_weights(model, target, names, **kw)
     single = {d: transfer_effects(model, target, {d: donors[d]}, year)[0] for d in names}
     table = pd.DataFrame(single)
     weighted = (table * w).sum(axis=1) / table.notna().mul(w).sum(axis=1)
-    return {
-        "effects": weighted,
-        "low": table.min(axis=1),
-        "high": table.max(axis=1),
-        "weights": w,
-        "single": table,
-    }
+    # effects are negative: the weak end is the larger value, the strong end the smaller
+    weak = np.maximum(weighted * band[0], table.max(axis=1))
+    strong = np.minimum(weighted * band[1], table.min(axis=1))
+    return {"effects": weighted, "weak": weak, "strong": strong, "weights": w, "single": table}
