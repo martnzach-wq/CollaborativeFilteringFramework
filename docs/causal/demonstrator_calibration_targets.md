@@ -406,3 +406,20 @@ pricing levers keep factors of 0.06 at damping 3.2: the configured road-pricing 
 times more strongly than in ABM light. Single-measure effects of cycling (−0.2 % against −3.1 %) and the 15-minute
 city (+0.5 % against −2.1 %) remain unmatched. Coping sensitivity (D44) 2050: car share 0.424 → 0.338 (PI = 0),
 0.242 → 0.179 (PI = 1).
+
+### Tallinn on the full ABM light export (D49, D50)
+
+The single-measure effects of ABM light are changes in car trips: all measures 2040 −35.6 % (D3.3 Fig. 17:
+−37.3 %), car pkm −31.9 %. Cycling optimisation is −1.6 % in 2040, not −3.1 %.
+
+Value of time, Estonia 2019: HEATCO D5 Table 0.4 (EUR2002, factor prices) car commute short 4.99, other short
+4.18, business 12.82; with 30/60/10 % weights and the HEATCO update (GDP per capita elasticity 0.7; Eurostat
+2002–2019 real GDP per capita ×1.80, HICP ×1.73; factor 2.62): 13.9 EUR/h (bus 10.2). Rail Baltica CBA (EY 2017,
+2015 prices): private 0.19 EUR/min = 11.4 EUR/h, business 25.8 EUR/h.
+
+Joint fit (three starting points, same optimum): squared error pathways 0.0156 (pkm and trip shares), effects
+0.0141 (24 effects), damping 0.34, profile strength 1.5 (bound). Car share of pkm optimised 2030/2040/2050
+0.403 / 0.314 / 0.212 (ABM light 0.365 / 0.296 / 0.242), reference 2050 0.429 (0.434); bicycle trip share
+optimised 2050 0.055 (0.056). The SD mode change accumulates over time, so the effects lag in 2030 (area toll
+−5.5 % against −14.1 %) and overshoot in 2050 (−30.2 % against −26.7 %); ABM light responds in equilibrium to
+each year's measure intensity.
