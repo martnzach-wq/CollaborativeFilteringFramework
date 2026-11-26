@@ -509,11 +509,18 @@ def recalibrate_joint(
     factor_bounds: tuple[float, float] = (0.01, 100.0),
     offset_bounds: tuple[float, float] = (-15.0, 15.0),
     damping_bounds: tuple[float, float] = (0.005, 2.0),
+    coping_odds_ratio: float | None = None,
+    coping_weight: float = 0.1,
+    distinction_bounds: tuple[float, float] = (0.0, 1.5),
 ) -> pd.DataFrame:
     """Joint fit of the per-intervention factors (log scale), the attractiveness offsets and the
     damping to both the ABM light pathway pkm shares (`class_r_targets`) and the single-measure
     effects (``abm_effects``, % change of car share; weighted by ``effect_weight``), since effects
-    fitted one by one overshoot in the full package. Bounded least squares from the configured values."""
+    fitted one by one overshoot in the full package. Bounded least squares from the configured values.
+
+    With ``coping_odds_ratio`` the coping-type profile strength (``attr_distinction``) is fitted as
+    well, with the residual ``coping_weight`` x log(odds ratio of car use of type A in the 2050
+    reference / ``coping_odds_ratio``), which keeps the type differences stable (decision D46)."""
     from scipy.optimize import least_squares
 
     base = model.city(city)
@@ -534,44 +541,62 @@ def recalibrate_joint(
     )
     lo = np.concatenate([[np.log(factor_bounds[0])] * len(keys), [offset_bounds[0]] * 4, [damping_bounds[0]]])
     hi = np.concatenate([[np.log(factor_bounds[1])] * len(keys), [offset_bounds[1]] * 4, [damping_bounds[1]]])
+    fit_distinction = coping_odds_ratio is not None
+    if fit_distinction:
+        x0 = np.append(x0, np.clip(base.mobility.attr_distinction, *distinction_bounds))
+        lo, hi = np.append(lo, distinction_bounds[0]), np.append(hi, distinction_bounds[1])
+    n_core = len(keys) + 5
 
     def unpack(x):
         cal = dict(zip(keys, np.exp(x[: len(keys)]), strict=True))
         offsets = dict(zip(MODES[1:], x[len(keys) : len(keys) + 4], strict=True))
-        return cal, offsets, float(x[-1])
+        distinction = float(x[n_core]) if fit_distinction else base.mobility.attr_distinction
+        return cal, offsets, float(x[n_core - 1]), distinction
 
     def city_with(x):
-        cal, offsets, damping = unpack(x)
+        cal, offsets, damping, distinction = unpack(x)
         mob = copy.deepcopy(base.mobility)
         mob.lever_calibration = {**cal0, **cal}
         mob.attr_offset = offsets
         mob.mode_change_damping = damping
+        mob.attr_distinction = distinction
         return dataclasses.replace(base, mobility=mob)
 
     def resid(x):
         c = city_with(x)
         out = {}
+        r_coping = []
         for key, pi in (("ref", 0.0), ("opt", 1.0)):
-            split = model.mobility.run_mobility(c, pi_scenario=pi)["centroid"]["modal_split"]
+            mm = model.mobility.MobilityModel(c, pi_scenario=pi)
+            split = mm.run()["centroid"]["modal_split"]
             for y in CLASS_R_YEARS:
                 for m in MODES:
                     out[f"{key}_{y}_{m}"] = split[m][y - 2019]
+            if fit_distinction and key == "ref":
+                ratio = model.mobility.car_odds_ratio_type_a(mm.trips[2050 - 2019])
+                r_coping = [coping_weight * np.log(ratio / coping_odds_ratio)]
         r_path = pd.Series(out).reindex(goal.index).to_numpy() - goal.to_numpy()
         r_eff = [
             effect_weight
             * (single_measure_effect(model, c, MEASURE_LEVERS[ms][0], year=year) - abm_effects[ms] / 100)
             for ms in measures
         ]
-        return np.concatenate([r_path, r_eff])
+        return np.concatenate([r_path, r_eff, r_coping])
 
     res = least_squares(resid, x0, bounds=(lo, hi), diff_step=1e-3, max_nfev=400)
-    cal, offsets, damping = unpack(res.x)
+    cal, offsets, damping, distinction = unpack(res.x)
     r = res.fun
+    n_eff = len(measures)
+    coping_resid = r[len(goal) + n_eff :]
+    r = r[: len(goal) + n_eff]
     rows = [{"parameter": f"cal:{k}", "value": v} for k, v in cal.items()]
     rows += [{"parameter": f"offset:{m}", "value": float(v)} for m, v in offsets.items()]
     rows.append({"parameter": "mode_change_damping", "value": damping})
+    if fit_distinction:
+        rows.append({"parameter": "attr_distinction", "value": distinction})
     out = pd.DataFrame(rows)
     out.attrs.update(
+        loss_coping=float((coping_resid**2).sum()),
         loss_pathway=float((r[: len(goal)] ** 2).sum()),
         loss_effects=float((r[len(goal) :] ** 2).sum()),
         effects=dict(
