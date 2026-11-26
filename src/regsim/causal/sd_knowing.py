@@ -436,11 +436,18 @@ MEASURE_LEVERS = {
 
 
 def single_measure_effect(
-    model: Knowing, city, lever: str, calibration: dict | None = None, year: int = 2040
+    model: Knowing,
+    city,
+    lever: str,
+    calibration: dict | None = None,
+    year: int = 2040,
+    metric: str = "car_trips",
 ) -> float:
-    """Relative change of the car (driver) share of pkm in ``year`` when only ``lever`` is applied
-    (PI = 1, all other levers held at their 2019 value) against the same run without any lever:
-    the experiment of the ABM light single-measure results. ``city`` is a name or a CityConfig."""
+    """Relative change of car use in ``year`` when only ``lever`` is applied (PI = 1, all other
+    levers held at their 2019 value) against the same run without any lever: the experiment of the
+    ABM light single-measure results. ``metric`` "car_trips" counts car (driver) trips, the measure
+    of ABM light's "car usage" (D3.3: all measures −37.3 % in 2040, car trips −36 %, car pkm −32 %);
+    "car_pkm_share" takes the car share of pkm. ``city`` is a name or a CityConfig."""
     base = model.city(city) if isinstance(city, str) else city
     mob = copy.deepcopy(base.mobility)
     if calibration is not None:
@@ -450,9 +457,13 @@ def single_measure_effect(
     single = configure(c, {}, removed=others)
     i = year - 2019
     none = configure(c, {}, removed=[lv for lv in LEVERS if getattr(c.mobility, lv, None)])
-    ref = model.mobility.run_mobility(none, pi_scenario=1.0)["centroid"]["modal_split"]["car"][i]
-    one = model.mobility.run_mobility(single, pi_scenario=1.0)["centroid"]["modal_split"]["car"][i]
-    return float(one / ref - 1)
+
+    def use(c):
+        mm = model.mobility.MobilityModel(c, pi_scenario=1.0)
+        split = mm.run()["centroid"]["modal_split"]["car"][i]
+        return mm.trips[i, 0].sum() if metric == "car_trips" else split
+
+    return float(use(single) / use(none) - 1)
 
 
 def recalibrate_levers(
