@@ -423,3 +423,20 @@ Joint fit (three starting points, same optimum): squared error pathways 0.0156 (
 optimised 2050 0.055 (0.056). The SD mode change accumulates over time, so the effects lag in 2030 (area toll
 −5.5 % against −14.1 %) and overshoot in 2050 (−30.2 % against −26.7 %); ABM light responds in equilibrium to
 each year's measure intensity.
+
+### Logit mode choice in Tallinn (D51)
+
+Joint fit on the full ABM light export (two starting points, nearly equal): squared error pathways 0.0032 and
+effects 0.0022 against 0.0156 and 0.0141 with the pairwise flows; coping-type stability holds without a
+constraint (odds ratio of type A 1.93 in the 2050 reference).
+
+| car share of pkm | 2030 | 2040 | 2050 |
+|---|---|---|---|
+| optimised SD / ABM light | 0.355 / 0.365 | 0.285 / 0.296 | 0.236 / 0.242 |
+| reference SD / ABM light | 0.435 / 0.440 | 0.436 / 0.436 | 0.445 / 0.434 |
+
+Single-measure effects (car trips, SD / ABM light, %): area toll −12.6 / −14.1, −20.3 / −20.7, −26.2 / −26.7; road
+pricing −1.8 / −2.0, −5.5 / −6.1, −9.2 / −10.3; cycling −0.1 / −0.2, −1.2 / −1.6, −2.2 / −3.2; 15-minute city
+−0.6 / −0.4, −1.6 / −2.1, −2.6 / −1.1. Car-occupancy incentives overshoot (2050 −2.9 / −0.4); traffic calming and
+parking lag in 2030 (−0.9 / −2.0, −1.0 / −2.2). Coping sensitivity (D44) 2050: car share of pkm 0.445 → 0.403
+(PI = 0), 0.236 → 0.208 (PI = 1), now the composition effect alone.
