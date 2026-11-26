@@ -1,0 +1,77 @@
+registry_version: knowing_v1
+# Coping-type shares of the KNOWING Climate Impact Coping Typology (D1.3; survey November 2023): national samples
+# of six countries (NUTS-0) and the settlement-type columns used for the demonstrators (NUTS-3; decision D54).
+# Behaviour metadata for transfer and lens construction; values are shares (0-1) and sum to one per region.
+indicators:
+- indicator_id: coping_share_a
+  label: "coping-type share A (Active Antagonists)"
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels: [0, 3]
+  unit: share
+  temporal: static
+  tags: [behaviour, coping_typology]
+  source:
+    connector: table
+    dataset: configs/data/coping_types_knowing.csv
+- indicator_id: coping_share_b
+  label: "coping-type share B (Beneficent Believers)"
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels: [0, 3]
+  unit: share
+  temporal: static
+  tags: [behaviour, coping_typology]
+  source:
+    connector: table
+    dataset: configs/data/coping_types_knowing.csv
+- indicator_id: coping_share_c
+  label: "coping-type share C (Concerned Compliers)"
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels: [0, 3]
+  unit: share
+  temporal: static
+  tags: [behaviour, coping_typology]
+  source:
+    connector: table
+    dataset: configs/data/coping_types_knowing.csv
+- indicator_id: coping_share_d
+  label: "coping-type share D (Doubting Distressed)"
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels: [0, 3]
+  unit: share
+  temporal: static
+  tags: [behaviour, coping_typology]
+  source:
+    connector: table
+    dataset: configs/data/coping_types_knowing.csv
+- indicator_id: coping_share_e
+  label: "coping-type share E (Empathic Engagers)"
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels: [0, 3]
+  unit: share
+  temporal: static
+  tags: [behaviour, coping_typology]
+  source:
+    connector: table
+    dataset: configs/data/coping_types_knowing.csv
+- indicator_id: coping_share_f
+  label: "coping-type share F (Fierce Forerunners)"
+  dtype: continuous
+  transform: identity
+  aggregation: wmean_pop
+  native_levels: [0, 3]
+  unit: share
+  temporal: static
+  tags: [behaviour, coping_typology]
+  source:
+    connector: table
+    dataset: configs/data/coping_types_knowing.csv

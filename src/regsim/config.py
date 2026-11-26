@@ -18,7 +18,7 @@ class DataConfig(BaseModel):
     periods: list[str] = Field(default_factory=lambda: ["2013/2017", "2018/2022"])  # decision D3
     store: str = "data/store"
     raw_dir: str = "data/raw"
-    sources: list[str] = Field(default_factory=lambda: ["eurostat"])  # decision D5: eurostat, d36, ardeco
+    sources: list[str] = Field(default_factory=lambda: ["eurostat"])  # decision D5: eurostat, d36, ardeco; table (D54)
     d36_gpkg: str | None = None
     lau: bool = False
 

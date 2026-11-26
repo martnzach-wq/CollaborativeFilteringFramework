@@ -1,0 +1,85 @@
+geo_code,indicator_id,period,value,source,source_version,flags
+EE001,coping_share_a,2023,0.09,knowing,D3.3 Table 28 = Fig. 73 metropolitan column,metropolitan column of the national sample
+EE001,coping_share_b,2023,0.17,knowing,D3.3 Table 28 = Fig. 73 metropolitan column,metropolitan column of the national sample
+EE001,coping_share_c,2023,0.32,knowing,D3.3 Table 28 = Fig. 73 metropolitan column,metropolitan column of the national sample
+EE001,coping_share_d,2023,0.13,knowing,D3.3 Table 28 = Fig. 73 metropolitan column,metropolitan column of the national sample
+EE001,coping_share_e,2023,0.13,knowing,D3.3 Table 28 = Fig. 73 metropolitan column,metropolitan column of the national sample
+EE001,coping_share_f,2023,0.17,knowing,D3.3 Table 28 = Fig. 73 metropolitan column,metropolitan column of the national sample
+ITF33,coping_share_a,2023,0.01,knowing,D3.4a Fig. A-94 metropolitan column,metropolitan column of the national sample
+ITF33,coping_share_b,2023,0.06,knowing,D3.4a Fig. A-94 metropolitan column,metropolitan column of the national sample
+ITF33,coping_share_c,2023,0.14,knowing,D3.4a Fig. A-94 metropolitan column,metropolitan column of the national sample
+ITF33,coping_share_d,2023,0.29,knowing,D3.4a Fig. A-94 metropolitan column,metropolitan column of the national sample
+ITF33,coping_share_e,2023,0.37,knowing,D3.4a Fig. A-94 metropolitan column,metropolitan column of the national sample
+ITF33,coping_share_f,2023,0.14,knowing,D3.4a Fig. A-94 metropolitan column,metropolitan column of the national sample
+ES511,coping_share_a,2023,0.03,knowing,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,urban column of the national sample
+ES511,coping_share_b,2023,0.09,knowing,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,urban column of the national sample
+ES511,coping_share_c,2023,0.09,knowing,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,urban column of the national sample
+ES511,coping_share_d,2023,0.37,knowing,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,urban column of the national sample
+ES511,coping_share_e,2023,0.33,knowing,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,urban column of the national sample
+ES511,coping_share_f,2023,0.1,knowing,D3.4b Table (section 5.3.3) = Fig. (Spain) urban column,urban column of the national sample
+DEA57,coping_share_a,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA58,coping_share_a,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA59,coping_share_a,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5A,coping_share_a,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5B,coping_share_a,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA57,coping_share_b,2023,0.21,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA58,coping_share_b,2023,0.21,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA59,coping_share_b,2023,0.21,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5A,coping_share_b,2023,0.21,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5B,coping_share_b,2023,0.21,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA57,coping_share_c,2023,0.27,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA58,coping_share_c,2023,0.27,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA59,coping_share_c,2023,0.27,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5A,coping_share_c,2023,0.27,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5B,coping_share_c,2023,0.27,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA57,coping_share_d,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA58,coping_share_d,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA59,coping_share_d,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5A,coping_share_d,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5B,coping_share_d,2023,0.12,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA57,coping_share_e,2023,0.14,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA58,coping_share_e,2023,0.14,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA59,coping_share_e,2023,0.14,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5A,coping_share_e,2023,0.14,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5B,coping_share_e,2023,0.14,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA57,coping_share_f,2023,0.15,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA58,coping_share_f,2023,0.15,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA59,coping_share_f,2023,0.15,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5A,coping_share_f,2023,0.15,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+DEA5B,coping_share_f,2023,0.15,knowing,D3.5 Fig. 56 (Germany) rural column,rural column of the national sample
+AT,coping_share_a,2023,0.11,knowing,D1.3 Fig. 8,national sample
+AT,coping_share_b,2023,0.12,knowing,D1.3 Fig. 8,national sample
+AT,coping_share_c,2023,0.27,knowing,D1.3 Fig. 8,national sample
+AT,coping_share_d,2023,0.14,knowing,D1.3 Fig. 8,national sample
+AT,coping_share_e,2023,0.17,knowing,D1.3 Fig. 8,national sample
+AT,coping_share_f,2023,0.2,knowing,D1.3 Fig. 8,national sample
+EE,coping_share_a,2023,0.12,knowing,D1.3 Fig. 8,national sample
+EE,coping_share_b,2023,0.16,knowing,D1.3 Fig. 8,national sample
+EE,coping_share_c,2023,0.33,knowing,D1.3 Fig. 8,national sample
+EE,coping_share_d,2023,0.14,knowing,D1.3 Fig. 8,national sample
+EE,coping_share_e,2023,0.12,knowing,D1.3 Fig. 8,national sample
+EE,coping_share_f,2023,0.13,knowing,D1.3 Fig. 8,national sample
+DE,coping_share_a,2023,0.11,knowing,D1.3 Fig. 8,national sample
+DE,coping_share_b,2023,0.14,knowing,D1.3 Fig. 8,national sample
+DE,coping_share_c,2023,0.22,knowing,D1.3 Fig. 8,national sample
+DE,coping_share_d,2023,0.16,knowing,D1.3 Fig. 8,national sample
+DE,coping_share_e,2023,0.21,knowing,D1.3 Fig. 8,national sample
+DE,coping_share_f,2023,0.17,knowing,D1.3 Fig. 8,national sample
+IT,coping_share_a,2023,0.02,knowing,D1.3 Fig. 8,national sample
+IT,coping_share_b,2023,0.05,knowing,D1.3 Fig. 8,national sample
+IT,coping_share_c,2023,0.14,knowing,D1.3 Fig. 8,national sample
+IT,coping_share_d,2023,0.27,knowing,D1.3 Fig. 8,national sample
+IT,coping_share_e,2023,0.36,knowing,D1.3 Fig. 8,national sample
+IT,coping_share_f,2023,0.16,knowing,D1.3 Fig. 8,national sample
+ES,coping_share_a,2023,0.04,knowing,D1.3 Fig. 8,national sample
+ES,coping_share_b,2023,0.09,knowing,D1.3 Fig. 8,national sample
+ES,coping_share_c,2023,0.1,knowing,D1.3 Fig. 8,national sample
+ES,coping_share_d,2023,0.37,knowing,D1.3 Fig. 8,national sample
+ES,coping_share_e,2023,0.31,knowing,D1.3 Fig. 8,national sample
+ES,coping_share_f,2023,0.09,knowing,D1.3 Fig. 8,national sample
+HR,coping_share_a,2023,0.04,knowing,D1.3 Fig. 8,national sample
+HR,coping_share_b,2023,0.08,knowing,D1.3 Fig. 8,national sample
+HR,coping_share_c,2023,0.16,knowing,D1.3 Fig. 8,national sample
+HR,coping_share_d,2023,0.29,knowing,D1.3 Fig. 8,national sample
+HR,coping_share_e,2023,0.35,knowing,D1.3 Fig. 8,national sample
+HR,coping_share_f,2023,0.08,knowing,D1.3 Fig. 8,national sample

@@ -96,3 +96,78 @@ def learn_transfer_weights(
         loo_rmse=float(np.sqrt(_loo(w, X, y)[0])),
         loo_rmse_default=float(np.sqrt(_loo(w0, X, y)[0])),
     )
+
+
+# ---- compositions (shares summing to one) of entities without observations -------------------------------
+
+
+def _clr(x: np.ndarray) -> np.ndarray:
+    lx = np.log(np.clip(x, 1e-6, None))
+    return lx - lx.mean(axis=-1, keepdims=True)
+
+
+def _closure(c: np.ndarray) -> np.ndarray:
+    e = np.exp(c - c.max(axis=-1, keepdims=True))
+    return e / e.sum(axis=-1, keepdims=True)
+
+
+@dataclass
+class CompositionEstimate:
+    estimate: pd.DataFrame  # target x part, shares
+    lower: pd.DataFrame  # weighted 10 % / 90 % range of the donors, closed
+    upper: pd.DataFrame
+    weights: pd.DataFrame  # target x donor kernel weights
+    bandwidth: float
+    loo_error: float  # mean Aitchison distance of the leave-one-out prediction of the donors
+    loo_error_mean: float  # the same for the unweighted mean of the other donors
+
+
+def estimate_composition(
+    shares: pd.DataFrame,
+    features: pd.DataFrame,
+    targets: list[str],
+    bandwidths: tuple[float, ...] = (1.0, 1.5, 2.0, 4.0, np.inf),
+) -> CompositionEstimate:
+    """Composition of ``targets`` as the kernel-weighted mean of the donors' ``shares`` in centred log-ratio
+    space; weights exp(-(d/h)^2) on standardised ``features`` (donors and targets, same columns). The
+    bandwidth h minimises the leave-one-out Aitchison error of the donors; h = inf is the unweighted mean."""
+    donors = list(shares.index)
+    shares = shares.div(shares.sum(axis=1), axis=0)
+    features = features[~features.index.duplicated()]
+    f = features.loc[donors + [t for t in targets if t not in donors]]
+    f = f.fillna(f.loc[donors].mean())  # a missing feature of a target takes the donors' mean
+    z = (f - f.mean()) / f.std(ddof=0).replace(0, 1)
+    zd, clr = z.loc[donors].to_numpy(), _clr(shares.to_numpy())
+
+    def kernel(a: np.ndarray, b: np.ndarray, h: float) -> np.ndarray:
+        d2 = ((a[:, None, :] - b[None, :, :]) ** 2).sum(axis=2)
+        return np.ones_like(d2) if np.isinf(h) else np.exp(-d2 / h**2)
+
+    def loo(h: float) -> float:
+        w = kernel(zd, zd, h)
+        np.fill_diagonal(w, 0.0)
+        w = w / w.sum(axis=1, keepdims=True)
+        return float(np.sqrt(((w @ clr - clr) ** 2).sum(axis=1)).mean())
+
+    errors = {h: loo(h) for h in bandwidths}
+    h = min(errors, key=errors.get)
+    w = kernel(z.loc[targets].to_numpy(), zd, h)
+    w = w / w.sum(axis=1, keepdims=True)
+    est = _closure(w @ clr)
+    lo, hi = np.empty_like(est), np.empty_like(est)
+    for i in range(len(targets)):
+        order = np.argsort(clr, axis=0)
+        for j in range(clr.shape[1]):
+            c = np.cumsum(w[i, order[:, j]])
+            lo[i, j] = clr[order[np.searchsorted(c, 0.1), j], j]
+            hi[i, j] = clr[order[min(np.searchsorted(c, 0.9), len(c) - 1), j], j]
+    frame = lambda a: pd.DataFrame(a, index=targets, columns=shares.columns)  # noqa: E731
+    return CompositionEstimate(
+        estimate=frame(est),
+        lower=frame(np.minimum(_closure(lo), est)),
+        upper=frame(np.maximum(_closure(hi), est)),
+        weights=pd.DataFrame(w, index=targets, columns=donors),
+        bandwidth=float(h),
+        loo_error=errors[h],
+        loo_error_mean=errors[np.inf] if np.inf in errors else float("nan"),
+    )

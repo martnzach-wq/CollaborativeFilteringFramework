@@ -110,6 +110,10 @@ def build(
         from regsim.data.ardeco import ArdecoConnector
 
         connectors["ardeco"] = ArdecoConnector(cache_dir=str(raw / "ardeco"), version=d.nuts_version)
+    if "table" in d.sources and "table" not in connectors:
+        from regsim.data.table import TableConnector
+
+        connectors["table"] = TableConnector()
     since, until = d.span
     harmoniser = Harmoniser(d.nuts_version, gisco)
     report = BuildReport(config_hash=config.config_hash())
@@ -161,7 +165,7 @@ def build(
 
     for entry in registry:
         name = entry.source.connector
-        if name not in ("eurostat", "ardeco") or name not in d.sources:
+        if name not in ("eurostat", "ardeco", "table") or name not in d.sources:
             continue
         spec = {
             "dataset": entry.source.dataset,

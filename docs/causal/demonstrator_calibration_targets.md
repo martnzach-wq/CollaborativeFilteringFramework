@@ -525,3 +525,12 @@ attractiveness, so their factors from the ABM light cities do not apply. The nea
 South Westphalia barely move Granollers, whose short trips (3.8 km by car) and low parking cost (0.18 EUR) give
 small cost changes; the Tallinn parameters give −29 %, within the range of the ABM light cities (all measures 2040:
 Tallinn −35.6 %, Naples −24.2 %, South Westphalia −10.5 % car trips).
+
+### Coping-type shares for regions without a survey (D54)
+
+Leave-one-out over the six surveyed countries (shares estimated from the other five, bandwidth by inner
+leave-one-out, at least 1): mean absolute error per type 1.9–6.9 points (mean 3.9) against 4.6–9.1 points (mean
+7.0) for the plain mean of the other countries; Aitchison distance 0.38–1.08 against 0.86–1.61. The settlement
+offsets (metropolitan, urban, rural: demonstrator column minus national sample) rest on one or two pairs; the
+metropolitan offset from Naples worsens Tallinn (Aitchison 0.56 against 0.41 without offset) and the one from
+Tallinn improves Naples (0.56 against 0.70), so the offset is an option, not a default.
