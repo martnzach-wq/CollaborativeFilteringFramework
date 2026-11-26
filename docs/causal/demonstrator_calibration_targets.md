@@ -589,3 +589,20 @@ MAED-City values follow from the earlier ratios (before / MAED-City, rounded to 
 changes by −1 to −3 % (Granollers +2 to +6 %). The faster response of the logit mode choice lowers Tallinn's
 2030 transport emissions (246 against 325 kt). Granollers' emissions rise because the previous model removed most
 car traffic (car share of pkm 2050 0.068 against 0.50).
+
+### Granollers: transfer band through energy and emissions
+
+The three lever-factor sets of the transfer band (weak end, central, strong end) run through the full model
+(`docs/causal/sd_granollers_band_integrated.csv`). Optimised pathway 2050:
+
+| | reference | weak end | central | strong end | previous flow model |
+|---|---|---|---|---|---|
+| car share of pkm | 0.591 | 0.569 | 0.501 | 0.292 | 0.068 |
+| car energy (GWh) | 108 | 104 | 93 | 57 | 17 |
+| transport CO2 (kt) | 19.2 | 18.8 | 17.4 | 13.0 | 8 |
+| direct CO2 (kt) | 28.7 | 28.2 | 26.9 | 22.5 | 18 |
+| total CO2 (kt) | 34.8 | 34.4 | 33.0 | 28.5 | 23 |
+| final energy (GWh) | 1,362 | 1,359 | 1,349 | 1,318 | 1,273 |
+
+The mobility measures change Granollers' total emissions 2050 by 1–18 % against the reference; the decline from
+312 kt (2019) to about 33 kt comes from fleet electrification and energy supply.
