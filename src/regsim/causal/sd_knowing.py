@@ -523,6 +523,8 @@ def recalibrate_joint(
     coping_odds_ratio: float | None = None,
     coping_weight: float = 0.1,
     distinction_bounds: tuple[float, float] = (0.0, 1.5),
+    logit_scale_bounds: tuple[float, float] = (0.005, 20.0),
+    adjustment_bounds: tuple[float, float] = (0.02, 1.0),
 ) -> pd.DataFrame:
     """Joint fit of the per-intervention factors (log scale), the attractiveness offsets and the
     damping to the ABM light pathways and single-measure effects, since effects fitted one by one
@@ -532,6 +534,9 @@ def recalibrate_joint(
     are pkm shares (`class_r_targets`), ``trips_ref_<year>_<mode>`` / ``trips_opt_<year>_<mode>`` trip
     shares (`abm_light_targets`). ``abm_effects`` gives the % change of car trips per measure, indexed
     by measure (at ``year``) or by (measure, year); its residuals are weighted by ``effect_weight``.
+
+    With the logit mode choice (``mode_choice="logit"``, decision D51) the logit scale and the
+    adjustment speed are fitted instead of the offsets and the damping.
 
     With ``coping_odds_ratio`` the coping-type profile strength (``attr_distinction``) is fitted as
     well, with the residual ``coping_weight`` x log(odds ratio of car use of type A in the 2050
@@ -553,34 +558,52 @@ def recalibrate_joint(
     keys = [MEASURE_LEVERS[ms][1] for ms in measures]
     goal = pathway_targets.set_index("quantity").value
     cal0 = base.mobility.lever_calibration
-    x0 = np.concatenate(
-        [
-            np.log(np.clip([cal0.get(k, 1.0) for k in keys], *factor_bounds)),
-            np.clip([base.mobility.attr_offset.get(m, 0.0) for m in MODES[1:]], *offset_bounds),
-            [np.clip(base.mobility.mode_change_damping, *damping_bounds)],
+    logit = getattr(base.mobility, "mode_choice", "flow") == "logit"
+    if logit:
+        # pivot-point logit (D51): log scale and adjustment speed take the place of offsets and damping;
+        # constant offsets cancel against the base-year pivot
+        core0 = [
+            np.log(np.clip(base.mobility.logit_scale, *logit_scale_bounds)),
+            np.clip(base.mobility.logit_adjustment, *adjustment_bounds),
         ]
-    )
-    lo = np.concatenate([[np.log(factor_bounds[0])] * len(keys), [offset_bounds[0]] * 4, [damping_bounds[0]]])
-    hi = np.concatenate([[np.log(factor_bounds[1])] * len(keys), [offset_bounds[1]] * 4, [damping_bounds[1]]])
+        core_lo = [np.log(logit_scale_bounds[0]), adjustment_bounds[0]]
+        core_hi = [np.log(logit_scale_bounds[1]), adjustment_bounds[1]]
+    else:
+        core0 = [
+            *np.clip([base.mobility.attr_offset.get(m, 0.0) for m in MODES[1:]], *offset_bounds),
+            np.clip(base.mobility.mode_change_damping, *damping_bounds),
+        ]
+        core_lo = [offset_bounds[0]] * 4 + [damping_bounds[0]]
+        core_hi = [offset_bounds[1]] * 4 + [damping_bounds[1]]
+    x0 = np.concatenate([np.log(np.clip([cal0.get(k, 1.0) for k in keys], *factor_bounds)), core0])
+    lo = np.concatenate([[np.log(factor_bounds[0])] * len(keys), core_lo])
+    hi = np.concatenate([[np.log(factor_bounds[1])] * len(keys), core_hi])
     fit_distinction = coping_odds_ratio is not None
     if fit_distinction:
         x0 = np.append(x0, np.clip(base.mobility.attr_distinction, *distinction_bounds))
         lo, hi = np.append(lo, distinction_bounds[0]), np.append(hi, distinction_bounds[1])
-    n_core = len(keys) + 5
+    n_core = len(keys) + len(core0)
     configured = [lv for lv in LEVERS if getattr(base.mobility, lv, None)]
 
     def unpack(x):
         cal = dict(zip(keys, np.exp(x[: len(keys)]), strict=True))
-        offsets = dict(zip(MODES[1:], x[len(keys) : len(keys) + 4], strict=True))
+        core = x[len(keys) : n_core]
+        if logit:
+            shape = {"logit_scale": float(np.exp(core[0])), "logit_adjustment": float(core[1])}
+        else:
+            shape = {
+                "attr_offset": dict(zip(MODES[1:], map(float, core[:4]), strict=True)),
+                "mode_change_damping": float(core[4]),
+            }
         distinction = float(x[n_core]) if fit_distinction else base.mobility.attr_distinction
-        return cal, offsets, float(x[n_core - 1]), distinction
+        return cal, shape, distinction
 
     def city_with(x):
-        cal, offsets, damping, distinction = unpack(x)
+        cal, shape, distinction = unpack(x)
         mob = copy.deepcopy(base.mobility)
         mob.lever_calibration = {**cal0, **cal}
-        mob.attr_offset = offsets
-        mob.mode_change_damping = damping
+        for k, v in shape.items():
+            setattr(mob, k, v)
         mob.attr_distinction = distinction
         return dataclasses.replace(base, mobility=mob)
 
@@ -616,14 +639,17 @@ def recalibrate_joint(
         return np.concatenate([r_path, r_eff, r_coping])
 
     res = least_squares(resid, x0, bounds=(lo, hi), diff_step=1e-3, max_nfev=400)
-    cal, offsets, damping, distinction = unpack(res.x)
+    cal, shape, distinction = unpack(res.x)
     r = res.fun
     n_eff = len(abm_effects)
     coping_resid = r[len(goal) + n_eff :]
     r = r[: len(goal) + n_eff]
     rows = [{"parameter": f"cal:{k}", "value": v} for k, v in cal.items()]
-    rows += [{"parameter": f"offset:{m}", "value": float(v)} for m, v in offsets.items()]
-    rows.append({"parameter": "mode_change_damping", "value": damping})
+    for k, v in shape.items():
+        if isinstance(v, dict):
+            rows += [{"parameter": f"offset:{m}", "value": float(w)} for m, w in v.items()]
+        else:
+            rows.append({"parameter": k, "value": v})
     if fit_distinction:
         rows.append({"parameter": "attr_distinction", "value": distinction})
     out = pd.DataFrame(rows)
