@@ -461,3 +461,25 @@ model does not reproduce; in South Westphalia ABM light's optimised car-passenge
 
 Car energy 2019 against MAED-City: Tallinn 1,154 / 1,225 GWh (−6 %), Naples 2,558 / 2,493 (+3 %), South
 Westphalia 12,137 / 13,750 (−12 %).
+
+### Cross test of the logit parameters
+
+Each city run with the parameters of the others (`docs/causal/sd_cross_test_logit.csv`): donor logit scale and
+adjustment, effective lever sensitivities scale × factor (15-minute city: factor), as from one donor or as the
+geometric mean of the two others; the target keeps its base year, populations, value of time and coping
+types. Normalising the scale by the mean car generalised cost (7.7–9.0 EUR per trip) changes little.
+
+| target | own: effects RMS (points) / car opt 2050 | mean of others: effects RMS / car opt 2050 | ABM light car opt 2050 |
+|---|---|---|---|
+| Tallinn | 1.0 / 0.236 | 6.2 / 0.321 | 0.242 |
+| Naples | 1.0 / 0.266 | 6.6 / 0.302 | 0.251 |
+| South Westphalia | 1.2 / 0.546 | 2.7 / 0.478 | 0.591 |
+
+Single-measure effects 2040 with the mean of the others (SD / ABM light, %): PT optimisation −3.0 / −2.6
+(Tallinn), −4.2 / −4.3 (Naples), −1.1 / −0.7 (South Westphalia); 15-minute city −2.0 / −2.1, −1.8 / −0.4,
+−2.0 / −1.7; parking −7.1 / −3.0, −2.8 / −3.3, −1.5 / −5.3. Pricing fails: area toll −6.0 / −20.7 (Tallinn),
+−18.8 / −5.6 (Naples); road pricing −0.3 / −6.1 (Tallinn), −0.2 / −13.3 (Naples). The same nominal toll and
+charge per km give ABM light effects that differ by a factor of 4 to 10 between the cities, so the pricing
+factors carry the scope of each scheme (share of car trips or km charged). Tallinn's scale (0.25, a non-linear
+response) transferred to South Westphalia removes most car traffic (car share 0.12); the near-linear scales of
+Naples and South Westphalia transfer better to each other.

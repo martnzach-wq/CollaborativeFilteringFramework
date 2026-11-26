@@ -3,7 +3,8 @@
 
 - Base year from the ABM light table (D47), coping types by compliance (D48), effects as car trips and value of time 11.37 EUR/h checked against HEATCO and Rail Baltica (D49), targets from the full export (D50), logit mode choice (D51): car share of pkm optimised within 0.01 of ABM light in 2030–2050.
 - Naples and South Westphalia on their ABM light exports with logit mode choice (D52); populations from the ABM light demand inputs.
-- Open: scale and lever factors only identified as products in Naples and South Westphalia; Granollers without ABM light export; cross-city transfer test.
+- Cross test: PT optimisation and 15-minute city transfer within about 1 point; pricing measures do not (scheme scope differs by city); effects RMS 2.7–6.6 points against 1.0–1.2 own.
+- Open: explicit scope of pricing schemes; Granollers without ABM light export.
 
 ## SD destination-weighted mode change and coping sensitivity (2026-11-25)
 
