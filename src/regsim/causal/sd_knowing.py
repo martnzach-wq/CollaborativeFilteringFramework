@@ -705,5 +705,6 @@ def abm_light_targets(path: str | Path, years=CLASS_R_YEARS) -> tuple[pd.DataFra
     for y in years:
         ref = g.loc[(str(y), "reference")].trips["car"]
         for raw, ms in ABM_LIGHT_MEASURES.items():
-            effects[(ms, y)] = 100 * (g.loc[(str(y), raw)].trips["car"] / ref - 1)
+            if (str(y), raw) in g.index.droplevel("mode"):
+                effects[(ms, y)] = 100 * (g.loc[(str(y), raw)].trips["car"] / ref - 1)
     return pd.DataFrame(rows), pd.Series(effects)
