@@ -525,9 +525,13 @@ def recalibrate_joint(
     distinction_bounds: tuple[float, float] = (0.0, 1.5),
 ) -> pd.DataFrame:
     """Joint fit of the per-intervention factors (log scale), the attractiveness offsets and the
-    damping to both the ABM light pathway pkm shares (`class_r_targets`) and the single-measure
-    effects (``abm_effects``, % change of car share; weighted by ``effect_weight``), since effects
-    fitted one by one overshoot in the full package. Bounded least squares from the configured values.
+    damping to the ABM light pathways and single-measure effects, since effects fitted one by one
+    overshoot in the full package. Bounded least squares from the configured values.
+
+    ``pathway_targets`` has ``quantity`` and ``value``: ``ref_<year>_<mode>`` / ``opt_<year>_<mode>``
+    are pkm shares (`class_r_targets`), ``trips_ref_<year>_<mode>`` / ``trips_opt_<year>_<mode>`` trip
+    shares (`abm_light_targets`). ``abm_effects`` gives the % change of car trips per measure, indexed
+    by measure (at ``year``) or by (measure, year); its residuals are weighted by ``effect_weight``.
 
     With ``coping_odds_ratio`` the coping-type profile strength (``attr_distinction``) is fitted as
     well, with the residual ``coping_weight`` x log(odds ratio of car use of type A in the 2050
@@ -535,11 +539,17 @@ def recalibrate_joint(
     from scipy.optimize import least_squares
 
     base = model.city(city)
-    measures = [
-        ms
-        for ms in abm_effects.index
-        if ms in MEASURE_LEVERS and getattr(base.mobility, MEASURE_LEVERS[ms][0], None)
+    if not isinstance(abm_effects.index, pd.MultiIndex):
+        abm_effects = pd.Series(
+            abm_effects.to_numpy(), index=pd.MultiIndex.from_tuples([(ms, year) for ms in abm_effects.index])
+        )
+    abm_effects = abm_effects[
+        [
+            ms in MEASURE_LEVERS and bool(getattr(base.mobility, MEASURE_LEVERS[ms][0], None))
+            for ms, _ in abm_effects.index
+        ]
     ]
+    measures = list(dict.fromkeys(ms for ms, _ in abm_effects.index))
     keys = [MEASURE_LEVERS[ms][1] for ms in measures]
     goal = pathway_targets.set_index("quantity").value
     cal0 = base.mobility.lever_calibration
@@ -557,6 +567,7 @@ def recalibrate_joint(
         x0 = np.append(x0, np.clip(base.mobility.attr_distinction, *distinction_bounds))
         lo, hi = np.append(lo, distinction_bounds[0]), np.append(hi, distinction_bounds[1])
     n_core = len(keys) + 5
+    configured = [lv for lv in LEVERS if getattr(base.mobility, lv, None)]
 
     def unpack(x):
         cal = dict(zip(keys, np.exp(x[: len(keys)]), strict=True))
@@ -573,6 +584,11 @@ def recalibrate_joint(
         mob.attr_distinction = distinction
         return dataclasses.replace(base, mobility=mob)
 
+    def car_trips(c):
+        mm = model.mobility.MobilityModel(c, pi_scenario=1.0)
+        mm.run()
+        return mm.trips[:, 0].sum(axis=(1, 2, 3))
+
     def resid(x):
         c = city_with(x)
         out = {}
@@ -581,23 +597,28 @@ def recalibrate_joint(
             mm = model.mobility.MobilityModel(c, pi_scenario=pi)
             split = mm.run()["centroid"]["modal_split"]
             for y in CLASS_R_YEARS:
-                for m in MODES:
+                trips = mm.trips[y - 2019].sum(axis=(1, 2, 3))
+                for k, m in enumerate(MODES):
                     out[f"{key}_{y}_{m}"] = split[m][y - 2019]
+                    out[f"trips_{key}_{y}_{m}"] = trips[k] / trips.sum()
             if fit_distinction and key == "ref":
                 ratio = model.mobility.car_odds_ratio_type_a(mm.trips[2050 - 2019])
                 r_coping = [coping_weight * np.log(ratio / coping_odds_ratio)]
         r_path = pd.Series(out).reindex(goal.index).to_numpy() - goal.to_numpy()
-        r_eff = [
-            effect_weight
-            * (single_measure_effect(model, c, MEASURE_LEVERS[ms][0], year=year) - abm_effects[ms] / 100)
+        none = car_trips(configure(c, {}, removed=configured))
+        sim = {
+            ms: car_trips(configure(c, {}, removed=[lv for lv in configured if lv != MEASURE_LEVERS[ms][0]]))
+            / none
+            - 1
             for ms in measures
-        ]
+        }
+        r_eff = [effect_weight * (sim[ms][y - 2019] - v / 100) for (ms, y), v in abm_effects.items()]
         return np.concatenate([r_path, r_eff, r_coping])
 
     res = least_squares(resid, x0, bounds=(lo, hi), diff_step=1e-3, max_nfev=400)
     cal, offsets, damping, distinction = unpack(res.x)
     r = res.fun
-    n_eff = len(measures)
+    n_eff = len(abm_effects)
     coping_resid = r[len(goal) + n_eff :]
     r = r[: len(goal) + n_eff]
     rows = [{"parameter": f"cal:{k}", "value": v} for k, v in cal.items()]
@@ -606,16 +627,57 @@ def recalibrate_joint(
     if fit_distinction:
         rows.append({"parameter": "attr_distinction", "value": distinction})
     out = pd.DataFrame(rows)
+    sim_eff = 100 * (r[len(goal) :] / effect_weight) + abm_effects.to_numpy()
     out.attrs.update(
         loss_coping=float((coping_resid**2).sum()),
         loss_pathway=float((r[: len(goal)] ** 2).sum()),
         loss_effects=float((r[len(goal) :] ** 2).sum()),
-        effects=dict(
-            zip(
-                measures,
-                (100 * (r[len(goal) :] / effect_weight) + abm_effects[measures].to_numpy()).tolist(),
-                strict=True,
-            )
-        ),
+        effects={f"{ms} {y}": float(v) for (ms, y), v in zip(abm_effects.index, sim_eff, strict=True)},
     )
     return out
+
+
+# ABM light measure names in the scenario exports -> names of `MEASURE_LEVERS`
+ABM_LIGHT_MEASURES = {
+    "traffic_calming": "traffic calming",
+    "parking_management": "parking management",
+    "uvar_pricing": "area toll",
+    "road_pricing": "road pricing",
+    "cycling_optimization": "cycling optimisation",
+    "public_transport_optimization": "public transport optimisation",
+    "15min_city": "15-minute city",
+    "car_occupancy_bonus": "car occupancy incentives",
+}
+ABM_LIGHT_MODES = {
+    "Car": "car",
+    "CarP": "car passenger",
+    "PT": "public transport",
+    "Bike": "bicycle",
+    "Walk": "walk",
+}
+
+
+def abm_light_targets(path: str | Path, years=CLASS_R_YEARS) -> tuple[pd.DataFrame, pd.Series]:
+    """Calibration targets from an ABM light scenario export (trips, mean time and distance per
+    year, scenario, zone, length class and mode; decision D50): pkm and trip shares by mode of the
+    reference and all-measures runs (``ref_``/``opt_`` and ``trips_ref_``/``trips_opt_`` quantities)
+    and the % change of car trips of each single measure against the reference, indexed by
+    (measure, year)."""
+    d = pd.read_csv(path)
+    d = d[d["mode"].isin(ABM_LIGHT_MODES)].assign(
+        mode=lambda x: x["mode"].map(ABM_LIGHT_MODES), pkm=lambda x: x.trips * x.avg_travel_distance_km
+    )
+    g = d.groupby(["year", "measure", "mode"])[["trips", "pkm"]].sum()
+    rows = []
+    for y in years:
+        for key, measure in (("ref", "reference"), ("opt", "all_measures")):
+            x = g.loc[(str(y), measure)]
+            for m in MODES:
+                rows.append({"quantity": f"{key}_{y}_{m}", "value": x.pkm[m] / x.pkm.sum()})
+                rows.append({"quantity": f"trips_{key}_{y}_{m}", "value": x.trips[m] / x.trips.sum()})
+    effects = {}
+    for y in years:
+        ref = g.loc[(str(y), "reference")].trips["car"]
+        for raw, ms in ABM_LIGHT_MEASURES.items():
+            effects[(ms, y)] = 100 * (g.loc[(str(y), raw)].trips["car"] / ref - 1)
+    return pd.DataFrame(rows), pd.Series(effects)
