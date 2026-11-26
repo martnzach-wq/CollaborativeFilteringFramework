@@ -788,3 +788,94 @@ def transfer_effects(
         if x:
             out[ms] = float(semi[ms].mean() * x)
     return pd.Series(out), semi
+
+
+# ---- choice of transfer donors by mobility profile and settlement structure (decision D56) ----------------
+
+PROFILE_FEATURES = (
+    "car_trip_share",
+    "pt_trip_share",
+    "active_trip_share",
+    "car_km_per_trip",
+    "od_trip_share",
+)
+
+
+def mobility_profile(model: Knowing, city) -> pd.Series:
+    """Base-year mobility profile from the configured trip rates and lengths: trip shares of car, PT and
+    active modes, mean car trip length, OD share of trips, and the settlement structure (1 for
+    polycentric rural)."""
+    c = model.city(city) if isinstance(city, str) else city
+    m = c.mobility
+    pops = {"internal": m.population_internal, "origin destination": m.population_od}
+    trips = np.zeros(5)
+    car_km = od = 0.0
+    for z, classes in m.initial_trip_rate.items():
+        for cl, rates in classes.items():
+            t = np.asarray(rates) * pops[z]
+            trips += t
+            if z == "origin destination":
+                od += t.sum()
+            lengths = (m.trip_length_by_mode or {}).get(z, {}).get(cl)
+            car_km += t[0] * (
+                lengths[0]
+                if lengths
+                else (m.initial_trip_length_internal if z == "internal" else m.initial_trip_length_od)[
+                    ("short", "medium", "long").index(cl)
+                ]
+            )
+    total = trips.sum()
+    return pd.Series(
+        {
+            "car_trip_share": trips[0] / total,
+            "pt_trip_share": trips[2] / total,
+            "active_trip_share": (trips[3] + trips[4]) / total,
+            "car_km_per_trip": car_km / trips[0],
+            "od_trip_share": od / total,
+            "polycentric": float(getattr(m, "spatial_structure", "monocentric") == "polycentric_rural"),
+        }
+    )
+
+
+def donor_weights(
+    model: Knowing, target, donors: list, bandwidth: float = 1.0, structure_weight: float = 2.0
+) -> pd.Series:
+    """Kernel weights exp(-(d/h)^2) of ``donors`` for ``target`` on the standardised mobility profile; a
+    different settlement structure adds ``structure_weight`` to the distance."""
+    names = [d if isinstance(d, str) else d.name for d in donors]
+    t_name = target if isinstance(target, str) else target.name
+    prof = pd.DataFrame(
+        {n: mobility_profile(model, c) for n, c in zip(names + [t_name], donors + [target], strict=True)}
+    ).T
+    feats = prof[list(PROFILE_FEATURES)]
+    z = (feats - feats.mean()) / feats.std(ddof=0).replace(0, 1)
+    d = np.sqrt(((z.loc[names] - z.loc[t_name]) ** 2).sum(axis=1) / len(PROFILE_FEATURES))
+    d = d + structure_weight * (prof.loc[names, "polycentric"] != prof.loc[t_name, "polycentric"])
+    w = np.exp(-((d / bandwidth) ** 2))
+    return w / w.sum()
+
+
+# 10 % / 90 % quantiles of ABM light effect / transferred effect over the cross test of Tallinn, Naples and
+# South Westphalia (23 measure effects, 2040; D56)
+TRANSFER_BAND = (0.27, 3.47)
+
+
+def transfer_effects_weighted(
+    model: Knowing, target, donors: dict, year: int = 2040, band=TRANSFER_BAND, **kw
+) -> dict:
+    """Similarity-weighted single-measure effects of ``target``: ``effects`` (weighted mean of the donors'
+    semi-elasticities times the target intensity), ``low`` / ``high`` (the weaker and stronger end of the
+    empirical transfer band ``band`` around the effect, widened to the single-donor transfers), ``weights``
+    and the single-donor transfers ``single``."""
+    names = list(donors)
+    w = donor_weights(model, target, names, **kw)
+    single = {d: transfer_effects(model, target, {d: donors[d]}, year)[0] for d in names}
+    table = pd.DataFrame(single)
+    weighted = (table * w).sum(axis=1) / table.notna().mul(w).sum(axis=1)
+    return {
+        "effects": weighted,
+        "low": table.min(axis=1),
+        "high": table.max(axis=1),
+        "weights": w,
+        "single": table,
+    }
