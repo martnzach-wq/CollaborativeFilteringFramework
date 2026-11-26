@@ -534,3 +534,27 @@ leave-one-out, at least 1): mean absolute error per type 1.9–6.9 points (mean 
 offsets (metropolitan, urban, rural: demonstrator column minus national sample) rest on one or two pairs; the
 metropolitan offset from Naples worsens Tallinn (Aitchison 0.56 against 0.41 without offset) and the one from
 Tallinn improves Naples (0.56 against 0.70), so the offset is an option, not a default.
+
+### Transfer by semi-elasticities (D55)
+
+Semi-elasticities 2040 (% car trips per unit; Tallinn / Naples / South Westphalia): road pricing per EUR per trip
+−2.4 / −6.4 / −1.1, parking per EUR per trip −10.2 / −16.6 / −17.8, PT time per 100 % reduction −17 / −28 / −5,
+cycling resistance −3.6 / −5.0 / −1.2, capacity −21 / −8 / −6.
+
+Cross test, each city from the other two (`docs/causal/sd_cross_test_semi_elasticities.csv`), against the
+transfer of scale × factor (mean of others):
+
+| target | effects RMS (points) | car share of pkm optimised 2050 | ABM light |
+|---|---|---|---|
+| Tallinn | 5.8 (6.2) | 0.259 (0.321) | 0.242 |
+| Naples | 6.5 (6.6) | 0.277 (0.302) | 0.251 |
+| South Westphalia | 2.2 (2.7) | 0.250 (0.478) | 0.591 |
+
+The rule improves the two cities and fails for South Westphalia: its ABM light effects are weak throughout
+(all measures 2040 −10.5 % against −36 % and −24 %), and both donors are cities. The semi-elasticities differ by
+region type more than by measure intensity, so the donors must resemble the target.
+
+Granollers (`docs/causal/sd_granollers_transfer.csv`): transferred effects 2040 road pricing −3.7 %, PT −2.5 %,
+traffic calming −1.7 %, cycling −1.2 % (reached −0.3 %; the factor hits the time floor), car occupancy −0.9 %,
+parking −0.5 % (base parking cost 0.18 EUR); all measures −9.8 % against −58 % in the previous flow model. Car
+share of pkm 2050: reference 0.584 (previous 0.387), optimised 0.512 (previous 0.068).

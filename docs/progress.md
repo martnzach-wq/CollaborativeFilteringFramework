@@ -5,7 +5,8 @@
 - Naples and South Westphalia on their ABM light exports with logit mode choice (D52); populations from the ABM light demand inputs.
 - Cross test: PT optimisation and 15-minute city transfer within about 1 point; pricing measures do not (scheme scope differs by city); effects RMS 2.7–6.6 points against 1.0–1.2 own.
 - Coping-type shares in regsim (D54): curated table, registry, estimate for unsurveyed countries (leave-one-out error 3.9 points per type against 7.0 for the plain mean); tests `tests/test_coping.py`; 185 unit tests pass.
-- Open: explicit scope of pricing schemes; Granollers without ABM light export.
+- Transfer by semi-elasticities (D55); Granollers on the common mechanisms with transferred factors (all measures 2040 −9.8 % car trips).
+- Open: donor choice by region type (South Westphalia transfer fails from the two cities); explicit scope of pricing schemes.
 
 ## SD destination-weighted mode change and coping sensitivity (2026-11-25)
 
