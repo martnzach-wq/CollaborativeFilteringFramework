@@ -708,3 +708,83 @@ def abm_light_targets(path: str | Path, years=CLASS_R_YEARS) -> tuple[pd.DataFra
             if (str(y), raw) in g.index.droplevel("mode"):
                 effects[(ms, y)] = 100 * (g.loc[(str(y), raw)].trips["car"] / ref - 1)
     return pd.DataFrame(rows), pd.Series(effects)
+
+
+# ---- transfer of single-measure effects by semi-elasticities (decision D55) -------------------------------
+
+
+def charged_km_per_car_trip(city) -> float:
+    """Mean km charged by road pricing per car trip in the base year (length per zone and class, OD trips
+    capped at ``road_pricing_od_km``, times ``road_pricing_km_scale``)."""
+    m = city.mobility
+    pops = {"internal": m.population_internal, "origin destination": m.population_od}
+    num = den = 0.0
+    for z, classes in m.trip_length_by_mode.items():
+        for c, lengths in classes.items():
+            trips = m.initial_trip_rate[z][c][0] * pops[z]
+            km = lengths[0]
+            if z == "origin destination" and m.road_pricing_od_km is not None:
+                km = min(km, m.road_pricing_od_km)
+            num += trips * km * m.road_pricing_km_scale
+            den += trips
+    return num / den
+
+
+def measure_intensity(model: Knowing, city, measure: str, year: int = 2040) -> float | None:
+    """Intensity of an ABM light measure in its natural unit: EUR per car trip (road pricing, parking),
+    EUR per entry (area toll), reduction share (capacity, PT time, cycling resistance), distance adaptation
+    (15-minute city) or attractiveness (car occupancy). None where the measure is not configured."""
+    m = city.mobility
+
+    def at(series):
+        return float(model.mobility._interp_series(series)[year - 2019]) if series else None
+
+    if measure == "road pricing":
+        r = at(m.policy_road_pricing)
+        return None if r is None else r * charged_km_per_car_trip(city)
+    if measure == "area toll":
+        return at(m.policy_area_toll) if m.area_toll_applicable else None
+    if measure == "parking management":
+        a = at(m.policy_parking_cost_adaptation)
+        return None if a is None else m.parking_cost_base * (a - 1)
+    if measure == "public transport optimisation":
+        a = at(m.policy_pt_traveltime_adaptation)
+        return None if a is None else 1 - a
+    if measure == "traffic calming":
+        a = at(m.policy_capacity_adaptation)
+        return None if a is None else 1 - a
+    if measure == "cycling optimisation":
+        return at(m.cycling_resistance_reduction)
+    if measure == "15-minute city":
+        return at(m.policy_distance_adaptation)
+    if measure == "car occupancy incentives":
+        return at(m.policy_car_passenger_attractiveness)
+    raise KeyError(measure)
+
+
+def transfer_effects(
+    model: Knowing, target, donors: dict, year: int = 2040
+) -> tuple[pd.Series, pd.DataFrame]:
+    """Single-measure effects (% change of car trips) of ``target`` from the effects of ``donors``
+    ({city or CityConfig: Series measure -> %}): the mean over donors of effect / intensity, times the
+    target's intensity. Returns the target effects and the donors' semi-elasticities."""
+
+    def cfg(c):
+        return model.city(c) if isinstance(c, str) else c
+
+    semi = {}
+    for d, eff in donors.items():
+        row = {}
+        for ms, v in eff.items():
+            x = measure_intensity(model, cfg(d), ms, year)
+            if x:
+                row[ms] = v / x
+        semi[d if isinstance(d, str) else d.name] = row
+    semi = pd.DataFrame(semi).T
+    t = cfg(target)
+    out = {}
+    for ms in semi.columns:
+        x = measure_intensity(model, t, ms, year)
+        if x:
+            out[ms] = float(semi[ms].mean() * x)
+    return pd.Series(out), semi
