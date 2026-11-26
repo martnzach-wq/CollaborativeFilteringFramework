@@ -2,7 +2,8 @@
 ## SD Tallinn on the full ABM light export (2026-11-26)
 
 - Base year from the ABM light table (D47), coping types by compliance (D48), effects as car trips and value of time 11.37 EUR/h checked against HEATCO and Rail Baltica (D49), targets from the full export (D50), logit mode choice (D51): car share of pkm optimised within 0.01 of ABM light in 2030–2050.
-- Open: Naples, South Westphalia and Granollers on the same basis once their ABM light exports are available; car-occupancy incentives overshoot.
+- Naples and South Westphalia on their ABM light exports with logit mode choice (D52); populations from the ABM light demand inputs.
+- Open: scale and lever factors only identified as products in Naples and South Westphalia; Granollers without ABM light export; cross-city transfer test.
 
 ## SD destination-weighted mode change and coping sensitivity (2026-11-25)
 

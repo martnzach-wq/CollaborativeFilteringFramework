@@ -440,3 +440,24 @@ pricing −1.8 / −2.0, −5.5 / −6.1, −9.2 / −10.3; cycling −0.1 / −
 −0.6 / −0.4, −1.6 / −2.1, −2.6 / −1.1. Car-occupancy incentives overshoot (2050 −2.9 / −0.4); traffic calming and
 parking lag in 2030 (−0.9 / −2.0, −1.0 / −2.2). Coping sensitivity (D44) 2050: car share of pkm 0.445 → 0.403
 (PI = 0), 0.236 → 0.208 (PI = 1), now the composition effect alone.
+
+### Naples and South Westphalia on the ABM light exports (D52)
+
+| | Naples | South Westphalia |
+|---|---|---|
+| squared error pathways / effects | 0.0072 / 0.0007 | 0.0199 / 0.0011 |
+| logit scale (1/EUR) / adjustment | 0.005 (bound) / 1.0 | 0.009 / 1.0 |
+| car share of pkm optimised 2030 / 2040 / 2050, SD | 0.414 / 0.340 / 0.266 | 0.650 / 0.602 / 0.546 |
+| ABM light | 0.407 / 0.324 / 0.251 | 0.638 / 0.608 / 0.591 |
+| car share of pkm reference 2050, SD / ABM light | 0.475 / 0.455 | 0.680 / 0.661 |
+
+In both cities the logit scale goes to (or near) its lower bound and the lever factors grow in proportion (Naples
+parking 86, cycling 93; South Westphalia parking 100, with road pricing, cycling and car passenger at 0.01): only
+the products scale × factor are identified. The Tallinn scale (0.25) fixed in Naples gives pathways 0.0118 and
+effects 0.0016. ABM light's reference drops from the base year to 2030 in Naples (car 0.474 → 0.458), which the SD
+model does not reproduce; in South Westphalia ABM light's optimised car-passenger pkm share falls to 0.034 (SD
+0.093). The first South Westphalia base-year export was inconsistent with the scenarios (car pkm share 0.37 against
+0.68 in 2030); the corrected one agrees (0.678).
+
+Car energy 2019 against MAED-City: Tallinn 1,154 / 1,225 GWh (−6 %), Naples 2,558 / 2,493 (+3 %), South
+Westphalia 12,137 / 13,750 (−12 %).
