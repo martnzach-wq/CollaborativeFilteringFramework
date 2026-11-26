@@ -627,7 +627,7 @@ def recalibrate_joint(
             if fit_distinction and key == "ref":
                 ratio = model.mobility.car_odds_ratio_type_a(mm.trips[2050 - 2019])
                 r_coping = [coping_weight * np.log(ratio / coping_odds_ratio)]
-        r_path = pd.Series(out).reindex(goal.index).to_numpy() - goal.to_numpy()
+        r_path = pd.Series(out, dtype=float).reindex(goal.index).to_numpy(float) - goal.to_numpy(float)
         none = car_trips(configure(c, {}, removed=configured))
         sim = {
             ms: car_trips(configure(c, {}, removed=[lv for lv in configured if lv != MEASURE_LEVERS[ms][0]]))
