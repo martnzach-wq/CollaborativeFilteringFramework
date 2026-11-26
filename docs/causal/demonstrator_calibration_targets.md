@@ -386,3 +386,23 @@ error pathways 0.0077, effects 0.0016; cycling factor 2.09, cycling effect −1.
 
 Coping sensitivity (D44) 2050: car share of pkm 0.428 → 0.368 (PI = 0) and 0.216 → 0.176 (PI = 1), EV share 80 →
 82 %. The change now equals the composition effect of the shifted type shares at the per-type car shares.
+
+### Tallinn on the ABM light base year (D47, D48)
+
+With length and door-to-door time per mode and class, the 2019 pkm shares equal ABM light (car 0.443, car
+passenger 0.088, PT 0.446, bicycle 0.003, walk 0.020). Car energy 2019 falls from 1,249 to 1,129 GWh (MAED-City
+1,225), since ABM light's OD car trips are shorter (21 km) than the former class centroid (26 km).
+
+Joint fit with coping-type stability, by value of time (squared error pathways / effects / coping):
+
+| VoT (EUR/h) | pathways | effects | coping | damping | profile strength |
+|---|---|---|---|---|---|
+| 3.79 | 0.0046 | 0.0029 | 0.0008 | 0.47 | 1.36 |
+| 7.58 | 0.0031 | 0.0020 | 0.0000 | 5.0 (bound) | 0.25 |
+| 11.37 | 0.0018 | 0.0026 | 0.0000 | 3.19 | 0.94 |
+
+With 11.37 EUR/h: car share of pkm 2050 0.424 (reference; ABM light 0.435) and 0.242 (optimised; 0.241). The
+pricing levers keep factors of 0.06 at damping 3.2: the configured road-pricing and toll series act about five
+times more strongly than in ABM light. Single-measure effects of cycling (−0.2 % against −3.1 %) and the 15-minute
+city (+0.5 % against −2.1 %) remain unmatched. Coping sensitivity (D44) 2050: car share 0.424 → 0.338 (PI = 0),
+0.242 → 0.179 (PI = 1).
