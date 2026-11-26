@@ -570,3 +570,22 @@ has the 10 / 90 % quantiles 0.27 / 3.47 (median 0.61), used as transfer band.
 Granollers (weights Tallinn 0.71, Naples 0.29, South Westphalia 0; scale 0.078, adjustment 0.77): all measures
 2040 −12.5 % car trips (band −3 % to −39 %), car share of pkm 2050 optimised 0.502 (0.569 to 0.292), reference
 0.591.
+
+### Integrated results after the mobility revision
+
+Energy and emissions of the current SD branch against the state before the mobility revision (commit f349f68,
+after D37) and the MAED-City pathway (`docs/causal/sd_integrated_comparison.csv`). Direct CO2, optimised pathway
+(PI = 1), 2019 / 2030 / 2040 / 2050, kt:
+
+| | before | now | MAED-City | now / MAED-City |
+|---|---|---|---|---|
+| Tallinn | 651 / 514 / 248 / 50 | 627 / 435 / 243 / 56 | 905 / 525 / 241 / 47 | 0.69 / 0.83 / 1.01 / 1.19 |
+| Naples | 1,387 / 976 / 538 / 187 | 1,341 / 905 / 486 / 173 | 1,360 / 920 / 503 / 199 | 0.99 / 0.98 / 0.97 / 0.87 |
+| South Westphalia | 9,380 / 6,394 / 2,638 / 300 | 8,832 / 5,894 / 2,397 / 208 | 9,380 / 5,921 / 2,236 / 252 | 0.94 / 1.00 / 1.07 / 0.82 |
+| Granollers | 176 / 130 / 63 / 18 | 182 / 139 / 76 / 27 | – | – |
+
+MAED-City values follow from the earlier ratios (before / MAED-City, rounded to two digits). Total CO2 2050
+(PI = 1): Tallinn 139 → 144, Naples 212 → 198, South Westphalia 306 → 211, Granollers 23 → 33 kt. Final energy
+changes by −1 to −3 % (Granollers +2 to +6 %). The faster response of the logit mode choice lowers Tallinn's
+2030 transport emissions (246 against 325 kt). Granollers' emissions rise because the previous model removed most
+car traffic (car share of pkm 2050 0.068 against 0.50).
