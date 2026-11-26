@@ -483,3 +483,18 @@ charge per km give ABM light effects that differ by a factor of 4 to 10 between 
 factors carry the scope of each scheme (share of car trips or km charged). Tallinn's scale (0.25, a non-linear
 response) transferred to South Westphalia removes most car traffic (car share 0.12); the near-linear scales of
 Naples and South Westphalia transfer better to each other.
+
+### Pricing proxies (D53)
+
+ABM light 2040, road pricing (`abm_base_year/abm_light_pricing_proxies.csv`):
+
+| | charge (EUR/km) | in-area car vkm per car trip | charge per car trip (EUR) | car trips | per EUR per trip | in-area car vkm |
+|---|---|---|---|---|---|---|
+| Tallinn | 0.30 | 8.3 | 2.49 | −6.1 % | −2.5 % | −7.2 % |
+| Naples | 0.30 | 7.0 | 2.10 | −13.3 % | −6.3 % | −17.7 % |
+| South Westphalia | 0.15 | 8.9 | 1.34 | −1.4 % | −1.0 % | +2.9 % |
+
+The response per EUR differs by a factor of six between the cities at similar charged km per trip. In South
+Westphalia the in-area car vkm rise under road pricing. If the area toll met the same response per EUR as road
+pricing, the 2040 toll of 15 EUR per entry would affect about 56 % of the car trips in Tallinn (−20.7 %) and 6 %
+in Naples (−5.6 %).
