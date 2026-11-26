@@ -2,7 +2,7 @@
 ## SD destination-weighted mode change and coping sensitivity (2026-11-25)
 
 - Mode change weighted by destination share (D43); cycling factor now identified (Tallinn 1.85, Naples 10.7, South Westphalia 0.75); Tallinn coping-type sensitivity 2050 (D44, off by default).
-- Open: coping types share one 2019 mode split, so the sensitivity is driven by the attractiveness profiles alone.
+- Coping types start from their own mode split (D45); Tallinn profile strength and value-of-time profile adjusted so that type differences stay stable (D46).
 
 ## SD active modes and EV fleet (2026-11-25)
 

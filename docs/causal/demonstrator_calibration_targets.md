@@ -376,3 +376,13 @@ The odds ratio of car use of type A stays near its 2019 value in Naples and Sout
 2050 BAU) but grows to 3.13 in Tallinn, whose branch applies the attractiveness profile with strength 1 instead of
 0.22. Tallinn coping sensitivity (D44) with these splits, 2050: car share of pkm 0.428 → 0.338 (PI = 0) and 0.213 →
 0.163 (PI = 1), EV share 80 → 82 %.
+
+### Stable coping-type differences in Tallinn (D46)
+
+The additive value-of-time profile gave type D 0.79 EUR/h and type A 6.79 EUR/h; with the profile relative to the
+base and strength 0.768, the car trip shares by type stay near their 2019 values (A–F 2019 0.55 / 0.51 / 0.48 /
+0.31 / 0.20 / 0.19, BAU 2050 0.59 / 0.54 / 0.57 / 0.30 / 0.20 / 0.20; odds ratio of type A 2.00). Joint fit: squared
+error pathways 0.0077, effects 0.0016; cycling factor 2.09, cycling effect −1.4 % against −3.1 %.
+
+Coping sensitivity (D44) 2050: car share of pkm 0.428 → 0.368 (PI = 0) and 0.216 → 0.176 (PI = 1), EV share 80 →
+82 %. The change now equals the composition effect of the shifted type shares at the per-type car shares.
