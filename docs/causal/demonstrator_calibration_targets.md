@@ -498,3 +498,30 @@ The response per EUR differs by a factor of six between the cities at similar ch
 Westphalia the in-area car vkm rise under road pricing. If the area toll met the same response per EUR as road
 pricing, the 2040 toll of 15 EUR per entry would affect about 56 % of the car trips in Tallinn (−20.7 %) and 6 %
 in Naples (−5.6 %).
+
+### Energy check and the OD share
+
+Car energy 2019 with OD traffic counted 0 / 0.5 / 1.0 (GWh): Tallinn 655 / 1,154 / 1,654 (MAED-City 1,225), Naples
+788 / 2,558 / 4,327 (2,493), South Westphalia 4,620 / 12,137 / 19,653 (13,750). MAED-City corresponds to OD shares
+of 0.57, 0.48 and 0.61.
+
+### Transfer to Granollers (no ABM light)
+
+Granollers run with the logit mode choice and transferred parameters against its previous flow model
+(`docs/causal/sd_granollers_transfer.csv`); base year from its trip rates, speed tables, access times and
+mode-specific lengths, value of time 13.5 EUR/h (HEATCO D5, Spain, updated to 2019).
+
+| car share of pkm 2050 / effect of all measures on car trips 2040 | reference | optimised | all measures 2040 |
+|---|---|---|---|
+| previous flow model | 0.387 | 0.068 | −58 % |
+| logit, Naples and South Westphalia | 0.578 | 0.559 | −3 % |
+| logit, all three | 0.573 | 0.552 | −5 % |
+| logit, Tallinn | 0.491 | 0.431 | −29 % |
+
+The previous model loses a third of its car share without measures and nearly all with them; street greening
+(−25 %), road pricing (−16 %) and car-passenger attractiveness (−10 %) dominate its single effects. Street
+greening acts in the reference too (not scaled by the PI), and cycling and car passenger act on the
+attractiveness, so their factors from the ABM light cities do not apply. The near-linear parameters of Naples and
+South Westphalia barely move Granollers, whose short trips (3.8 km by car) and low parking cost (0.18 EUR) give
+small cost changes; the Tallinn parameters give −29 %, within the range of the ABM light cities (all measures 2040:
+Tallinn −35.6 %, Naples −24.2 %, South Westphalia −10.5 % car trips).
