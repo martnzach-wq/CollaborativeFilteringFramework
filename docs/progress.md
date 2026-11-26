@@ -6,7 +6,8 @@
 - Cross test: PT optimisation and 15-minute city transfer within about 1 point; pricing measures do not (scheme scope differs by city); effects RMS 2.7–6.6 points against 1.0–1.2 own.
 - Coping-type shares in regsim (D54): curated table, registry, estimate for unsurveyed countries (leave-one-out error 3.9 points per type against 7.0 for the plain mean); tests `tests/test_coping.py`; 185 unit tests pass.
 - Transfer by semi-elasticities (D55); Granollers on the common mechanisms with transferred factors (all measures 2040 −9.8 % car trips).
-- Open: donor choice by region type (South Westphalia transfer fails from the two cities); explicit scope of pricing schemes.
+- Similarity-weighted donors with settlement structure and empirical transfer band 0.27–3.5 × (D56); Granollers all measures 2040 −12.5 % (−3 % to −39 %).
+- Open: more ABM light regions as donors (a second polycentric rural region, a small walkable city); explicit scope of pricing schemes.
 
 ## SD destination-weighted mode change and coping sensitivity (2026-11-25)
 

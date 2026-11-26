@@ -558,3 +558,15 @@ Granollers (`docs/causal/sd_granollers_transfer.csv`): transferred effects 2040 
 traffic calming −1.7 %, cycling −1.2 % (reached −0.3 %; the factor hits the time floor), car occupancy −0.9 %,
 parking −0.5 % (base parking cost 0.18 EUR); all measures −9.8 % against −58 % in the previous flow model. Car
 share of pkm 2050: reference 0.584 (previous 0.387), optimised 0.512 (previous 0.068).
+
+### Similarity-weighted donors and transfer band (D56)
+
+Cross test of the single-measure effects 2040 (RMS, points; weighted / equal donors): Tallinn 6.5 / 5.6, Naples
+6.2 / 6.5, South Westphalia 1.6 / 2.2. The weighting changes little: Tallinn and Naples have nearly the same profile
+but differ in their response to pricing, and South Westphalia has no polycentric donor. The range of the
+single-donor transfers contains the ABM light effect in 14–50 % of the measures; the ratio ABM light / transferred
+has the 10 / 90 % quantiles 0.27 / 3.47 (median 0.61), used as transfer band.
+
+Granollers (weights Tallinn 0.71, Naples 0.29, South Westphalia 0; scale 0.078, adjustment 0.77): all measures
+2040 −12.5 % car trips (band −3 % to −39 %), car share of pkm 2050 optimised 0.502 (0.569 to 0.292), reference
+0.591.
