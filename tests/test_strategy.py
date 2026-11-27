@@ -219,3 +219,39 @@ def test_solve_strategy_meets_the_target():
     scales, check = solve_strategy(None, city, s, evaluate=evaluate)
     assert scales["shift"][2030] == pytest.approx(1.5, abs=1e-3)  # removed share 0.3
     assert check.loc[0, "gap"] == pytest.approx(0.0, abs=1e-4)
+
+
+def test_effect_classes_and_registered_measure():
+    from regsim.causal import strategy as S
+
+    S.register_measure(
+        "test_addon_lever",
+        {
+            "field": "x_test_lever",
+            "units": ("x_guide",),
+            "exposure": (),
+            "response": "behavioural",
+            "status": "lever",
+            "effect": "stated effect",
+        },
+    )
+    try:
+        s = _strategy(
+            measures=[
+                {"measure": "test_addon_lever", "unit": "x_guide", "intensity": {2030: 1.0}, "source": SRC},
+                {"measure": "ev_fleet", "unit": "percent_of_fleet", "intensity": {2040: 60.0}, "source": SRC},
+                {"measure": "parking_management", "unit": "factor", "intensity": {2030: 1.2}, "source": SRC},
+            ],
+            pathways=[{"row": "EN_finEN_Service fossil", "values": {2040: 0.0}, "source": SRC}],
+        )
+        cfg, report = apply_strategy(None, _City(_Mobility(), _Demand()), s)
+        eff = report.set_index("element").effect
+        assert eff["test_addon_lever"] == "stated effect"
+        assert eff["ev_fleet"] == "exogenous path"
+        assert eff["parking_management"] == "modelled"
+        assert eff["EN_finEN_Service fossil"] == "exogenous path"
+        assert cfg.mobility.x_test_lever == {2019: 0.0, 2030: 1.0}
+        with pytest.raises(ValueError):
+            S.register_measure("bad", {"field": "x"})
+    finally:
+        S.CATALOGUE.pop("test_addon_lever", None)

@@ -31,6 +31,7 @@ CATALOGUE: dict[str, dict] = {
             "exposure": (),
             "response": "technical",
             "status": "lever",
+            "effect": "exogenous path",
         }
         for g in ("households", "services", "industry", "freight", "transport_other")
     },
@@ -41,6 +42,7 @@ CATALOGUE: dict[str, dict] = {
             "exposure": (),
             "response": "physical",
             "status": "lever",
+            "effect": "exogenous path",
         }
         for g in ("pv", "wind", "hydro", "district_heating", "electrolysis", "other")
     },
@@ -50,6 +52,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": ("charged_km_per_car_trip",),
         "response": "behavioural",
         "status": "lever",
+        "effect": "modelled",
     },
     "area_toll": {
         "field": "policy_area_toll",
@@ -57,6 +60,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": ("zone_trip_share",),
         "response": "behavioural",
         "status": "lever",
+        "effect": "modelled",
     },
     "parking_management": {
         "field": "policy_parking_cost_adaptation",
@@ -64,6 +68,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "behavioural",
         "status": "lever",
+        "effect": "modelled",
     },
     "traffic_calming": {
         "field": "policy_capacity_adaptation",
@@ -71,6 +76,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "behavioural",
         "status": "lever",
+        "effect": "modelled",
     },
     "pt_optimisation": {
         "field": "policy_pt_traveltime_adaptation",
@@ -78,6 +84,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "behavioural",
         "status": "lever",
+        "effect": "modelled",
     },
     "cycling_optimisation": {
         "field": "cycling_resistance_reduction",
@@ -85,6 +92,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "behavioural",
         "status": "lever",
+        "effect": "modelled",
     },
     "fifteen_minute_city": {
         "field": "policy_distance_adaptation",
@@ -92,6 +100,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "behavioural",
         "status": "lever",
+        "effect": "modelled",
     },
     "car_occupancy": {
         "field": "policy_car_passenger_attractiveness",
@@ -99,6 +108,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "behavioural",
         "status": "lever",
+        "effect": "modelled",
     },
     "ev_fleet": {
         "field": "ev_pi_trajectory",
@@ -106,6 +116,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "behavioural",
         "status": "lever",
+        "effect": "exogenous path",
     },
     # microclimate levers (D60): share of the PALM-4U pathway per year, or natural units placed on the land-cover
     # classes in the proportions of the pathway; decoupled from traffic calming unless the city sets a coupling
@@ -115,6 +126,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "physical",
         "status": "lever",
+        "effect": "modelled",
     },
     "unsealing": {
         "field": ("microclimate", {"share_of_pathway": "policy_unseal", "ha": "unseal_ha"}),
@@ -122,6 +134,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "physical",
         "status": "lever",
+        "effect": "modelled",
     },
     "retrofit": {
         "field": None,
@@ -129,6 +142,7 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "technical",
         "status": "bundled",
+        "effect": "not mapped",
     },
     "heating_change": {
         "field": None,
@@ -136,14 +150,23 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "technical",
         "status": "bundled",
+        "effect": "not mapped",
     },
-    "pv": {"field": None, "units": ("MWp",), "exposure": (), "response": "physical", "status": "bundled"},
+    "pv": {
+        "field": None,
+        "units": ("MWp",),
+        "exposure": (),
+        "response": "physical",
+        "status": "bundled",
+        "effect": "not mapped",
+    },
     "district_heating": {
         "field": None,
         "units": ("share", "GWh"),
         "exposure": (),
         "response": "technical",
         "status": "bundled",
+        "effect": "not mapped",
     },
     "electrolysis": {
         "field": None,
@@ -151,8 +174,26 @@ CATALOGUE: dict[str, dict] = {
         "exposure": (),
         "response": "systemic",
         "status": "bundled",
+        "effect": "not mapped",
     },
 }
+
+
+# effect classes: "modelled" (the model estimates the response to the intensity), "stated effect" (the size of the
+# response comes from an external estimate and is imposed), "exogenous path" (the trajectory of the quantity itself
+# is an input), "not mapped" (no lever; give a pathway instead)
+EFFECTS = ("modelled", "stated effect", "exogenous path", "not mapped")
+
+
+def register_measure(name: str, spec: dict) -> None:
+    """Add a measure of a city add-on to the catalogue (e.g. a Vienna-specific lever). ``spec`` has the keys of
+    the catalogue entries; ``field`` names an attribute of the city's mobility configuration."""
+    missing = {"field", "units", "exposure", "response", "status", "effect"} - set(spec)
+    if missing:
+        raise ValueError(f"{name}: missing keys {sorted(missing)}")
+    if spec["effect"] not in EFFECTS:
+        raise ValueError(f"{name}: effect must be one of {EFFECTS}")
+    CATALOGUE[name] = dict(spec)
 
 
 def _series(values: dict[int, float | None], base_year: int, base_value: float) -> dict[int, float]:
@@ -195,7 +236,13 @@ def apply_strategy(
     by = strategy.base_year
     for m in strategy.measures:
         cat = CATALOGUE[m.measure]
-        row = {"element": m.measure, "kind": "measure", "role": m.role, "source": m.source.document}
+        row = {
+            "element": m.measure,
+            "kind": "measure",
+            "role": m.role,
+            "effect": cat["effect"],
+            "source": m.source.document,
+        }
         given = {y: v for y, v in m.intensity.items() if v is not None}
         if m.role == "solved" and given:
             if scales is None or m.solve_group not in scales:
@@ -271,7 +318,13 @@ def apply_strategy(
     overrides = dict(getattr(demand, "overrides", {}) or {})
     for p in strategy.pathways:
         given = {y: v for y, v in p.values.items() if v is not None}
-        row = {"element": p.row, "kind": "pathway", "role": "stated", "source": p.source.document}
+        row = {
+            "element": p.row,
+            "kind": "pathway",
+            "role": "stated",
+            "effect": "exogenous path",
+            "source": p.source.document,
+        }
         if not given:
             report.append(row | {"status": "unmapped", "reason": "no values"})
             continue
@@ -283,6 +336,7 @@ def apply_strategy(
                 "element": o.quantity,
                 "kind": "outcome",
                 "role": "target",
+                "effect": "",
                 "source": o.source.document,
                 "status": "check",
                 "reason": "",
