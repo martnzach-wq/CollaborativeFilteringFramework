@@ -160,6 +160,17 @@ Independently of the role, each element has an effect class (D63): *modelled* (r
 depend only on exogenous paths (in the SD model: buildings, industry, supply, vehicle fleet) are checks of a
 strategy's consistency, not estimates of the effect of its measures.
 
+### 4.5 Backcast without costs
+
+`solve_backcast` (D64) treats every measure and pathway as a multiple m of its stated level: m = 0 is the reference
+(the lever's value without the measure, a pathway row's reference override), m = 1 the strategy, values in between
+or above move along the same path. Elements share a multiplier through `backcast_group`. Outcomes with a `bound`
+("max" or "min") can be hard targets; the solver finds the multipliers that meet them either closest to the
+strategy (min Σ (m − 1)², "how must the strategy change") or with the least effort (min Σ m / m_max, "what is the
+least that meets the targets"). Shares stay within their physical limits, rows stay non-negative, and `delay_to`
+holds the multiplied elements at their reference until a start year (timing questions). Costs are not part of
+the objective; with unit costs per measure the same structure takes a cost objective.
+
 ## 5 Identification with existing data only
 
 Without new domain-model runs, the separation of intensity, exposure and response rests on:

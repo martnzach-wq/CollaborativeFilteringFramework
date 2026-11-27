@@ -265,6 +265,8 @@ class StrategyMeasure(BaseModel):
     # bundle whose common scale the model finds against the outcome targets of ``solve_group`` (decision D61)
     role: Literal["stated", "solved"] = "stated"
     solve_group: str | None = None
+    # backcast (decision D64): elements of one group share a multiplier of their stated level; default: the measure
+    backcast_group: str | None = None
 
     @model_validator(mode="after")
     def _solve_group(self) -> StrategyMeasure:
@@ -290,6 +292,7 @@ class StrategyPathway(BaseModel):
     values: dict[int, float | None]
     source: StrategySource
     confidence: Literal["stated", "derived", "assumed"] = "stated"
+    backcast_group: str | None = None  # default: the row
 
 
 class StrategyOutcome(BaseModel):
@@ -298,6 +301,8 @@ class StrategyOutcome(BaseModel):
     quantity: str  # a column of the SD runner output, e.g. "car_km_share", "emissions_total"
     values: dict[int, float | None]
     relative_to: int | None = None  # targets as change against this year (e.g. -0.5 for minus 50 %)
+    # the target as an upper ("max") or lower ("min") limit, for the backcast (D64); None: a value to meet
+    bound: Literal["max", "min"] | None = None
     source: StrategySource
 
 

@@ -297,3 +297,54 @@ def test_heat_health_levers_start_from_their_neutral_value():
     assert set(report.effect) == {"modelled", "stated effect"}
     _, report = apply_strategy(None, _HeatCity(_Mobility(), _Demand()), s)
     assert (report.status == "unmapped").all()
+
+
+def test_backcast_multipliers_and_least_change():
+    from regsim.causal.strategy import solve_backcast
+
+    s = _strategy(
+        measures=[
+            {"measure": "traffic_calming", "unit": "share_removed", "intensity": {2030: 0.2}, "source": SRC},
+            {
+                "measure": "parking_management",
+                "unit": "factor",
+                "intensity": {2030: 1.2},
+                "backcast_group": "parking",
+                "source": SRC,
+            },
+        ],
+        outcomes=[{"quantity": "trip_share_car", "values": {2030: 0.12}, "bound": "max", "source": SRC}],
+    )
+    city = _City(_Mobility(), _Demand())
+    cfg, report = apply_strategy(None, city, s, multipliers={"parking": 0.5, "traffic_calming": 2.0})
+    assert cfg.mobility.policy_parking_cost_adaptation[2030] == pytest.approx(1.1)  # 1 + 0.5 x 0.2
+    assert cfg.mobility.policy_capacity_adaptation[2030] == pytest.approx(0.6)  # 0.4 removed
+    cfg, _ = apply_strategy(None, city, s, multipliers={"parking": 1.0}, delay_to=2030)
+    assert cfg.mobility.policy_parking_cost_adaptation[2029] == pytest.approx(1.0)  # delayed
+
+    def evaluate_many(mults):  # car share 0.30 - 0.5 x removed - 0.25 x parking increase
+        out = []
+        for m in mults:
+            c, _ = apply_strategy(None, city, s, multipliers=m)
+            removed = 1 - c.mobility.policy_capacity_adaptation[2030]
+            park = c.mobility.policy_parking_cost_adaptation[2030] - 1
+            out.append(
+                pd.DataFrame(
+                    {"trip_share_car": [0.30, 0.30 - 0.5 * removed - 0.25 * park]},
+                    index=pd.Index([2019, 2030]),
+                )
+            )
+        return out
+
+    groups = {"traffic_calming": (0.0, 2.0), "parking": (0.0, 2.0)}
+    sol = solve_backcast(None, city, s, groups, ["trip_share_car"], evaluate_many=evaluate_many)
+    assert sol["success"]
+    assert sol["margins"].margin.min() == pytest.approx(0.0, abs=1e-4)  # binding target 0.12
+    m = sol["multipliers"]  # least change from (1, 1) along (0.1, 0.05): (1.24, 1.12)
+    assert m["traffic_calming"] == pytest.approx(1.24, abs=1e-3)
+    assert m["parking"] == pytest.approx(1.12, abs=1e-3)
+    sol = solve_backcast(
+        None, city, s, groups, ["trip_share_car"], objective="effort", evaluate_many=evaluate_many
+    )
+    assert sol["multipliers"]["traffic_calming"] == pytest.approx(1.8, abs=1e-3)  # cheaper per unit of effort
+    assert sol["multipliers"]["parking"] == pytest.approx(0.0, abs=1e-3)

@@ -317,14 +317,69 @@ def _scale_at(scale: dict[int, float], year: int, base_year: int) -> float:
     return float(np.interp(year, [a for a, _ in pts], [b for _, b in pts]))
 
 
+def _interp(points: dict, year: int) -> float:
+    ys = sorted(points)
+    return float(np.interp(year, ys, [float(points[y]) for y in ys]))
+
+
+def _reference_value(measure, cat: dict, year: int, base, heat) -> float:
+    """Value of a measure's lever without the measure, in the measure's unit (backcast multiplier m = 0)."""
+    field = cat["field"]
+    if "reference" in cat:  # a city add-on gives the reference path of an exogenous-path measure
+        return _interp(cat["reference"], year)
+    if isinstance(field, tuple) and field[0] == "heat_health":
+        n = cat.get("neutral", 0.0)
+        return float(getattr(heat, n)) if isinstance(n, str) and heat is not None else float(n or 0.0)
+    if measure.measure == "ev_fleet":
+        current = getattr(base.mobility, field) or {}
+        return _interp(current, year) if current else 0.0
+    if isinstance(field, tuple):
+        return 0.0
+    return 1.0 if measure.unit == "factor" else 0.0
+
+
+def _upper_limit(measure, cat: dict) -> float:
+    field = cat["field"]
+    if measure.unit == "percent_of_fleet":
+        return 100.0
+    if isinstance(field, tuple) and field[0] == "heat_health" and measure.unit == "share":
+        return 1.0
+    if measure.unit in SHARE_UNITS:
+        return MAX_SHARE
+    return float("inf")
+
+
+def _multiply(given: dict, mult: float, ref, by: int, start: int | None, cap: float) -> dict:
+    """Stated values moved to ref + mult x (stated - ref); with ``start`` the measure keeps its reference value
+    before ``start`` and reaches the multiplied path from ``start`` on."""
+    out = {y: min(max(ref(y) + mult * (v - ref(y)), 0.0), cap) for y, v in given.items()}
+    if start is not None and start > by:
+        pts = {by: ref(by), **out}
+        at_start = _interp(pts, start)
+        out = {y: (ref(y) if by < y < start else v) for y, v in out.items()}
+        out[start - 1] = ref(start - 1)
+        out.setdefault(start, at_start)
+    return dict(sorted(out.items()))
+
+
 def apply_strategy(
-    model, city, strategy: StrategyFile, scales: dict[str, dict[int, float]] | None = None
+    model,
+    city,
+    strategy: StrategyFile,
+    scales: dict[str, dict[int, float]] | None = None,
+    multipliers: dict[str, float] | None = None,
+    delay_to: int | None = None,
+    reference_rows: dict[str, dict[int, float]] | None = None,
 ) -> tuple[object, pd.DataFrame]:
     """City configuration with the strategy's measures on the levers and its pathways on the MAED-City rows.
 
     Stated measures enter with their intensity. Solved measures (decision D61) enter with their shape scaled
     by the common scale of their group, ``scales[group][year]`` (linear between the years, 0 in the base year),
     as found by `solve_strategy`; without a scale they are reported as "to solve" and left out.
+    Backcast (decision D64): ``multipliers[group]`` moves every element of a backcast group (``backcast_group``,
+    default the measure or row) from its reference to reference + m x (stated - reference), with physical caps
+    (shares, fleet share, non-negative rows); ``delay_to`` delays the multiplied groups to that year. The reference of a
+    pathway row is the city's reference override or ``reference_rows[row]``.
     Returns the configuration and a table of every strategy element with its role and mapping status; elements
     without a lever, without values, or with an unsupported unit or exposure are listed there and left out."""
     from regsim.causal import sd_knowing as K
@@ -358,6 +413,14 @@ def apply_strategy(
             }
             if m.unit in SHARE_UNITS:  # a scaled share stays below its physical limit
                 given = {y: min(v, MAX_SHARE) for y, v in given.items()}
+        group = m.backcast_group or m.measure
+        if multipliers is not None and group in multipliers and given and cat["status"] == "lever":
+            row["multiplier"] = multipliers[group]
+
+            def ref(y, m=m, cat=cat):
+                return _reference_value(m, cat, y, base, heat)
+
+            given = _multiply(given, multipliers[group], ref, by, delay_to, _upper_limit(m, cat))
         if cat["status"] != "lever":
             report.append(row | {"status": "unmapped", "reason": f"{cat['status']}: give a pathway instead"})
             continue
@@ -441,6 +504,25 @@ def apply_strategy(
         if not given:
             report.append(row | {"status": "unmapped", "reason": "no values"})
             continue
+        group = p.backcast_group or p.row
+        if multipliers is not None and group in multipliers:
+            ref_pts = (reference_rows or {}).get(p.row) or (
+                getattr(base.energy_demand, "overrides", {}) or {}
+            ).get(p.row)
+            if not ref_pts:
+                report.append(
+                    row
+                    | {
+                        "status": "mapped",
+                        "reason": "MAED-City row replaced; no reference row, not multiplied",
+                    }
+                )
+                overrides[p.row] = given
+                continue
+            row["multiplier"] = multipliers[group]
+            given = _multiply(
+                given, multipliers[group], lambda y, r=ref_pts: _interp(r, y), by, delay_to, float("inf")
+            )
         overrides[p.row] = given
         report.append(row | {"status": "mapped", "reason": "MAED-City row replaced"})
     for o in strategy.outcomes:
@@ -637,3 +719,130 @@ def solve_strategy(
     scales = scales_of(fit.x)
     cfg, _ = apply_strategy(model, city, strategy, scales)
     return scales, check_outcomes(evaluate(cfg), strategy)
+
+
+def outcome_margins(results: pd.DataFrame, strategy: StrategyFile, hard: list[str]) -> pd.DataFrame:
+    """Margin of each hard target (outcome quantity in ``hard`` with a ``bound``): >= 0 where the target is met,
+    in the target's own unit (change against ``relative_to`` or level)."""
+    rows = []
+    for o in strategy.outcomes:
+        if o.quantity not in hard:
+            continue
+        if o.bound is None:
+            raise ValueError(f"hard target {o.quantity}: the outcome needs a bound ('max' or 'min')")
+        for y, t in o.values.items():
+            if t is None:
+                continue
+            v = float(results.loc[y, o.quantity])
+            if o.relative_to is not None:
+                v = v / float(results.loc[o.relative_to, o.quantity]) - 1
+            rows.append(
+                {
+                    "quantity": o.quantity,
+                    "year": y,
+                    "target": t,
+                    "model": v,
+                    "margin": (t - v) if o.bound == "max" else (v - t),
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def solve_backcast(
+    model,
+    city,
+    strategy: StrategyFile,
+    groups: dict[str, tuple[float, float]],
+    hard: list[str],
+    objective: str = "deviation",
+    scales: dict[str, dict[int, float]] | None = None,
+    delay_to: int | None = None,
+    reference_rows: dict[str, dict[int, float]] | None = None,
+    pi_scenario: float = 1.0,
+    evaluate_many=None,
+    x0: dict[str, float] | None = None,
+    maxiter: int = 60,
+    step: float = 0.02,
+) -> dict:
+    """Multipliers m of the backcast groups (multiples of the stated level, within ``groups[g] = (lo, hi)``) that
+    meet every hard target (decision D64).
+
+    objective "deviation": closest to the strategy, min sum (m - 1)^2; "effort": least effort, min sum m / hi.
+    The objective needs no model run; the targets are evaluated with ``evaluate_many(list of multiplier dicts) ->
+    list of result tables`` (default: sequential `strategy_outcomes`; pass a parallel map for speed), with forward
+    differences of ``step`` for the gradients. Solved measures enter at ``scales`` (their level at m = 1).
+    Returns multipliers, margins of the hard targets at the solution, the full check and the solver status."""
+    from scipy.optimize import minimize
+
+    names = list(groups)
+    lo = np.array([groups[g][0] for g in names])
+    hi = np.array([groups[g][1] for g in names])
+
+    def run(mults: dict[str, float]) -> pd.DataFrame:
+        cfg, _ = apply_strategy(model, city, strategy, scales, mults, delay_to, reference_rows)
+        return strategy_outcomes(model, cfg, pi_scenario)
+
+    evaluate_many = evaluate_many or (lambda ms: [run(m) for m in ms])
+    cache: dict[tuple, np.ndarray] = {}
+
+    def margins_at(points: list[np.ndarray]) -> list[np.ndarray]:
+        todo = [p for p in points if tuple(np.round(p, 10)) not in cache]
+        if todo:
+            res = evaluate_many([dict(zip(names, map(float, p), strict=True)) for p in todo])
+            for p, r in zip(todo, res, strict=True):
+                cache[tuple(np.round(p, 10))] = outcome_margins(r, strategy, hard).margin.to_numpy()
+        return [cache[tuple(np.round(p, 10))] for p in points]
+
+    def cons(x):
+        return margins_at([x])[0]
+
+    def cons_jac(x):
+        pts = [x] + [
+            x + step * np.eye(len(x))[i] * (1 if x[i] + step <= hi[i] else -1) for i in range(len(x))
+        ]
+        vals = margins_at(pts)
+        g0 = vals[0]
+        cols = [(vals[i + 1] - g0) / (step * (1 if x[i] + step <= hi[i] else -1)) for i in range(len(x))]
+        return np.column_stack(cols)
+
+    if objective == "deviation":
+
+        def obj(x):
+            return float(np.sum((x - 1.0) ** 2))
+
+        def obj_jac(x):
+            return 2.0 * (x - 1.0)
+    elif objective == "effort":
+
+        def obj(x):
+            return float(np.sum(x / hi))
+
+        def obj_jac(x):
+            return 1.0 / hi
+    else:
+        raise ValueError(f"unknown objective {objective!r}")
+
+    start_x = np.clip(np.array([(x0 or {}).get(g, 1.0) for g in names]), lo, hi)
+    fit = minimize(
+        obj,
+        start_x,
+        jac=obj_jac,
+        method="SLSQP",
+        bounds=list(zip(lo, hi, strict=True)),
+        constraints=[{"type": "ineq", "fun": cons, "jac": cons_jac}],
+        options={"maxiter": maxiter, "ftol": 1e-6},
+    )
+    x = np.clip(fit.x, lo, hi)
+    mults = dict(zip(names, map(float, x), strict=True))
+    res = evaluate_many([mults])[0]
+    margins = outcome_margins(res, strategy, hard)
+    return {
+        "multipliers": mults,
+        "margins": margins,
+        "check": check_outcomes(res, strategy),
+        "results": res,
+        "success": bool(fit.success) and bool((margins.margin >= -1e-3).all()),
+        "message": str(fit.message),
+        "objective": float(obj(x)),
+        "evaluations": len(cache),
+    }
