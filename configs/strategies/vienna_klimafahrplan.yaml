@@ -27,9 +27,13 @@ measures:
     intensity: {2030: null, 2040: null}
     source: {document: Wiener Klimafahrplan, section: mobility, note: zero-emission share of the passenger car fleet}
   - measure: greening
-    unit: share_of_area
+    unit: trees
     intensity: {2030: null, 2040: null}
-    source: {document: Wiener Klimafahrplan, section: urban greening and unsealing}
+    source: {document: Wiener Klimafahrplan, section: urban greening and unsealing, note: trees planted against the base year (cumulative)}
+  - measure: unsealing
+    unit: ha
+    intensity: {2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: urban greening and unsealing, note: sealed area removed against the base year}
   - measure: retrofit
     unit: percent_per_year
     intensity: {2030: null, 2040: null}

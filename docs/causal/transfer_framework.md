@@ -51,7 +51,7 @@ subsidies) does need an extension (section 6).
 | mobility | 15-minute city | share of trips shortened per year | medium and long trips | behavioural | lever | re-choice of mode (D49) |
 | mobility | car occupancy | attractiveness | car trips | behavioural | lever | weak, uncertain |
 | fleet | combustion-car sales ban, EV subsidy | ban year, EUR | fleet turnover | behavioural + market | EV trajectory with ban compliance (D42) | compliance by coping type |
-| microclimate | greening, unsealing, trees | share of area per Corine class | sealed share, building structure, population exposed | physical | lever (PI on feature trajectories) | λ from Tallinn PALM-4U; β CDD per K |
+| microclimate | tree planting, unsealing | trees planted, ha unsealed, or share of the PALM-4U pathway | land-cover classes (placed as in the pathway), city area | physical | levers, decoupled from traffic calming by default (D60) | λ from Tallinn PALM-4U; β CDD per K |
 | buildings | retrofit | rate (% per year), depth (kWh/m²) | floor area by construction period | technical + behavioural | bundled (MAED) | savings per m² from building typologies (TABULA); compliance by type |
 | buildings | heating-system change (heat pumps, DH connection) | units per year, share | buildings suitable, heat density | technical + behavioural | bundled (MAED, IESopt) | COP by climate; compliance by type |
 | buildings | cooling limits, AC sales limits | limit values | AC stock, CDD | physical + behavioural | cooling ∝ CDD; behaviour missing | compliance by type (D3.3 Table 30) |
@@ -120,7 +120,7 @@ assumption.
 | 15-minute city | `policy_distance_adaptation` | – |
 | car occupancy | `policy_car_passenger_attractiveness` | – |
 | EV fleet | `ev_pi_trajectory` (% of fleet) | – |
-| greening, unsealing | PI on the feature trajectories (fixed coupling with traffic calming) | – |
+| greening (unit `trees` or `share_of_pathway`), unsealing (`ha` or `share_of_pathway`) | `MicroclimateConfig.plant_trees` / `policy_plant_trees`, `unseal_ha` / `policy_unseal` (D60) | `city_area_km2` for ha |
 | energy demand by sector group (households, services, industry, freight, other transport) | `EnergyDemandConfig.policy_energy[group]` (share of the way from BAU to CETS) | – |
 | supply by technology group (PV, wind, hydro, district heating, electrolysis, other) | `EnergySupplyConfig.policy_supply[group]` (share of the way from 2019 to the IESopt 2050 value) | – |
 | retrofit rate, heating systems in natural units | translated into the shares above or given as `pathways` | – |

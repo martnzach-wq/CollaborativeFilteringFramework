@@ -111,3 +111,37 @@ def test_check_outcomes_relative_target():
 def test_vienna_template_validates():
     s = StrategyFile.from_yaml("configs/strategies/vienna_klimafahrplan.yaml")
     assert s.region == "AT130" and len(s.measures) >= 5
+
+
+@dataclasses.dataclass
+class _Micro:
+    calibration_csv: str | None = "mc.csv"
+    city_area_km2: float | None = None
+    coupling: str | None = None
+    policy_plant_trees: dict = dataclasses.field(default_factory=dict)
+    policy_unseal: dict = dataclasses.field(default_factory=dict)
+    plant_trees: dict = dataclasses.field(default_factory=dict)
+    unseal_ha: dict = dataclasses.field(default_factory=dict)
+
+
+@dataclasses.dataclass
+class _MicroCity:
+    mobility: _Mobility
+    energy_demand: _Demand
+    microclimate: _Micro
+
+
+def test_microclimate_levers_in_natural_units():
+    s = _strategy(
+        measures=[
+            {"measure": "greening", "unit": "trees", "intensity": {2030: 5000.0}, "source": SRC},
+            {"measure": "unsealing", "unit": "ha", "intensity": {2040: 80.0}, "source": SRC},
+        ]
+    )
+    cfg, report = apply_strategy(None, _MicroCity(_Mobility(), _Demand(), _Micro()), s)
+    status = report.set_index("element")
+    assert cfg.microclimate.plant_trees == {2019: 0.0, 2030: 5000.0}
+    assert status.loc["unsealing", "status"] == "unmapped"  # ha needs the city area
+    cfg, report = apply_strategy(None, _MicroCity(_Mobility(), _Demand(), _Micro(city_area_km2=159.2)), s)
+    assert cfg.microclimate.unseal_ha == {2019: 0.0, 2040: 80.0}
+    assert (report.status == "mapped").all()

@@ -101,12 +101,21 @@ CATALOGUE: dict[str, dict] = {
         "response": "behavioural",
         "status": "lever",
     },
+    # microclimate levers (D60): share of the PALM-4U pathway per year, or natural units placed on the land-cover
+    # classes in the proportions of the pathway; decoupled from traffic calming unless the city sets a coupling
     "greening": {
-        "field": None,
-        "units": ("share_of_area",),
+        "field": ("microclimate", {"share_of_pathway": "policy_plant_trees", "trees": "plant_trees"}),
+        "units": ("share_of_pathway", "trees"),
         "exposure": (),
         "response": "physical",
-        "status": "coupled with traffic_calming",
+        "status": "lever",
+    },
+    "unsealing": {
+        "field": ("microclimate", {"share_of_pathway": "policy_unseal", "ha": "unseal_ha"}),
+        "units": ("share_of_pathway", "ha"),
+        "exposure": (),
+        "response": "physical",
+        "status": "lever",
     },
     "retrofit": {
         "field": None,
@@ -165,6 +174,7 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
     mob = copy.deepcopy(base.mobility)
     demand = copy.deepcopy(base.energy_demand)
     supply = copy.deepcopy(getattr(base, "energy_supply", None))
+    micro = copy.deepcopy(getattr(base, "microclimate", None))
     report = []
     by = strategy.base_year
     for m in strategy.measures:
@@ -179,6 +189,24 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
             continue
         if m.unit not in cat["units"]:
             report.append(row | {"status": "unmapped", "reason": f"unit {m.unit!r} not in {cat['units']}"})
+            continue
+        if isinstance(cat["field"], tuple) and cat["field"][0] == "microclimate":
+            if micro is None or micro.calibration_csv is None:
+                report.append(
+                    row | {"status": "unmapped", "reason": "no microclimate calibration for this city"}
+                )
+                continue
+            attr = cat["field"][1][m.unit]
+            if m.unit == "ha" and not micro.city_area_km2:
+                report.append(
+                    row | {"status": "unmapped", "reason": "unit 'ha' needs microclimate.city_area_km2"}
+                )
+                continue
+            setattr(micro, attr, _series(given, by, 0.0))
+            reason = f"microclimate.{attr}"
+            if micro.coupling is not None:
+                reason += f" (ignored: city couples the microclimate to {micro.coupling})"
+            report.append(row | {"status": "mapped", "reason": reason})
             continue
         if isinstance(cat["field"], tuple):  # energy and supply levers: {group: {year: share}}
             part, attr, group = cat["field"]
@@ -236,6 +264,8 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
     parts = {"mobility": mob, "energy_demand": demand}
     if supply is not None:
         parts["energy_supply"] = supply
+    if micro is not None:
+        parts["microclimate"] = micro
     cfg = dataclasses.replace(base, **parts)
     return cfg, pd.DataFrame(report)
 
