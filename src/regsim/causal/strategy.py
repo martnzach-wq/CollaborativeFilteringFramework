@@ -763,9 +763,11 @@ def solve_strategy(
     return scales, check_outcomes(evaluate(cfg), strategy)
 
 
-def outcome_margins(results: pd.DataFrame, strategy: StrategyFile, hard: list[str]) -> pd.DataFrame:
+def outcome_margins(
+    results: pd.DataFrame, strategy: StrategyFile, hard: list[str], years: list[int] | None = None
+) -> pd.DataFrame:
     """Margin of each hard target (outcome quantity in ``hard`` with a ``bound``): >= 0 where the target is met,
-    in the target's own unit (change against ``relative_to`` or level)."""
+    in the target's own unit (change against ``relative_to`` or level); ``years`` limits the target years."""
     rows = []
     for o in strategy.outcomes:
         if o.quantity not in hard:
@@ -773,7 +775,7 @@ def outcome_margins(results: pd.DataFrame, strategy: StrategyFile, hard: list[st
         if o.bound is None:
             raise ValueError(f"hard target {o.quantity}: the outcome needs a bound ('max' or 'min')")
         for y, t in o.values.items():
-            if t is None:
+            if t is None or (years is not None and y not in years):
                 continue
             v = float(results.loc[y, o.quantity])
             if o.relative_to is not None:
@@ -806,6 +808,7 @@ def solve_backcast(
     x0: dict[str, float] | None = None,
     maxiter: int = 60,
     step: float = 0.02,
+    hard_years: list[int] | None = None,
 ) -> dict:
     """Multipliers m of the backcast groups (multiples of the stated level, within ``groups[g] = (lo, hi)``) that
     meet every hard target (decision D64).
@@ -815,6 +818,7 @@ def solve_backcast(
     list of result tables`` (default: sequential `strategy_outcomes`; pass a parallel map for speed), with forward
     differences of ``step`` for the gradients. Solved measures enter at ``scales`` (their level at m = 1); groups in
     ``accelerate`` read a multiplier above 1 as a faster path (see `apply_strategy`).
+    ``hard_years`` limits the hard targets to those years (the others are reported in the check).
     Returns multipliers, margins of the hard targets at the solution, the full check and the solver status."""
     from scipy.optimize import minimize
 
@@ -834,7 +838,9 @@ def solve_backcast(
         if todo:
             res = evaluate_many([dict(zip(names, map(float, p), strict=True)) for p in todo])
             for p, r in zip(todo, res, strict=True):
-                cache[tuple(np.round(p, 10))] = outcome_margins(r, strategy, hard).margin.to_numpy()
+                cache[tuple(np.round(p, 10))] = outcome_margins(
+                    r, strategy, hard, hard_years
+                ).margin.to_numpy()
         return [cache[tuple(np.round(p, 10))] for p in points]
 
     def cons(x):
@@ -879,7 +885,7 @@ def solve_backcast(
     x = np.clip(fit.x, lo, hi)
     mults = dict(zip(names, map(float, x), strict=True))
     res = evaluate_many([mults])[0]
-    margins = outcome_margins(res, strategy, hard)
+    margins = outcome_margins(res, strategy, hard, hard_years)
     return {
         "multipliers": mults,
         "margins": margins,
