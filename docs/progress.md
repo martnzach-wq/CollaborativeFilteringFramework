@@ -4,7 +4,7 @@
 - `docs/causal/transfer_framework.md`: decomposition of measure effects, measure catalogue for all modules, transfer of the reference pathway (regsim covers demography, climate, income and coping types; the mobility base year and the energy balance by sector and carrier stay local), strategy interface (D57).
 - `regsim.config.StrategyFile`, `regsim.causal.strategy` (catalogue, `apply_strategy`, `check_outcomes`), template `configs/strategies/vienna_klimafahrplan.yaml` (values to be taken from the documents); SD branch: CETS row overrides and area-toll exposure. Tests `tests/test_strategy.py`.
 - Energy levers restored (D58): reference energy demand from the MAED-City BAU of D3.x, supply held at 2019; the strategy interface maps shares of the way to CETS per sector and technology group.
-- Open: the SD reference electrifies cars faster than MAED-City's BAU (passenger transport energy 2050 −40 %).
+- Reference EV share from the MAED-City BAU (D59): reference final energy 2050 within ±3.5 % of the MAED-City BAU.
 
 ## SD Tallinn on the full ABM light export (2026-11-26)
 

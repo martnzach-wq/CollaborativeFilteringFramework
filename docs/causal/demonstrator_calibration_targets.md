@@ -624,3 +624,13 @@ The gap in final energy lies in passenger transport: the SD reference electrifie
 Tallinn 870 against 1,466 GWh, South Westphalia 7,769 against 12,600 GWh). Total CO2 2050 (reference / optimised):
 Tallinn 793 / 144, Naples 2,161 / 198, South Westphalia 7,400 / 211 kt; before D58 the reference used the CETS
 energy system (Tallinn 282 kt).
+
+### Reference EV fleet from the MAED-City BAU (D59)
+
+Reference pathway 2050 after D59 against the MAED-City BAU: final energy Tallinn 9,436 / 9,770 GWh (−3.4 %),
+Naples 8,783 / 8,490 (+3.5 %), South Westphalia 49,876 / 50,200 (−0.6 %); passenger transport Tallinn 1,168 /
+1,466 GWh, South Westphalia 12,277 / 12,600 GWh; direct CO2 Tallinn 694 / 994 kt (base-year gap: MAED-City counts
+the DH gas boilers), Naples 1,068 / 1,144 kt, South Westphalia 8,378 / 8,347 kt. Mobility recalibration (squared
+error pathways / effects): Tallinn 0.0036 / 0.0023, Naples 0.0069 / 0.0006, South Westphalia 0.0197 / 0.0011;
+car share of pkm 2050 reference / optimised: Tallinn 0.420 / 0.237 (ABM light 0.434 / 0.242), Naples 0.475 / 0.265,
+South Westphalia 0.678 / 0.546.
