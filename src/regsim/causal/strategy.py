@@ -436,7 +436,10 @@ def strategy_outcomes(model, cfg, pi_scenario: float = 1.0, pkm_method: str = "c
         + np.asarray(ed["hh_other_fossil"])
         + np.asarray(ed["service_fossil"])
     ) * ef_other
-    out["emissions_industry"] = np.asarray(ed["industry_fossil"]) * ef_other
+    # process emissions of industry (kt), where a city add-on reports them
+    out["emissions_industry"] = np.asarray(ed["industry_fossil"]) * ef_other + np.asarray(
+        ed.get("industry_process_kt", np.zeros(len(years)))
+    )
     out["emissions_energy_supply"] = np.asarray(es["em_elec_prod"]) + np.asarray(es["em_dh"])
     # territorial: direct combustion and local generation, without imported electricity
     out["emissions_territorial"] = out["emissions_total"] - np.asarray(es["em_elec_imp"])
