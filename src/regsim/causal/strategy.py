@@ -376,7 +376,37 @@ def strategy_outcomes(model, cfg, pi_scenario: float = 1.0, pkm_method: str = "c
         },
         index=pd.Index(years, name="year"),
     )
-    for q in ("emissions_total", "emissions_transport", "final_energy", "final_energy_transport"):
+    ef_other = cfg.energy_supply.fuel_ef_other_t_per_gwh / 1000
+    out["emissions_buildings"] = (
+        np.asarray(ed["hh_heating_fossil"])
+        + np.asarray(ed["hh_other_fossil"])
+        + np.asarray(ed["service_fossil"])
+    ) * ef_other
+    out["emissions_energy_supply"] = np.asarray(es["em_elec_prod"]) + np.asarray(es["em_dh"])
+    # territorial: direct combustion and local generation, without imported electricity
+    out["emissions_territorial"] = out["emissions_total"] - np.asarray(es["em_elec_imp"])
+    buildings = np.asarray(ed["total_households"]) + np.asarray(ed["total_services"])
+    out["fossil_share_building_final_energy"] = (
+        np.asarray(ed["hh_heating_fossil"])
+        + np.asarray(ed["hh_other_fossil"])
+        + np.asarray(ed["service_fossil"])
+    ) / buildings
+    out["electricity_demand_twh"] = np.asarray(ed["ED_CoreElectricityDemand"]) / 1000
+    out["district_heat_demand_twh"] = (
+        np.asarray(ed["hh_heating_dh"])
+        + np.asarray(ed["hh_other_dh"])
+        + np.asarray(ed["service_dh"])
+        + np.asarray(ed.get("industry_dh", np.zeros(len(years))))
+    ) / 1000
+    for q in (
+        "emissions_total",
+        "emissions_transport",
+        "emissions_buildings",
+        "emissions_energy_supply",
+        "emissions_territorial",
+        "final_energy",
+        "final_energy_transport",
+    ):
         out[f"{q}_per_capita"] = out[q] / out["population"]
     return out
 

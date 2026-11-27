@@ -289,6 +289,7 @@ class StrategyPathway(BaseModel):
     unit: Literal["GWh"] = "GWh"
     values: dict[int, float | None]
     source: StrategySource
+    confidence: Literal["stated", "derived", "assumed"] = "stated"
 
 
 class StrategyOutcome(BaseModel):
