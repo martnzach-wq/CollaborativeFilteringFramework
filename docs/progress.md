@@ -5,6 +5,7 @@
 - `regsim.config.StrategyFile`, `regsim.causal.strategy` (catalogue, `apply_strategy`, `check_outcomes`), template `configs/strategies/vienna_klimafahrplan.yaml` (values to be taken from the documents); SD branch: CETS row overrides and area-toll exposure. Tests `tests/test_strategy.py`.
 - Energy levers restored (D58): reference energy demand from the MAED-City BAU of D3.x, supply held at 2019; the strategy interface maps shares of the way to CETS per sector and technology group.
 - Reference EV share from the MAED-City BAU (D59): reference final energy 2050 within ±3.5 % of the MAED-City BAU.
+- Stated and solved strategy measures with a solver against outcome targets (D61); external city configurations through `KNOWING_CITY_CONFIGS` (SD branch); city-specific inputs stay in their own repositories.
 - Microclimate levers (D60): tree planting and unsealing decoupled from traffic calming by default, in shares of the PALM-4U pathway or natural units (trees, ha); coupling kept for the demonstrator runs; strategy catalogue measures `greening` and `unsealing`.
 
 ## SD Tallinn on the full ABM light export (2026-11-26)

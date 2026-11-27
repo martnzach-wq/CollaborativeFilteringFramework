@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class DataConfig(BaseModel):
@@ -261,6 +261,16 @@ class StrategyMeasure(BaseModel):
     exposure: StrategyExposure | None = None
     source: StrategySource
     confidence: Literal["stated", "derived", "assumed"] = "stated"
+    # "stated": the intensity is an input from the strategy; "solved": ``intensity`` is the shape of a lever
+    # bundle whose common scale the model finds against the outcome targets of ``solve_group`` (decision D61)
+    role: Literal["stated", "solved"] = "stated"
+    solve_group: str | None = None
+
+    @model_validator(mode="after")
+    def _solve_group(self) -> StrategyMeasure:
+        if (self.role == "solved") != (self.solve_group is not None):
+            raise ValueError(f"{self.measure}: solve_group is required for role 'solved' and only for it")
+        return self
 
     @field_validator("measure")
     @classmethod
@@ -290,6 +300,16 @@ class StrategyOutcome(BaseModel):
     source: StrategySource
 
 
+class StrategySolve(BaseModel):
+    """Outcome targets that set the common scale of the solved measures of one group, one scale per year in
+    ``years`` (linear in between, 0 in the base year)."""
+
+    group: str
+    targets: list[str]  # outcome quantities of the strategy
+    years: list[int]
+    bounds: tuple[float, float] = (0.0, 5.0)
+
+
 class StrategyFile(BaseModel):
     region: str
     name: str
@@ -297,6 +317,21 @@ class StrategyFile(BaseModel):
     measures: list[StrategyMeasure] = Field(default_factory=list)
     pathways: list[StrategyPathway] = Field(default_factory=list)
     outcomes: list[StrategyOutcome] = Field(default_factory=list)
+    solve: list[StrategySolve] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _groups(self) -> StrategyFile:
+        groups = {g.group for g in self.solve}
+        used = {m.solve_group for m in self.measures if m.role == "solved"}
+        if used - groups:
+            raise ValueError(f"solve groups without targets: {sorted(used - groups)}")
+        quantities = {o.quantity for o in self.outcomes}
+        for g in self.solve:
+            if set(g.targets) - quantities:
+                raise ValueError(
+                    f"group {g.group}: targets not among the outcomes: {sorted(set(g.targets) - quantities)}"
+                )
+        return self
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> StrategyFile:

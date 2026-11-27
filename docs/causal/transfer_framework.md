@@ -136,6 +136,23 @@ run reports the central value and both ends. For the area toll and other levers 
 contains the demonstrators' exposure, the factor is divided by the demonstrator exposure once that exposure is
 known; until then the band covers it.
 
+### 4.4 Stated and solved intensities
+
+Strategies often quantify targets but not the intensity of every measure. Each measure therefore carries a role:
+
+- **stated**: the intensity comes from the strategy (or is derived from it, with `confidence: derived` or
+  `assumed`); the model supplies the response.
+- **solved**: the strategy names the measure without intensity. Its `intensity` holds the *shape* of a lever
+  bundle (by default the KNOWING pathway design), and the model finds one common scale per bundle (`solve_group`)
+  and target year so that the outcome targets listed under `solve` are met (`solve_strategy`, least squares
+  within bounds). Shares of a physical quantity stay at or below 0.9.
+
+`apply_strategy` reports the role of every element (stated, solved, target), so that a result separates what the
+strategy states from what the model infers. A solved scale answers "how strong would the named measures have to
+be to meet the target, given the transferred responses", which is a consistency check of the strategy, not a
+forecast; it carries the transfer band of the responses (D56). Outcome targets used for solving are no longer
+independent checks; the other outcomes remain checks.
+
 ## 5 Identification with existing data only
 
 Without new domain-model runs, the separation of intensity, exposure and response rests on:

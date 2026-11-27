@@ -11,9 +11,15 @@ from __future__ import annotations
 import copy
 import dataclasses
 
+import numpy as np
 import pandas as pd
 
 from regsim.config import StrategyFile
+
+# units that are shares of a physical quantity (capacity, travel time, cycling resistance) and their upper limit
+# for solved measures (decision D61)
+SHARE_UNITS = ("share_removed", "share_time_saved", "share")
+MAX_SHARE = 0.9
 
 # measure -> SD field, accepted units, exposure kinds, response kind, status
 CATALOGUE: dict[str, dict] = {
@@ -163,11 +169,21 @@ def _convert(measure: str, unit: str, value: float, mobility) -> float:
     return value
 
 
-def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.DataFrame]:
+def _scale_at(scale: dict[int, float], year: int, base_year: int) -> float:
+    pts = sorted({base_year: 0.0, **scale}.items())
+    return float(np.interp(year, [a for a, _ in pts], [b for _, b in pts]))
+
+
+def apply_strategy(
+    model, city, strategy: StrategyFile, scales: dict[str, dict[int, float]] | None = None
+) -> tuple[object, pd.DataFrame]:
     """City configuration with the strategy's measures on the levers and its pathways on the MAED-City rows.
 
-    Returns the configuration and a table of every strategy element with its mapping status; elements without a
-    lever, without values, or with an unsupported unit or exposure are listed there and left out."""
+    Stated measures enter with their intensity. Solved measures (decision D61) enter with their shape scaled
+    by the common scale of their group, ``scales[group][year]`` (linear between the years, 0 in the base year),
+    as found by `solve_strategy`; without a scale they are reported as "to solve" and left out.
+    Returns the configuration and a table of every strategy element with its role and mapping status; elements
+    without a lever, without values, or with an unsupported unit or exposure are listed there and left out."""
     from regsim.causal import sd_knowing as K
 
     base = model.city(city) if isinstance(city, str) else city
@@ -179,8 +195,19 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
     by = strategy.base_year
     for m in strategy.measures:
         cat = CATALOGUE[m.measure]
-        row = {"element": m.measure, "kind": "measure", "source": m.source.document}
+        row = {"element": m.measure, "kind": "measure", "role": m.role, "source": m.source.document}
         given = {y: v for y, v in m.intensity.items() if v is not None}
+        if m.role == "solved" and given:
+            if scales is None or m.solve_group not in scales:
+                report.append(row | {"status": "to solve", "reason": f"group {m.solve_group}"})
+                continue
+            raw_neutral = 1.0 if m.unit == "factor" else 0.0
+            given = {
+                y: raw_neutral + _scale_at(scales[m.solve_group], y, by) * (v - raw_neutral)
+                for y, v in given.items()
+            }
+            if m.unit in SHARE_UNITS:  # a scaled share stays below its physical limit
+                given = {y: min(v, MAX_SHARE) for y, v in given.items()}
         if cat["status"] != "lever":
             report.append(row | {"status": "unmapped", "reason": f"{cat['status']}: give a pathway instead"})
             continue
@@ -244,7 +271,7 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
     overrides = dict(getattr(demand, "overrides", {}) or {})
     for p in strategy.pathways:
         given = {y: v for y, v in p.values.items() if v is not None}
-        row = {"element": p.row, "kind": "pathway", "source": p.source.document}
+        row = {"element": p.row, "kind": "pathway", "role": "stated", "source": p.source.document}
         if not given:
             report.append(row | {"status": "unmapped", "reason": "no values"})
             continue
@@ -255,6 +282,7 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
             {
                 "element": o.quantity,
                 "kind": "outcome",
+                "role": "target",
                 "source": o.source.document,
                 "status": "check",
                 "reason": "",
@@ -313,3 +341,88 @@ def check_outcomes(results: pd.DataFrame, strategy: StrategyFile) -> pd.DataFram
                 }
             )
     return pd.DataFrame(rows)
+
+
+def strategy_outcomes(model, cfg, pi_scenario: float = 1.0, pkm_method: str = "centroid") -> pd.DataFrame:
+    """Outcome quantities of one SD run (index year) for `check_outcomes` and `solve_strategy`: trip shares of
+    the residents (internal zone; car = driver and passenger), car trips across the city boundary (origin-
+    destination zone), passenger-km shares, emissions (total, transport), final energy, population and the
+    per-capita values."""
+    mm = model.mobility.MobilityModel(cfg, pi_scenario=pi_scenario)
+    mob = mm.run()
+    ed = model.energy_demand.run_energy_demand(cfg, mob, pkm_method=pkm_method)
+    es = model.energy_supply.run_energy_supply(cfg, ed)
+    mods = model.mobility
+    trips = mm.trips  # [year, mode, length class, zone, coping type]
+    internal = trips[:, :, :, mods.TT_IDX["internal"], :].sum(axis=(2, 3))
+    od = trips[:, :, :, mods.TT_IDX["origin destination"], :].sum(axis=(2, 3))
+    car = [mods.MODE_IDX["car"], mods.MODE_IDX["car passenger"]]
+    years = list(np.asarray(mob["years"]).astype(int))
+    pop = np.asarray(mm.population["internal"], dtype=float)
+    m = mob[pkm_method] if pkm_method in mob else mob["centroid"]
+    out = pd.DataFrame(
+        {
+            "trip_share_car": internal[:, car].sum(axis=1) / internal.sum(axis=1),
+            "trip_share_sustainable": 1 - internal[:, car].sum(axis=1) / internal.sum(axis=1),
+            "car_volume_city_boundary": od[:, car].sum(axis=1),
+            "car_km_share": np.asarray(m["modal_split"]["car"])
+            + np.asarray(m["modal_split"]["car passenger"]),
+            "ev_share": np.asarray(mob["ev_share"]),
+            "emissions_total": np.asarray(es["total_emissions_kt"]),
+            "emissions_transport": np.asarray(es["em_transport"]),
+            "final_energy": np.asarray(ed["total_final_energy"]),
+            "final_energy_transport": np.asarray(ed["total_transport"]),
+            "population": pop,
+        },
+        index=pd.Index(years, name="year"),
+    )
+    for q in ("emissions_total", "emissions_transport", "final_energy", "final_energy_transport"):
+        out[f"{q}_per_capita"] = out[q] / out["population"]
+    return out
+
+
+def solve_strategy(
+    model, city, strategy: StrategyFile, pi_scenario: float = 1.0, evaluate=None
+) -> tuple[dict[str, dict[int, float]], pd.DataFrame]:
+    """Common scales of the solved measures that meet the outcome targets of their groups (decision D61).
+
+    One scale per group and year of the group (least squares over the targets of the group in those years,
+    within the group's bounds). ``evaluate(cfg) -> DataFrame`` defaults to `strategy_outcomes`. Returns the
+    scales and the outcome check of the solved configuration."""
+    from scipy.optimize import least_squares
+
+    evaluate = evaluate or (lambda cfg: strategy_outcomes(model, cfg, pi_scenario))
+    groups = strategy.solve
+    keys = [(g.group, y) for g in groups for y in g.years]
+    targets = {o.quantity: o for o in strategy.outcomes}
+
+    def scales_of(x):
+        out: dict[str, dict[int, float]] = {}
+        for (g, y), v in zip(keys, x, strict=True):
+            out.setdefault(g, {})[y] = float(v)
+        return out
+
+    def resid(x):
+        cfg, _ = apply_strategy(model, city, strategy, scales_of(x))
+        res = evaluate(cfg)
+        r = []
+        for g in groups:
+            for q in g.targets:
+                o = targets[q]
+                for y in g.years:
+                    t = o.values.get(y)
+                    if t is None:
+                        continue
+                    v = float(res.loc[y, q])
+                    if o.relative_to is not None:
+                        v = v / float(res.loc[o.relative_to, q]) - 1
+                    r.append(v - t)
+        return np.asarray(r)
+
+    lo = [g.bounds[0] for g in groups for _ in g.years]
+    hi = [g.bounds[1] for g in groups for _ in g.years]
+    x0 = np.clip(np.ones(len(keys)), lo, hi)
+    fit = least_squares(resid, x0, bounds=(lo, hi), diff_step=0.05)
+    scales = scales_of(fit.x)
+    cfg, _ = apply_strategy(model, city, strategy, scales)
+    return scales, check_outcomes(evaluate(cfg), strategy)

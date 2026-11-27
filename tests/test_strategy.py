@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 from pydantic import ValidationError
 
-from regsim.causal.strategy import apply_strategy, check_outcomes
+from regsim.causal.strategy import apply_strategy, check_outcomes, solve_strategy
 from regsim.config import StrategyFile
 
 
@@ -154,3 +154,68 @@ def test_check_outcomes_reference_year_outside_run():
     results = pd.DataFrame({"emissions_total": [1000.0, 500.0]}, index=pd.Index([2019, 2030], name="year"))
     out = check_outcomes(results, s)
     assert out.loc[0, "note"] == "reference year 2005 outside the model run"
+
+
+def _solved_strategy(**kw):
+    base = {
+        "measures": [
+            {
+                "measure": "traffic_calming",
+                "unit": "share_removed",
+                "intensity": {2030: 0.2, 2040: 0.4},
+                "role": "solved",
+                "solve_group": "shift",
+                "confidence": "assumed",
+                "source": SRC,
+            },
+            {"measure": "parking_management", "unit": "factor", "intensity": {2030: 1.2}, "source": SRC},
+        ],
+        "outcomes": [{"quantity": "trip_share_car", "values": {2030: 0.15}, "source": SRC}],
+        "solve": [{"group": "shift", "targets": ["trip_share_car"], "years": [2030]}],
+    }
+    return _strategy(**(base | kw))
+
+
+def test_solved_measure_needs_group_and_targets():
+    with pytest.raises(ValidationError):
+        _strategy(
+            measures=[
+                {
+                    "measure": "traffic_calming",
+                    "unit": "share_removed",
+                    "intensity": {2030: 0.2},
+                    "role": "solved",
+                    "source": SRC,
+                }
+            ]
+        )
+    with pytest.raises(ValidationError):
+        _solved_strategy(solve=[])
+
+
+def test_solved_measures_are_reported_and_scaled():
+    s = _solved_strategy()
+    city = _City(_Mobility(), _Demand())
+    _, report = apply_strategy(None, city, s)
+    rep = report.set_index("element")
+    assert rep.loc["traffic_calming", "status"] == "to solve"
+    assert rep.loc["traffic_calming", "role"] == "solved"
+    assert rep.loc["parking_management", "role"] == "stated"
+    cfg, _ = apply_strategy(None, city, s, {"shift": {2030: 0.5}})
+    # 2030: 1 - 0.5 x 0.2; 2040 continues with the 2030 scale
+    assert cfg.mobility.policy_capacity_adaptation[2030] == pytest.approx(0.9)
+    assert cfg.mobility.policy_capacity_adaptation[2040] == pytest.approx(0.8)
+    assert cfg.mobility.policy_parking_cost_adaptation[2030] == pytest.approx(1.2)  # stated, unscaled
+
+
+def test_solve_strategy_meets_the_target():
+    s = _solved_strategy()
+    city = _City(_Mobility(), _Demand())
+
+    def evaluate(cfg):  # car share falls with the removed capacity: 0.30 - 0.5 x removed share
+        removed = 1 - cfg.mobility.policy_capacity_adaptation.get(2030, 1.0)
+        return pd.DataFrame({"trip_share_car": [0.30, 0.30 - 0.5 * removed]}, index=pd.Index([2019, 2030]))
+
+    scales, check = solve_strategy(None, city, s, evaluate=evaluate)
+    assert scales["shift"][2030] == pytest.approx(1.5, abs=1e-3)  # removed share 0.3
+    assert check.loc[0, "gap"] == pytest.approx(0.0, abs=1e-4)
