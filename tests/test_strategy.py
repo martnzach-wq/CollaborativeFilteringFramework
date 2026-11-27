@@ -23,6 +23,7 @@ class _Mobility:
 @dataclasses.dataclass
 class _Demand:
     overrides: dict = dataclasses.field(default_factory=dict)
+    policy_energy: dict = dataclasses.field(default_factory=dict)
 
 
 @dataclasses.dataclass
@@ -63,6 +64,12 @@ def test_measures_pathways_and_report():
             },
             {"measure": "ev_fleet", "unit": "percent_of_fleet", "intensity": {2040: 60.0}, "source": SRC},
             {"measure": "retrofit", "unit": "percent_per_year", "intensity": {2030: 2.0}, "source": SRC},
+            {
+                "measure": "energy_households",
+                "unit": "share_of_cets",
+                "intensity": {2040: 0.5},
+                "source": SRC,
+            },
             {"measure": "pv", "unit": "MWp", "intensity": {2030: None}, "source": SRC},
         ],
         pathways=[
@@ -84,6 +91,7 @@ def test_measures_pathways_and_report():
     assert m.policy_area_toll == {2019: 0.0, 2030: 5.0} and m.area_toll_affected_share == 0.2
     assert m.ev_pi_trajectory == {2019: 1.0, 2040: 60.0}
     assert cfg.energy_demand.overrides["EN_finEN_hh_space heating_fossil fuel"] == {2019: 900.0, 2040: 0.0}
+    assert cfg.energy_demand.policy_energy == {"households": {2019: 0.0, 2040: 0.5}}
     status = report.set_index("element").status
     assert status["retrofit"] == "unmapped" and status["pv"] == "unmapped"
     assert status["emissions_total"] == "check"

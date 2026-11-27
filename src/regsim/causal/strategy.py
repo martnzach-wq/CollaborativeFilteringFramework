@@ -17,6 +17,27 @@ from regsim.config import StrategyFile
 
 # measure -> SD field, accepted units, exposure kinds, response kind, status
 CATALOGUE: dict[str, dict] = {
+    # energy levers (D58): share of the way from the reference (BAU) to the CETS trajectory, per year
+    **{
+        f"energy_{g}": {
+            "field": ("energy_demand", "policy_energy", g),
+            "units": ("share_of_cets",),
+            "exposure": (),
+            "response": "technical",
+            "status": "lever",
+        }
+        for g in ("households", "services", "industry", "freight", "transport_other")
+    },
+    **{
+        f"supply_{g}": {
+            "field": ("energy_supply", "policy_supply", g),
+            "units": ("share_of_cets",),
+            "exposure": (),
+            "response": "physical",
+            "status": "lever",
+        }
+        for g in ("pv", "wind", "hydro", "district_heating", "electrolysis", "other")
+    },
     "road_pricing": {
         "field": "policy_road_pricing",
         "units": ("EUR/km",),
@@ -142,6 +163,8 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
 
     base = model.city(city) if isinstance(city, str) else city
     mob = copy.deepcopy(base.mobility)
+    demand = copy.deepcopy(base.energy_demand)
+    supply = copy.deepcopy(getattr(base, "energy_supply", None))
     report = []
     by = strategy.base_year
     for m in strategy.measures:
@@ -156,6 +179,14 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
             continue
         if m.unit not in cat["units"]:
             report.append(row | {"status": "unmapped", "reason": f"unit {m.unit!r} not in {cat['units']}"})
+            continue
+        if isinstance(cat["field"], tuple):  # energy and supply levers: {group: {year: share}}
+            part, attr, group = cat["field"]
+            target = demand if part == "energy_demand" else supply
+            current = dict(getattr(target, attr) or {})
+            current[group] = _series(given, by, 0.0)
+            setattr(target, attr, current)
+            report.append(row | {"status": "mapped", "reason": f"{part}.{attr}[{group}]"})
             continue
         neutral = {"factor": 1.0, "share_removed": 1.0, "share_time_saved": 1.0, "EUR/trip": 1.0}.get(
             m.unit, 0.0
@@ -182,7 +213,7 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
             elif m.exposure.kind == "zone_trip_share":
                 mob.area_toll_affected_share = m.exposure.value
         report.append(row | status)
-    overrides = dict(getattr(base.energy_demand, "overrides", {}) or {})
+    overrides = dict(getattr(demand, "overrides", {}) or {})
     for p in strategy.pathways:
         given = {y: v for y, v in p.values.items() if v is not None}
         row = {"element": p.row, "kind": "pathway", "source": p.source.document}
@@ -201,9 +232,11 @@ def apply_strategy(model, city, strategy: StrategyFile) -> tuple[object, pd.Data
                 "reason": "",
             }
         )
-    cfg = dataclasses.replace(
-        base, mobility=mob, energy_demand=dataclasses.replace(base.energy_demand, overrides=overrides)
-    )
+    demand.overrides = overrides
+    parts = {"mobility": mob, "energy_demand": demand}
+    if supply is not None:
+        parts["energy_supply"] = supply
+    cfg = dataclasses.replace(base, **parts)
     return cfg, pd.DataFrame(report)
 
 

@@ -34,8 +34,10 @@ translation the measure follows the MAED-City or IESopt trajectory in both pathw
 14) these measures are levers too: refurbishment rate (`EN annual refurbishment rate`), district heating
 (`EN finEN total DH`), decarbonisation of industry and services (`EN finEN Industry/Service fossile`), PV, DH heat
 pumps, electric boilers, wind and hydro (`ES PV increase`, `ES new heatpumps`, `ES new electrboilers`,
-`ES new wind`, `ES new hydro`). Restoring them as levers needs a reference trajectory per row (section 3), not a
-new model structure. A behavioural response to these measures (for example more private heat pumps through
+`ES new wind`, `ES new hydro`). They are restored in the Python translation (D58): each sector group of the
+energy demand moves from its reference (BAU) trajectory to the CETS row with PI × intensity, each supply group
+from its 2019 capacity to the IESopt 2050 value; the BAU trajectories come from the MAED-City BAU results of D3.3,
+D3.4a and D3.5. A behavioural response to these measures (for example more private heat pumps through
 subsidies) does need an extension (section 6).
 
 | Module | Measure | Intensity (unit) | Exposure / potential | Response | SD status | Response parameters without new runs |
@@ -60,11 +62,9 @@ subsidies) does need an extension (section 6).
 
 ## 3 Transfer of the reference (BAU) pathway
 
-The SD model runs a reference (PI = 0) and an optimised pathway (PI = 1). Only mobility and microclimate respond
-to the PI; energy demand of buildings, industry and services, and energy supply follow the MAED-City CETS and
-IESopt trajectories in **both** cases. A reference pathway outside transport therefore does not exist yet: for the
-demonstrators the reference shows the CETS energy system with reference mobility. For a new region the reference
-has to be built from the components below.
+The SD model runs a reference (PI = 0) and an optimised pathway (PI = 1). With the energy levers (D58) the
+reference uses the MAED-City BAU trajectories of the demonstrators for energy demand and the 2019 supply
+capacities. For a new region the reference has to be built from the components below.
 
 | Component | What the SD model needs | From regsim / European data | Estimable from similar regions (regsim) | Local data needed |
 |---|---|---|---|---|
@@ -121,7 +121,9 @@ assumption.
 | car occupancy | `policy_car_passenger_attractiveness` | – |
 | EV fleet | `ev_pi_trajectory` (% of fleet) | – |
 | greening, unsealing | PI on the feature trajectories (fixed coupling with traffic calming) | – |
-| retrofit, heating change, PV, DH, electrolysis | bundled: through `pathways` | – |
+| energy demand by sector group (households, services, industry, freight, other transport) | `EnergyDemandConfig.policy_energy[group]` (share of the way from BAU to CETS) | – |
+| supply by technology group (PV, wind, hydro, district heating, electrolysis, other) | `EnergySupplyConfig.policy_supply[group]` (share of the way from 2019 to the IESopt 2050 value) | – |
+| retrofit rate, heating systems in natural units | translated into the shares above or given as `pathways` | – |
 
 The mapped strategy runs as the optimised pathway (PI = 1); the reference is the same configuration with the
 strategy's measures held at their 2019 values. Measures without a lever are listed by `apply_strategy` as

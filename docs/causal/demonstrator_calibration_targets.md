@@ -606,3 +606,21 @@ The three lever-factor sets of the transfer band (weak end, central, strong end)
 
 The mobility measures change Granollers' total emissions 2050 by 1–18 % against the reference; the decline from
 312 kt (2019) to about 33 kt comes from fleet electrification and energy supply.
+
+### Energy levers and the MAED-City BAU (D58)
+
+BAU growth rates per sector group (per year): Tallinn households 0.16 %, services 0.96 %, industry 1.37 %,
+freight and other −0.48 %; Naples −1.0 %, 0.8 %, 0.9 %, −0.4 %; South Westphalia buildings −0.35 %, industry
+0.71 %, freight and other −0.15 %. Reference pathway (PI = 0) against the MAED-City BAU, 2050:
+
+| | final energy SD / MAED-City BAU (GWh) | electricity share SD / MAED-City | direct CO2 2019 → 2050 SD (kt) | MAED-City BAU CO2 2019 → 2050 (kt) |
+|---|---|---|---|---|
+| Tallinn | 9,138 / 9,770 | 0.40 / 0.41 | 627 → 580 | 901 → 994 |
+| Naples | 7,963 / 8,490 | 0.38 / 0.37 | 1,341 → 876 | 1,369 → 1,144 |
+| South Westphalia | 45,369 / 50,200 | 0.23 / 0.19 | 8,832 → 7,262 | 9,340 → 8,347 |
+
+The gap in final energy lies in passenger transport: the SD reference electrifies the car fleet (EV share 2050
+43 / 46 / 52 %, efficiency three times higher), while MAED-City's BAU keeps fossil cars (passenger transport 2050
+Tallinn 870 against 1,466 GWh, South Westphalia 7,769 against 12,600 GWh). Total CO2 2050 (reference / optimised):
+Tallinn 793 / 144, Naples 2,161 / 198, South Westphalia 7,400 / 211 kt; before D58 the reference used the CETS
+energy system (Tallinn 282 kt).
