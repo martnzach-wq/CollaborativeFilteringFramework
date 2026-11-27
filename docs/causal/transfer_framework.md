@@ -168,7 +168,9 @@ or above move along the same path. Elements share a multiplier through `backcast
 ("max" or "min") can be hard targets; the solver finds the multipliers that meet them either closest to the
 strategy (min Σ (m − 1)², "how must the strategy change") or with the least effort (min Σ m / m_max, "what is the
 least that meets the targets"). Shares stay within their physical limits, rows stay non-negative, and `delay_to`
-holds the multiplied elements at their reference until a start year (timing questions). Costs are not part of
+holds the multiplied elements at their reference until a start year (timing questions). For paths towards an end
+state (fleet share, phase-out, full implementation) `accelerate` reads a multiplier above 1 as a faster path from a
+given year: the value of year y is the stated value of year y0 + (y − y0) m, so the end state comes earlier. Costs are not part of
 the objective; with unit costs per measure the same structure takes a cost objective.
 
 ## 5 Identification with existing data only

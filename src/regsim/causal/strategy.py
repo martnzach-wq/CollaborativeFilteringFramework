@@ -349,10 +349,25 @@ def _upper_limit(measure, cat: dict) -> float:
     return float("inf")
 
 
-def _multiply(given: dict, mult: float, ref, by: int, start: int | None, cap: float) -> dict:
-    """Stated values moved to ref + mult x (stated - ref); with ``start`` the measure keeps its reference value
-    before ``start`` and reaches the multiplied path from ``start`` on."""
-    out = {y: min(max(ref(y) + mult * (v - ref(y)), 0.0), cap) for y, v in given.items()}
+def _multiply(
+    given: dict, mult: float, ref, by: int, start: int | None, cap: float, accel_from: int | None = None
+) -> dict:
+    """Stated values moved to ref + mult x (stated - ref); with ``accel_from`` a multiplier above 1 instead runs the
+    stated path faster from that year (the value of year y is the stated value of accel_from + (y - accel_from) x
+    mult), for paths towards an end state; with ``start`` the measure keeps its reference value before ``start`` and
+    reaches the multiplied path from ``start`` on."""
+    if accel_from is not None and mult > 1.0:
+        pts = {by: ref(by), **given}
+        last = max(given)
+        out = {y: v for y, v in given.items() if y < accel_from}
+        out.update(
+            {
+                y: min(max(_interp(pts, accel_from + (y - accel_from) * mult), 0.0), cap)
+                for y in range(accel_from, last + 1)
+            }
+        )
+    else:
+        out = {y: min(max(ref(y) + mult * (v - ref(y)), 0.0), cap) for y, v in given.items()}
     if start is not None and start > by:
         pts = {by: ref(by), **out}
         at_start = _interp(pts, start)
@@ -370,6 +385,7 @@ def apply_strategy(
     multipliers: dict[str, float] | None = None,
     delay_to: int | None = None,
     reference_rows: dict[str, dict[int, float]] | None = None,
+    accelerate: dict[str, int] | None = None,
 ) -> tuple[object, pd.DataFrame]:
     """City configuration with the strategy's measures on the levers and its pathways on the MAED-City rows.
 
@@ -379,7 +395,8 @@ def apply_strategy(
     Backcast (decision D64): ``multipliers[group]`` moves every element of a backcast group (``backcast_group``,
     default the measure or row) from its reference to reference + m x (stated - reference), with physical caps
     (shares, fleet share, non-negative rows); ``delay_to`` delays the multiplied groups to that year. The reference of a
-    pathway row is the city's reference override or ``reference_rows[row]``.
+    pathway row is the city's reference override or ``reference_rows[row]``. For groups in ``accelerate`` (group ->
+    year) a multiplier above 1 runs the stated path faster from that year (an earlier end state).
     Returns the configuration and a table of every strategy element with its role and mapping status; elements
     without a lever, without values, or with an unsupported unit or exposure are listed there and left out."""
     from regsim.causal import sd_knowing as K
@@ -420,7 +437,15 @@ def apply_strategy(
             def ref(y, m=m, cat=cat):
                 return _reference_value(m, cat, y, base, heat)
 
-            given = _multiply(given, multipliers[group], ref, by, delay_to, _upper_limit(m, cat))
+            given = _multiply(
+                given,
+                multipliers[group],
+                ref,
+                by,
+                delay_to,
+                _upper_limit(m, cat),
+                (accelerate or {}).get(group),
+            )
         if cat["status"] != "lever":
             report.append(row | {"status": "unmapped", "reason": f"{cat['status']}: give a pathway instead"})
             continue
@@ -521,7 +546,13 @@ def apply_strategy(
                 continue
             row["multiplier"] = multipliers[group]
             given = _multiply(
-                given, multipliers[group], lambda y, r=ref_pts: _interp(r, y), by, delay_to, float("inf")
+                given,
+                multipliers[group],
+                lambda y, r=ref_pts: _interp(r, y),
+                by,
+                delay_to,
+                float("inf"),
+                (accelerate or {}).get(group),
             )
         overrides[p.row] = given
         report.append(row | {"status": "mapped", "reason": "MAED-City row replaced"})
@@ -758,6 +789,7 @@ def solve_backcast(
     scales: dict[str, dict[int, float]] | None = None,
     delay_to: int | None = None,
     reference_rows: dict[str, dict[int, float]] | None = None,
+    accelerate: dict[str, int] | None = None,
     pi_scenario: float = 1.0,
     evaluate_many=None,
     x0: dict[str, float] | None = None,
@@ -770,7 +802,8 @@ def solve_backcast(
     objective "deviation": closest to the strategy, min sum (m - 1)^2; "effort": least effort, min sum m / hi.
     The objective needs no model run; the targets are evaluated with ``evaluate_many(list of multiplier dicts) ->
     list of result tables`` (default: sequential `strategy_outcomes`; pass a parallel map for speed), with forward
-    differences of ``step`` for the gradients. Solved measures enter at ``scales`` (their level at m = 1).
+    differences of ``step`` for the gradients. Solved measures enter at ``scales`` (their level at m = 1); groups in
+    ``accelerate`` read a multiplier above 1 as a faster path (see `apply_strategy`).
     Returns multipliers, margins of the hard targets at the solution, the full check and the solver status."""
     from scipy.optimize import minimize
 
@@ -779,7 +812,7 @@ def solve_backcast(
     hi = np.array([groups[g][1] for g in names])
 
     def run(mults: dict[str, float]) -> pd.DataFrame:
-        cfg, _ = apply_strategy(model, city, strategy, scales, mults, delay_to, reference_rows)
+        cfg, _ = apply_strategy(model, city, strategy, scales, mults, delay_to, reference_rows, accelerate)
         return strategy_outcomes(model, cfg, pi_scenario)
 
     evaluate_many = evaluate_many or (lambda ms: [run(m) for m in ms])

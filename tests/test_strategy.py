@@ -348,3 +348,23 @@ def test_backcast_multipliers_and_least_change():
     )
     assert sol["multipliers"]["traffic_calming"] == pytest.approx(1.8, abs=1e-3)  # cheaper per unit of effort
     assert sol["multipliers"]["parking"] == pytest.approx(0.0, abs=1e-3)
+
+
+def test_backcast_acceleration_reaches_the_end_state_earlier():
+    s = _strategy(
+        measures=[
+            {
+                "measure": "ev_fleet",
+                "unit": "percent_of_fleet",
+                "intensity": {2025: 10.0, 2045: 90.0},
+                "source": SRC,
+            }
+        ]
+    )
+    city = _City(_Mobility(), _Demand())
+    cfg, _ = apply_strategy(None, city, s, multipliers={"ev_fleet": 2.0}, accelerate={"ev_fleet": 2025})
+    ev = cfg.mobility.ev_pi_trajectory
+    assert ev[2035] == pytest.approx(90.0)  # the 2045 state ten years earlier
+    assert ev[2030] == pytest.approx(50.0)
+    cfg, _ = apply_strategy(None, city, s, multipliers={"ev_fleet": 0.5}, accelerate={"ev_fleet": 2025})
+    assert cfg.mobility.ev_pi_trajectory[2045] < 90.0  # below 1: towards the reference
