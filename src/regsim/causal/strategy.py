@@ -350,12 +350,19 @@ def _upper_limit(measure, cat: dict) -> float:
 
 
 def _multiply(
-    given: dict, mult: float, ref, by: int, start: int | None, cap: float, accel_from: int | None = None
+    given: dict,
+    mult: float,
+    ref,
+    by: int,
+    start: int | None,
+    cap: float,
+    accel_from: int | None = None,
+    ramp: int = 4,
 ) -> dict:
     """Stated values moved to ref + mult x (stated - ref); with ``accel_from`` a multiplier above 1 instead runs the
     stated path faster from that year (the value of year y is the stated value of accel_from + (y - accel_from) x
     mult), for paths towards an end state; with ``start`` the measure keeps its reference value before ``start`` and
-    reaches the multiplied path from ``start`` on."""
+    reaches the multiplied path over ``ramp`` years from ``start`` on."""
     if accel_from is not None and mult > 1.0:
         pts = {by: ref(by), **given}
         last = max(given)
@@ -369,11 +376,15 @@ def _multiply(
     else:
         out = {y: min(max(ref(y) + mult * (v - ref(y)), 0.0), cap) for y, v in given.items()}
     if start is not None and start > by:
+        # held at the reference before ``start``, then a linear transition over ``ramp`` years to the path [A]
         pts = {by: ref(by), **out}
-        at_start = _interp(pts, start)
+        last = max(max(out), start + ramp - 1)
+        path = {y: _interp(pts, y) for y in range(start, last + 1)}
         out = {y: (ref(y) if by < y < start else v) for y, v in out.items()}
         out[start - 1] = ref(start - 1)
-        out.setdefault(start, at_start)
+        for y in range(start, last + 1):
+            w = min((y - start + 1) / ramp, 1.0)
+            out[y] = min(max(ref(y) + w * (path[y] - ref(y)), 0.0), cap)
     return dict(sorted(out.items()))
 
 

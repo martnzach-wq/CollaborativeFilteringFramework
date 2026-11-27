@@ -321,6 +321,7 @@ def test_backcast_multipliers_and_least_change():
     assert cfg.mobility.policy_capacity_adaptation[2030] == pytest.approx(0.6)  # 0.4 removed
     cfg, _ = apply_strategy(None, city, s, multipliers={"parking": 1.0}, delay_to=2030)
     assert cfg.mobility.policy_parking_cost_adaptation[2029] == pytest.approx(1.0)  # delayed
+    assert cfg.mobility.policy_parking_cost_adaptation[2031] == pytest.approx(1.1)  # half way after 2 of 4 years
 
     def evaluate_many(mults):  # car share 0.30 - 0.5 x removed - 0.25 x parking increase
         out = []
