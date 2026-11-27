@@ -78,6 +78,7 @@ class Knowing:
     mobility: object
     energy_demand: object
     energy_supply: object
+    heat_health: object = None  # heat-health submodel, where the checkout has one
 
     def city(self, name: str):
         return getattr(self.city_config, name.upper())
@@ -91,7 +92,8 @@ def load(path: str | Path) -> Knowing:
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
     mods = [importlib.import_module(m) for m in ("city_config", "mobility", "energy_demand", "energy_supply")]
-    return Knowing(path, *mods)
+    heat = importlib.import_module("heat_health") if (path / "heat_health.py").exists() else None
+    return Knowing(path, *mods, heat_health=heat)
 
 
 def _scale(value, factor: float):

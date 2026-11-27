@@ -255,3 +255,45 @@ def test_effect_classes_and_registered_measure():
             S.register_measure("bad", {"field": "x"})
     finally:
         S.CATALOGUE.pop("test_addon_lever", None)
+
+
+@dataclasses.dataclass
+class _Heat:
+    hap0: float = 0.5
+    shading_base_rate: float = 0.003
+    street_trees: dict = dataclasses.field(default_factory=dict)
+    hap_target: dict = dataclasses.field(default_factory=dict)
+    shading_rate: dict = dataclasses.field(default_factory=dict)
+    ac_growth_mult: dict = dataclasses.field(default_factory=dict)
+
+
+@dataclasses.dataclass
+class _HeatCity:
+    mobility: _Mobility
+    energy_demand: _Demand
+    heat_health: _Heat | None = None
+
+
+def test_heat_health_levers_start_from_their_neutral_value():
+    s = _strategy(
+        measures=[
+            {"measure": "street_trees", "unit": "trees_per_year", "intensity": {2026: 4000.0}, "source": SRC},
+            {"measure": "heat_action_plan", "unit": "share", "intensity": {2026: 1.0}, "source": SRC},
+            {
+                "measure": "passive_cooling",
+                "unit": "share_per_year",
+                "intensity": {2026: 0.025},
+                "source": SRC,
+            },
+            {"measure": "ac_restraint", "unit": "factor", "intensity": {2026: 0.25}, "source": SRC},
+        ]
+    )
+    cfg, report = apply_strategy(None, _HeatCity(_Mobility(), _Demand(), _Heat()), s)
+    assert (report.status == "mapped").all()
+    assert cfg.heat_health.street_trees == {2019: 0.0, 2026: 4000.0}
+    assert cfg.heat_health.hap_target == {2019: 0.5, 2026: 1.0}
+    assert cfg.heat_health.shading_rate == {2019: 0.003, 2026: 0.025}
+    assert cfg.heat_health.ac_growth_mult == {2019: 1.0, 2026: 0.25}
+    assert set(report.effect) == {"modelled", "stated effect"}
+    _, report = apply_strategy(None, _HeatCity(_Mobility(), _Demand()), s)
+    assert (report.status == "unmapped").all()

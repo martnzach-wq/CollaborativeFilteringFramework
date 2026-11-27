@@ -128,6 +128,90 @@ CATALOGUE: dict[str, dict] = {
         "status": "lever",
         "effect": "modelled",
     },
+    # heat-health levers (submodel heat_health of the SD model): natural units per year on the land-cover
+    # classes (trees, unsealing) or on the dwelling stock; "neutral" is the value without the measure (a number
+    # or an attribute of the city's heat_health configuration)
+    "street_trees": {
+        "field": ("heat_health", {"trees_per_year": "street_trees"}),
+        "units": ("trees_per_year",),
+        "neutral": 0.0,
+        "exposure": (),
+        "response": "physical",
+        "status": "lever",
+        "effect": "modelled",
+    },
+    "courtyard_trees": {
+        "field": ("heat_health", {"trees_per_year": "courtyard_trees"}),
+        "units": ("trees_per_year",),
+        "neutral": 0.0,
+        "exposure": (),
+        "response": "physical",
+        "status": "lever",
+        "effect": "modelled",
+    },
+    "unsealing_streets": {
+        "field": ("heat_health", {"pp_per_year": "unseal_street_pp"}),
+        "units": ("pp_per_year",),
+        "neutral": 0.0,
+        "exposure": (),
+        "response": "physical",
+        "status": "lever",
+        "effect": "modelled",
+    },
+    "unsealing_courtyards": {
+        "field": ("heat_health", {"pp_per_year": "unseal_dense_pp"}),
+        "units": ("pp_per_year",),
+        "neutral": 0.0,
+        "exposure": (),
+        "response": "physical",
+        "status": "lever",
+        "effect": "modelled",
+    },
+    "ac_restraint": {
+        "field": ("heat_health", {"factor": "ac_growth_mult"}),
+        "units": ("factor",),
+        "neutral": 1.0,
+        "exposure": (),
+        "response": "behavioural",
+        "status": "lever",
+        "effect": "modelled",
+    },
+    "heat_action_plan": {
+        "field": ("heat_health", {"share": "hap_target"}),
+        "units": ("share",),
+        "neutral": "hap0",
+        "exposure": (),
+        "response": "health",
+        "status": "lever",
+        "effect": "stated effect",
+    },
+    "passive_cooling": {
+        "field": ("heat_health", {"share_per_year": "shading_rate"}),
+        "units": ("share_per_year",),
+        "neutral": "shading_base_rate",
+        "exposure": (),
+        "response": "physical",
+        "status": "lever",
+        "effect": "stated effect",
+    },
+    "building_greening": {
+        "field": ("heat_health", {"share_per_year": "greening_rate"}),
+        "units": ("share_per_year",),
+        "neutral": 0.0,
+        "exposure": (),
+        "response": "physical",
+        "status": "lever",
+        "effect": "stated effect",
+    },
+    "district_cooling": {
+        "field": ("heat_health", {"share": "dc_share"}),
+        "units": ("share",),
+        "neutral": 0.0,
+        "exposure": (),
+        "response": "technical",
+        "status": "lever",
+        "effect": "stated effect",
+    },
     "unsealing": {
         "field": ("microclimate", {"share_of_pathway": "policy_unseal", "ha": "unseal_ha"}),
         "units": ("share_of_pathway", "ha"),
@@ -232,6 +316,7 @@ def apply_strategy(
     demand = copy.deepcopy(base.energy_demand)
     supply = copy.deepcopy(getattr(base, "energy_supply", None))
     micro = copy.deepcopy(getattr(base, "microclimate", None))
+    heat = copy.deepcopy(getattr(base, "heat_health", None))
     report = []
     by = strategy.base_year
     for m in strategy.measures:
@@ -263,6 +348,16 @@ def apply_strategy(
             continue
         if m.unit not in cat["units"]:
             report.append(row | {"status": "unmapped", "reason": f"unit {m.unit!r} not in {cat['units']}"})
+            continue
+        if isinstance(cat["field"], tuple) and cat["field"][0] == "heat_health":
+            if heat is None:
+                report.append(row | {"status": "unmapped", "reason": "no heat_health submodel for this city"})
+                continue
+            attr = cat["field"][1][m.unit]
+            neutral = cat.get("neutral", 0.0)
+            neutral = float(getattr(heat, neutral) if isinstance(neutral, str) else neutral)
+            setattr(heat, attr, _series(given, by, neutral))
+            report.append(row | {"status": "mapped", "reason": f"heat_health.{attr}"})
             continue
         if isinstance(cat["field"], tuple) and cat["field"][0] == "microclimate":
             if micro is None or micro.calibration_csv is None:
@@ -348,6 +443,8 @@ def apply_strategy(
         parts["energy_supply"] = supply
     if micro is not None:
         parts["microclimate"] = micro
+    if heat is not None:
+        parts["heat_health"] = heat
     cfg = dataclasses.replace(base, **parts)
     return cfg, pd.DataFrame(report)
 
@@ -467,6 +564,13 @@ def strategy_outcomes(model, cfg, pi_scenario: float = 1.0, pkm_method: str = "c
         "final_energy_transport",
     ):
         out[f"{q}_per_capita"] = out[q] / out["population"]
+    # heat-health submodel (from its base year; earlier years empty)
+    hh_mod = getattr(model, "heat_health", None)
+    if hh_mod is not None and getattr(cfg, "heat_health", None) is not None:
+        hh = hh_mod.run_heat_health(cfg, population=dict(zip(years, pop, strict=True)))
+        cols = ["heat_deaths", "heat_days", "ac_share", "cooled_share", "shaded_share", "hap_level"]
+        out = out.join(hh[cols])
+        out["heat_deaths_per_100k"] = out["heat_deaths"] / out["population"] * 1e5
     return out
 
 
