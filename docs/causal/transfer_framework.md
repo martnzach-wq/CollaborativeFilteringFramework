@@ -153,6 +153,11 @@ be to meet the target, given the transferred responses", which is a consistency 
 forecast; it carries the transfer band of the responses (D56). Outcome targets used for solving are no longer
 independent checks; the other outcomes remain checks.
 
+Independently of the role, each element has an effect class (D63): *modelled* (response estimated by the model),
+*stated effect* (response size from an external estimate) or *exogenous path* (trajectory as input). Outcomes that
+depend only on exogenous paths (in the SD model: buildings, industry, supply, vehicle fleet) are checks of a
+strategy's consistency, not estimates of the effect of its measures.
+
 ## 5 Identification with existing data only
 
 Without new domain-model runs, the separation of intensity, exposure and response rests on:
