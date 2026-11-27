@@ -29,8 +29,14 @@ about 56 % of the car trips in Tallinn and 6 % in Naples.
 
 ## 2 Measure catalogue
 
-`SD status`: **lever** = intensity enters the SD model and the response is modelled; **bundled** = the measure is
-part of an exogenous MAED-City or IESopt trajectory, intensity, exposure and response are not separated.
+`SD status`: **lever** = intensity enters the SD model and the response is modelled; **bundled** = in the Python
+translation the measure follows the MAED-City or IESopt trajectory in both pathways. In the SD design (D2.4 Table
+14) these measures are levers too: refurbishment rate (`EN annual refurbishment rate`), district heating
+(`EN finEN total DH`), decarbonisation of industry and services (`EN finEN Industry/Service fossile`), PV, DH heat
+pumps, electric boilers, wind and hydro (`ES PV increase`, `ES new heatpumps`, `ES new electrboilers`,
+`ES new wind`, `ES new hydro`). Restoring them as levers needs a reference trajectory per row (section 3), not a
+new model structure. A behavioural response to these measures (for example more private heat pumps through
+subsidies) does need an extension (section 6).
 
 | Module | Measure | Intensity (unit) | Exposure / potential | Response | SD status | Response parameters without new runs |
 |---|---|---|---|---|---|---|
@@ -143,3 +149,25 @@ Without new domain-model runs, the separation of intensity, exposure and respons
 
 The empirical transfer band (0.27–3.5 × for single mobility effects, D56) stays the measure of what these sources
 cannot explain.
+
+## 6 Behavioural responses in energy demand and supply
+
+In D2.4 the energy levers set exogenous rates or trajectories (PI between reference and CETS); the uptake by
+households and firms is not modelled. D2.4 marks the endogenous uptake as prepared for the EV change rate, district
+cooling and AC limits ("can be made endogenous, not yet implemented"). Private heat pumps are not a lever of their
+own: they are part of the household space-heating rows of MAED-City (`hh_space heating_electr` against
+`_fossil fuel`); the heat-pump lever of Table 14 is the district-heating heat pump on the supply side.
+
+An endogenous response (e.g. subsidies → private heat pumps) needs an extension with:
+
+| Element | Content | Source without new domain runs |
+|---|---|---|
+| stock and flows | heating systems by type (fossil boiler, heat pump, DH, biomass, electric) in floor area or dwellings; replacement at end of life plus early replacement | building register, MAED-City base year; lifetimes from the literature |
+| decision rule | logit over systems at replacement on annualised cost (investment net of subsidy, energy cost, hurdle rate), as in the mobility logit; partial adjustment for the stock | literature on heating-choice models; the mobility logit as template |
+| intensity | subsidy (EUR per unit or share of investment), ban dates for fossil systems, DH expansion | local strategy (section 4) |
+| exposure | buildings suitable for heat pumps (age, insulation), buildings within DH reach | building and heat-density data |
+| behavioural modulation | compliance by coping type for subsidies and retrofit (D3.3 Table 30), weighted with the local coping distribution (D54) | behaviour model |
+| calibration | PI = 1 reproduces the CETS household space-heating rows, PI = 0 the reference; the subsidy response from the literature | MAED-City CETS of the demonstrators |
+
+The same pattern serves the refurbishment rate (decision to retrofit at the renovation cycle), AC uptake and
+limits, district-cooling connection and the EV change rate.
