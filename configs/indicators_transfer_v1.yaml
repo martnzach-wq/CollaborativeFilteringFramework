@@ -1,0 +1,100 @@
+registry_version: transfer_v1
+# Indicators for the transfer of SD-model pathways to new regions (transfer framework, section 3; decision D65):
+# age structure for heat-health exposure, commuting for cordon and boundary measures, private households for the
+# household size (population / households) of cooling electricity and building pathways. Public European sources
+# only. Shares of commuters follow from the three employment counts.
+indicators:
+- indicator_id: share_age_65plus
+  label: share of the population aged 65 and over
+  dtype: continuous
+  transform: logit
+  aggregation: wmean_pop
+  native_levels: [3]
+  unit: "%"
+  tags: [demography, heat_health, transfer]
+  source:
+    connector: eurostat
+    dataset: demo_r_pjanind3
+    filters:
+      indic_de: PC_Y65_MAX
+      unit: PC
+- indicator_id: share_age_75plus
+  label: share of the population aged 75 and over
+  dtype: continuous
+  transform: logit
+  aggregation: wmean_pop
+  native_levels: [3]
+  unit: "%"
+  tags: [demography, heat_health, transfer]
+  source:
+    connector: eurostat
+    dataset: demo_r_pjanind3
+    filters:
+      indic_de: PC_Y75_MAX
+      unit: PC
+- indicator_id: employed_work_same_region
+  label: employed residents working in their own NUTS-2 region
+  dtype: continuous
+  transform: log
+  aggregation: sum
+  native_levels: [2]
+  unit: thousand persons
+  tags: [commuting, mobility, transfer]
+  survey: LFS
+  source:
+    connector: eurostat
+    dataset: lfst_r_lfe2ecomm
+    filters:
+      c_work: INR
+      age: Y_GE15
+      sex: T
+      unit: THS_PER
+- indicator_id: employed_work_other_region
+  label: employed residents working in another NUTS-2 region (out-commuters)
+  dtype: continuous
+  transform: log1p
+  aggregation: sum
+  native_levels: [2]
+  unit: thousand persons
+  tags: [commuting, mobility, transfer]
+  survey: LFS
+  source:
+    connector: eurostat
+    dataset: lfst_r_lfe2ecomm
+    filters:
+      c_work: OUTR
+      age: Y_GE15
+      sex: T
+      unit: THS_PER
+- indicator_id: employed_work_abroad
+  label: employed residents working abroad (cross-border commuters)
+  dtype: continuous
+  transform: log1p
+  aggregation: sum
+  native_levels: [2]
+  unit: thousand persons
+  tags: [commuting, mobility, transfer]
+  survey: LFS
+  source:
+    connector: eurostat
+    dataset: lfst_r_lfe2ecomm
+    filters:
+      c_work: FOR
+      age: Y_GE15
+      sex: T
+      unit: THS_PER
+- indicator_id: private_households
+  label: private households
+  dtype: continuous
+  transform: log
+  aggregation: sum
+  native_levels: [2]
+  unit: thousand households
+  tags: [households, energy, transfer]
+  survey: LFS
+  source:
+    connector: eurostat
+    dataset: lfst_r_lfsd2hh
+    filters:
+      deg_urb: TOTAL
+      unit: THS_HH

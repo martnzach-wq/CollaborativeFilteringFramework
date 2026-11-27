@@ -801,6 +801,12 @@ PROFILE_FEATURES = (
     "car_km_per_trip",
     "od_trip_share",
 )
+# commuter features (D56 extension): for levers acting on car trips across a cordon or priced per trip, donors are
+# also compared by the car share of the origin-destination trips and the commuter population per resident
+COMMUTER_FEATURES = ("od_car_trip_share", "od_population_ratio")
+LEVER_FEATURES = dict.fromkeys(
+    ("area toll", "road pricing", "parking management"), PROFILE_FEATURES + COMMUTER_FEATURES
+)
 
 
 def mobility_profile(model: Knowing, city) -> pd.Series:
@@ -827,6 +833,16 @@ def mobility_profile(model: Knowing, city) -> pd.Series:
                 ]
             )
     total = trips.sum()
+    od_trips = (
+        np.asarray(
+            [
+                np.asarray(r) * pops["origin destination"]
+                for r in m.initial_trip_rate.get("origin destination", {}).values()
+            ]
+        ).sum(axis=0)
+        if m.initial_trip_rate.get("origin destination")
+        else np.zeros(5)
+    )
     return pd.Series(
         {
             "car_trip_share": trips[0] / total,
@@ -834,24 +850,31 @@ def mobility_profile(model: Knowing, city) -> pd.Series:
             "active_trip_share": (trips[3] + trips[4]) / total,
             "car_km_per_trip": car_km / trips[0],
             "od_trip_share": od / total,
+            "od_car_trip_share": od_trips[0] / od_trips.sum() if od_trips.sum() else 0.0,
+            "od_population_ratio": pops["origin destination"] / pops["internal"],
             "polycentric": float(getattr(m, "spatial_structure", "monocentric") == "polycentric_rural"),
         }
     )
 
 
 def donor_weights(
-    model: Knowing, target, donors: list, bandwidth: float = 1.0, structure_weight: float = 2.0
+    model: Knowing,
+    target,
+    donors: list,
+    bandwidth: float = 1.0,
+    structure_weight: float = 2.0,
+    features: tuple[str, ...] = PROFILE_FEATURES,
 ) -> pd.Series:
-    """Kernel weights exp(-(d/h)^2) of ``donors`` for ``target`` on the standardised mobility profile; a
-    different settlement structure adds ``structure_weight`` to the distance."""
+    """Kernel weights exp(-(d/h)^2) of ``donors`` for ``target`` on the standardised mobility profile
+    (``features``); a different settlement structure adds ``structure_weight`` to the distance."""
     names = [d if isinstance(d, str) else d.name for d in donors]
     t_name = target if isinstance(target, str) else target.name
     prof = pd.DataFrame(
         {n: mobility_profile(model, c) for n, c in zip(names + [t_name], donors + [target], strict=True)}
     ).T
-    feats = prof[list(PROFILE_FEATURES)]
+    feats = prof[list(features)]
     z = (feats - feats.mean()) / feats.std(ddof=0).replace(0, 1)
-    d = np.sqrt(((z.loc[names] - z.loc[t_name]) ** 2).sum(axis=1) / len(PROFILE_FEATURES))
+    d = np.sqrt(((z.loc[names] - z.loc[t_name]) ** 2).sum(axis=1) / len(features))
     d = d + structure_weight * (prof.loc[names, "polycentric"] != prof.loc[t_name, "polycentric"])
     w = np.exp(-((d / bandwidth) ** 2))
     return w / w.sum()
@@ -863,18 +886,36 @@ TRANSFER_BAND = (0.27, 3.47)
 
 
 def transfer_effects_weighted(
-    model: Knowing, target, donors: dict, year: int = 2040, band=TRANSFER_BAND, **kw
+    model: Knowing,
+    target,
+    donors: dict,
+    year: int = 2040,
+    band=TRANSFER_BAND,
+    lever_features: dict[str, tuple[str, ...]] | None = None,
+    **kw,
 ) -> dict:
     """Similarity-weighted single-measure effects of ``target``: ``effects`` (weighted mean of the donors'
     semi-elasticities times the target intensity), ``weak`` / ``strong`` (the ends of the empirical transfer
     band ``band`` around the effect, widened to the single-donor transfers), ``weights``
-    and the single-donor transfers ``single``."""
+    and the single-donor transfers ``single``. ``lever_features`` (e.g. `LEVER_FEATURES`) gives levers their own
+    profile features for the donor weights (``weights_by_lever``); without it every lever uses the profile."""
     names = list(donors)
     w = donor_weights(model, target, names, **kw)
     single = {d: transfer_effects(model, target, {d: donors[d]}, year)[0] for d in names}
     table = pd.DataFrame(single)
-    weighted = (table * w).sum(axis=1) / table.notna().mul(w).sum(axis=1)
+    wl = pd.DataFrame(dict.fromkeys(table.index, w)).T
+    for lever, feats in (lever_features or {}).items():
+        if lever in wl.index:
+            wl.loc[lever] = donor_weights(model, target, names, features=feats, **kw)[wl.columns]
+    weighted = (table * wl).sum(axis=1) / table.notna().mul(wl).sum(axis=1)
     # effects are negative: the weak end is the larger value, the strong end the smaller
     weak = np.maximum(weighted * band[0], table.max(axis=1))
     strong = np.minimum(weighted * band[1], table.min(axis=1))
-    return {"effects": weighted, "weak": weak, "strong": strong, "weights": w, "single": table}
+    return {
+        "effects": weighted,
+        "weak": weak,
+        "strong": strong,
+        "weights": w,
+        "weights_by_lever": wl,
+        "single": table,
+    }

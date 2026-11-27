@@ -82,8 +82,16 @@ capacities. For a new region the reference has to be built from the components b
 | reference efficiency trend | sector energy intensity over time | – | – | national reference scenario (NECP, EU Reference Scenario) |
 | supply 2019 | local generation, DH, imports | renewables share (NUTS-0) | – | utility data, energy balance |
 | grid emission factor trajectory | t CO2 per GWh | – | – | national NECP or system operator projection |
+| commuting | persons and car share crossing the city boundary, trend | employed residents by place of work, NUTS-2 (`employed_work_*`, LFS; D65) | donor weights of cordon and pricing levers by car share of OD trips and commuter population (D56 extension) | inbound counts or cordon survey (essential for boundary targets) |
+| territorial transport accounting | share of fuel sold that is burnt in the territory | – | – | regional emission inventory (fuel export, cross-border fuelling); essential for transport targets |
+| local generation and dispatch | share of electricity demand generated locally, operation of gas CHP | – | – | utility data; decides whether local renewables lower territorial emissions |
+| households | persons per household | population / private households (`private_households`, NUTS-2; D65) | – | – |
+| building heating | heating systems by carrier | Census 2021 (national statistical offices; no Eurostat API table) | coarse from similar regions | building register, useful-energy analysis |
+| land cover for the microclimate | sealing, building height, tree canopy by land-cover class, residents by class | Copernicus Urban Atlas, HRL Imperviousness and Tree Cover Density (no connector yet) | – | municipal tree cadastre, land-use map |
+| heat–health | age structure, death rates, temperature–mortality curve by age group, care-home residents per person 75+, AC prevalence and its diffusion | age shares 65+ and 75+, NUTS-3 (`share_age_65plus`, `share_age_75plus`; D65); weekly deaths by age (Eurostat demo_r_mweek3) | temperature–mortality curves estimable from weekly deaths for any NUTS-2 region (planned) | care-home places and mortality; AC surveys (national) |
 
-Assessment: with regsim alone a reference pathway can be built for demography, climate, income and coping types.
+Assessment: with regsim alone a reference pathway can be built for demography, climate, income, coping types and
+the age structure and commuting of the heat-health and boundary measures.
 Two inputs are indispensable and local: the **mobility base year** (modal split by distance class and zone) and
 the **energy balance by sector and carrier**. A reference trend for energy demand and supply comes from
 national reference scenarios; it is not estimable from similar regions, since it follows national policy.
