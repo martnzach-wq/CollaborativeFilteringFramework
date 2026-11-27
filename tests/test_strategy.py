@@ -145,3 +145,12 @@ def test_microclimate_levers_in_natural_units():
     cfg, report = apply_strategy(None, _MicroCity(_Mobility(), _Demand(), _Micro(city_area_km2=159.2)), s)
     assert cfg.microclimate.unseal_ha == {2019: 0.0, 2040: 80.0}
     assert (report.status == "mapped").all()
+
+
+def test_check_outcomes_reference_year_outside_run():
+    s = _strategy(
+        outcomes=[{"quantity": "emissions_total", "relative_to": 2005, "values": {2030: -0.5}, "source": SRC}]
+    )
+    results = pd.DataFrame({"emissions_total": [1000.0, 500.0]}, index=pd.Index([2019, 2030], name="year"))
+    out = check_outcomes(results, s)
+    assert out.loc[0, "note"] == "reference year 2005 outside the model run"

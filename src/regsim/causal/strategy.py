@@ -285,6 +285,17 @@ def check_outcomes(results: pd.DataFrame, strategy: StrategyFile) -> pd.DataFram
                 }
             )
             continue
+        if o.relative_to is not None and o.relative_to not in results.index:
+            rows.append(
+                {
+                    "quantity": o.quantity,
+                    "year": None,
+                    "target": None,
+                    "model": None,
+                    "note": f"reference year {o.relative_to} outside the model run",
+                }
+            )
+            continue
         for y, target in o.values.items():
             if target is None or y not in results.index:
                 continue
