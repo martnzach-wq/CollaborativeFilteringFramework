@@ -1,0 +1,145 @@
+# Transfer of the SD model to regions without domain-model runs
+
+Scope: the KNOWING integrated SD model (mobility, microclimate, energy demand, energy supply) applied to a
+region for which no ABM light, MAED-City, IESopt or PALM-4U runs exist, and for which none will be made. The
+demonstrators (Tallinn, Naples, South Westphalia, Granollers) supply all behavioural evidence. Decisions D44–D56
+in `docs/decisions.md`; results in `docs/causal/demonstrator_calibration_targets.md`.
+
+## 1 Decomposition of a measure effect
+
+    effect = intensity × exposure × response
+
+| Component | Meaning | Source in a new region |
+|---|---|---|
+| intensity | the dose set by the measure, in natural units (EUR per km, retrofit rate, MWp, share of area greened) | local strategy (section 4) |
+| exposure | the share of trips, km, floor area, buildings or area that the measure reaches; bounded by the **potential** | local structural data; regsim indicators; estimates from similar regions |
+| response | the change per unit of exposed dose | model structure plus parameters from the demonstrators or the literature |
+
+Responses are of three kinds, which transfer differently:
+
+| Kind | Examples | Transfer |
+|---|---|---|
+| physical or technical | PV yield per kWp, heat-pump COP, cooling per m² of trees (PALM λ), emission factors | good: parameters with climate and technology corrections |
+| behavioural | mode choice, compliance, rebound, investment decisions | partial: through the coping-type distribution (D54), compliance by type (D3.3 Table 30) and the availability of alternatives; residual band 0.27–3.5 × (D56) |
+| systemic | electricity mix, imports, prices, grid limits | local: only through scenario inputs (section 4) |
+
+A calibrated lever factor contains exposure and response together wherever the model lacks an explicit exposure
+term. This is why the pricing factors did not transfer between the demonstrators (D53): the same toll reached
+about 56 % of the car trips in Tallinn and 6 % in Naples.
+
+## 2 Measure catalogue
+
+`SD status`: **lever** = intensity enters the SD model and the response is modelled; **bundled** = the measure is
+part of an exogenous MAED-City or IESopt trajectory, intensity, exposure and response are not separated.
+
+| Module | Measure | Intensity (unit) | Exposure / potential | Response | SD status | Response parameters without new runs |
+|---|---|---|---|---|---|---|
+| mobility | road pricing | EUR per km | charged km per car trip | behavioural | lever (D53 exposure) | semi-elasticity −1 to −6 % car trips per EUR per trip (D55) |
+| mobility | area toll | EUR per entry | share of car trips entering the zone | behavioural | lever, exposure missing | per EUR and entry −1.4 % (Tallinn dose-response 2030–2050) |
+| mobility | parking management | EUR per trip | share of trips with priced parking | behavioural | lever | semi-elasticities −10 to −18 % per EUR (D55) |
+| mobility | traffic calming / capacity | share of road capacity removed | road network in the area | behavioural | lever | semi-elasticities; walk/cycle time bonus (D41) |
+| mobility | PT optimisation | share of PT time saved | PT trips, PT network | behavioural | lever | semi-elasticities −5 to −28 % per 100 % time saved |
+| mobility | cycling optimisation | share of cycling resistance removed | car trips below 5 km | behavioural | lever | perceived-time reduction (D41) |
+| mobility | 15-minute city | share of trips shortened per year | medium and long trips | behavioural | lever | re-choice of mode (D49) |
+| mobility | car occupancy | attractiveness | car trips | behavioural | lever | weak, uncertain |
+| fleet | combustion-car sales ban, EV subsidy | ban year, EUR | fleet turnover | behavioural + market | EV trajectory with ban compliance (D42) | compliance by coping type |
+| microclimate | greening, unsealing, trees | share of area per Corine class | sealed share, building structure, population exposed | physical | lever (PI on feature trajectories) | λ from Tallinn PALM-4U; β CDD per K |
+| buildings | retrofit | rate (% per year), depth (kWh/m²) | floor area by construction period | technical + behavioural | bundled (MAED) | savings per m² from building typologies (TABULA); compliance by type |
+| buildings | heating-system change (heat pumps, DH connection) | units per year, share | buildings suitable, heat density | technical + behavioural | bundled (MAED, IESopt) | COP by climate; compliance by type |
+| buildings | cooling limits, AC sales limits | limit values | AC stock, CDD | physical + behavioural | cooling ∝ CDD; behaviour missing | compliance by type (D3.3 Table 30) |
+| supply | PV, wind, biomethane | MWp, MW, GWh | roof area, irradiation, wind potential | physical + systemic | bundled (IESopt) | yield per kWp from irradiation (regsim d36) |
+| supply | district heating | network length, connections | heat density | technical | bundled (IESopt) | – |
+| supply | electrolysis, biofuel blending | MW, blend share | demand in industry and transport | systemic | bundled; blend share as input | – |
+| all | emission factors | – | fuel mix | physical | IPCC by fuel (D37) | transferable |
+
+## 3 Transfer of the reference (BAU) pathway
+
+The SD model runs a reference (PI = 0) and an optimised pathway (PI = 1). Only mobility and microclimate respond
+to the PI; energy demand of buildings, industry and services, and energy supply follow the MAED-City CETS and
+IESopt trajectories in **both** cases. A reference pathway outside transport therefore does not exist yet: for the
+demonstrators the reference shows the CETS energy system with reference mobility. For a new region the reference
+has to be built from the components below.
+
+| Component | What the SD model needs | From regsim / European data | Estimable from similar regions (regsim) | Local data needed |
+|---|---|---|---|---|
+| population 2019 and change | core and surroundings, annual | NUTS-3 population and growth (Eurostat; Statistik Austria at LAU) | – | delineation of core and surroundings; projections (national or city) |
+| income, GDP | value of time, car ownership | GDP per inhabitant, household income (NUTS-2/3) | – | – |
+| climate | HDD, CDD, heat days, trajectory | HDD/CDD (NUTS-2/3), D3.6 heat days, irradiation | CDD trajectory from similar climate | local climate scenario if available |
+| coping types | shares A–F | D54 table | estimate for unsurveyed countries (error 3.9 points per type) | local survey |
+| mobility base year | trips, length, time by mode × class × zone | cars per 1,000, network densities (D3.6) | modal split and length structure from similar regions: coarse | travel survey or transport model (essential) |
+| mobility reference trend | population, costs, fleet | – | stable by construction in the logit model | national fuel price and EV projections |
+| fleet | EV share trajectory | – | – | national registrations and projections |
+| energy balance 2019 | final energy by sector and carrier | national balances (Eurostat), not regional | per-capita structure from similar regions: coarse | city energy balance (essential; e.g. Wien Energiebericht) |
+| buildings | floor area by period, heating systems | – | coarse from similar regions | building register, heat atlas |
+| reference efficiency trend | sector energy intensity over time | – | – | national reference scenario (NECP, EU Reference Scenario) |
+| supply 2019 | local generation, DH, imports | renewables share (NUTS-0) | – | utility data, energy balance |
+| grid emission factor trajectory | t CO2 per GWh | – | – | national NECP or system operator projection |
+
+Assessment: with regsim alone a reference pathway can be built for demography, climate, income and coping types.
+Two inputs are indispensable and local: the **mobility base year** (modal split by distance class and zone) and
+the **energy balance by sector and carrier**. A reference trend for energy demand and supply comes from
+national reference scenarios; it is not estimable from similar regions, since it follows national policy.
+Behavioural responses come from the demonstrators with the transfer band of D56.
+
+## 4 Interface for local strategies
+
+A local strategy (for Vienna the Klimafahrplan and the Smart Klima City Strategie) supplies intensity and exposure;
+the model supplies the response. The interface is a YAML file validated by `regsim.config.StrategyFile`
+(example: `configs/strategies/vienna_klimafahrplan.yaml`).
+
+### 4.1 Entries
+
+| Entry | Content | Use |
+|---|---|---|
+| `measures` | catalogue measure, intensity series `{year: value}` with unit, exposure (kind, value), source (document, section), confidence | **input**: mapped to the SD levers (`regsim.causal.strategy.apply_strategy`) |
+| `pathways` | trajectories of a bundled sector (e.g. final energy of households by carrier, PV capacity), with unit and source | **input**: replace the corresponding MAED-City or IESopt rows; no modelled response |
+| `outcomes` | targets stated as results (modal split, CO2 per inhabitant, final energy) | **check**: compared with the model results; never an input |
+
+Strategies often state outcomes ("85 % sustainable modes by 2030", "climate-neutral by 2040") rather than measures.
+Outcomes are not inputs: the model computes them from the measures, and the comparison shows whether the
+measures stated in the strategy suffice (`check_outcomes`). A target can be solved for a single measure
+intensity (the intensity of one lever that meets it), which is reported as the required intensity, not as an
+assumption.
+
+### 4.2 Mapping to the SD model
+
+| Catalogue measure | SD field (intensity) | Exposure field |
+|---|---|---|
+| road pricing | `policy_road_pricing` (EUR/km) | `road_pricing_km_scale` (charged km per car trip / model value) |
+| area toll | `policy_area_toll` (EUR per entry) | share of car trips entering the zone (not yet modelled; reported) |
+| parking management | `policy_parking_cost_adaptation` (factor on base cost) | – |
+| traffic calming | `policy_capacity_adaptation` (factor on capacity) | – |
+| PT optimisation | `policy_pt_traveltime_adaptation` (factor on PT time) | – |
+| cycling optimisation | `cycling_resistance_reduction` (share) | – |
+| 15-minute city | `policy_distance_adaptation` | – |
+| car occupancy | `policy_car_passenger_attractiveness` | – |
+| EV fleet | `ev_pi_trajectory` (% of fleet) | – |
+| greening, unsealing | PI on the feature trajectories (fixed coupling with traffic calming) | – |
+| retrofit, heating change, PV, DH, electrolysis | bundled: through `pathways` | – |
+
+The mapped strategy runs as the optimised pathway (PI = 1); the reference is the same configuration with the
+strategy's measures held at their 2019 values. Measures without a lever are listed by `apply_strategy` as
+unmapped, with the reason, so that no strategy element is silently dropped.
+
+### 4.3 Responses
+
+Lever factors, logit scale and adjustment come from the demonstrators (D55, D56) and carry the transfer band; a
+run reports the central value and both ends. For the area toll and other levers whose calibrated factor still
+contains the demonstrators' exposure, the factor is divided by the demonstrator exposure once that exposure is
+known; until then the band covers it.
+
+## 5 Identification with existing data only
+
+Without new domain-model runs, the separation of intensity, exposure and response rests on:
+
+1. **Dose-response within a demonstrator**: the ABM light single measures of Tallinn in 2030, 2040 and 2050 at
+   three intensities (area toll 10 / 15 / 20 EUR: −14 / −21 / −27 % car trips, close to linear).
+2. **Cross-sectional semi-elasticities** of the three ABM light demonstrators at their own intensities (D55).
+3. **Exposure proxies** from the ABM light exports (charged km per car trip, D53) and from structural data.
+4. **Literature parameters** for physical and technical responses (TABULA savings, COP, PV yield, IPCC factors)
+   and for the value of time (HEATCO D5, D49).
+5. **Behaviour model** compliance by coping type for all measure types in D3.3 Table 30 (AC limits, cooling
+   capacity, subsidies, sales ban, parking removal, heat-wave travel, retrofit).
+
+The empirical transfer band (0.27–3.5 × for single mobility effects, D56) stays the measure of what these sources
+cannot explain.

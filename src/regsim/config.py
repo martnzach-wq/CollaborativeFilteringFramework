@@ -18,7 +18,9 @@ class DataConfig(BaseModel):
     periods: list[str] = Field(default_factory=lambda: ["2013/2017", "2018/2022"])  # decision D3
     store: str = "data/store"
     raw_dir: str = "data/raw"
-    sources: list[str] = Field(default_factory=lambda: ["eurostat"])  # decision D5: eurostat, d36, ardeco; table (D54)
+    sources: list[str] = Field(
+        default_factory=lambda: ["eurostat"]
+    )  # decision D5: eurostat, d36, ardeco; table (D54)
     d36_gpkg: str | None = None
     lau: bool = False
 
@@ -232,4 +234,70 @@ class RuleSet(BaseModel):
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> RuleSet:
+        return cls.model_validate(yaml.safe_load(Path(path).read_text(encoding="utf-8")))
+
+
+# ---- local strategies as inputs of the SD model (decision D57) ------------------------------------------
+
+
+class StrategySource(BaseModel):
+    document: str
+    section: str = ""
+    note: str = ""
+
+
+class StrategyExposure(BaseModel):
+    kind: str  # e.g. "charged_km_per_car_trip", "zone_trip_share"
+    value: float
+    source: StrategySource | None = None
+
+
+class StrategyMeasure(BaseModel):
+    """A measure of the catalogue (`regsim.causal.strategy.CATALOGUE`) with its intensity over time."""
+
+    measure: str
+    unit: str
+    intensity: dict[int, float | None]
+    exposure: StrategyExposure | None = None
+    source: StrategySource
+    confidence: Literal["stated", "derived", "assumed"] = "stated"
+
+    @field_validator("measure")
+    @classmethod
+    def _known(cls, v: str) -> str:
+        from regsim.causal.strategy import CATALOGUE
+
+        if v not in CATALOGUE:
+            raise ValueError(f"unknown measure {v!r}; see regsim.causal.strategy.CATALOGUE")
+        return v
+
+
+class StrategyPathway(BaseModel):
+    """Trajectory of a bundled sector that replaces a MAED-City row (no modelled response)."""
+
+    row: str  # label of the CETS row, e.g. "EN_finEN_hh_space heating_fossil fuel"
+    unit: Literal["GWh"] = "GWh"
+    values: dict[int, float | None]
+    source: StrategySource
+
+
+class StrategyOutcome(BaseModel):
+    """A target stated as a result; compared with the model, never an input."""
+
+    quantity: str  # a column of the SD runner output, e.g. "car_km_share", "emissions_total"
+    values: dict[int, float | None]
+    relative_to: int | None = None  # targets as change against this year (e.g. -0.5 for minus 50 %)
+    source: StrategySource
+
+
+class StrategyFile(BaseModel):
+    region: str
+    name: str
+    base_year: int = 2019
+    measures: list[StrategyMeasure] = Field(default_factory=list)
+    pathways: list[StrategyPathway] = Field(default_factory=list)
+    outcomes: list[StrategyOutcome] = Field(default_factory=list)
+
+    @classmethod
+    def from_yaml(cls, path: str | Path) -> StrategyFile:
         return cls.model_validate(yaml.safe_load(Path(path).read_text(encoding="utf-8")))

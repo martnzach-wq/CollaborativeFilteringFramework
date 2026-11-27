@@ -1,4 +1,10 @@
 # Progress
+## Transfer framework and strategy interface (2026-11-27)
+
+- `docs/causal/transfer_framework.md`: decomposition of measure effects, measure catalogue for all modules, transfer of the reference pathway (regsim covers demography, climate, income and coping types; the mobility base year and the energy balance by sector and carrier stay local), strategy interface (D57).
+- `regsim.config.StrategyFile`, `regsim.causal.strategy` (catalogue, `apply_strategy`, `check_outcomes`), template `configs/strategies/vienna_klimafahrplan.yaml` (values to be taken from the documents); SD branch: CETS row overrides and area-toll exposure. Tests `tests/test_strategy.py`.
+- Open: energy demand and supply follow the CETS pathway in the reference as well; a reference energy pathway needs national reference scenarios and the local energy balance.
+
 ## SD Tallinn on the full ABM light export (2026-11-26)
 
 - Base year from the ABM light table (D47), coping types by compliance (D48), effects as car trips and value of time 11.37 EUR/h checked against HEATCO and Rail Baltica (D49), targets from the full export (D50), logit mode choice (D51): car share of pkm optimised within 0.01 of ABM light in 2030–2050.

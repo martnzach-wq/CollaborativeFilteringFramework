@@ -1,0 +1,55 @@
+# Strategy interface (decision D57, docs/causal/transfer_framework.md section 4): template for Vienna.
+# Values are left empty (null) until they are taken from the documents; every entry names its source.
+# measures: intensity (and exposure) as inputs; pathways: trajectories of bundled sectors (replace MAED-City
+# rows); outcomes: stated results, compared with the model, never inputs.
+region: AT130  # Wien (NUTS-3)
+name: Wiener Klimafahrplan and Smart Klima City Strategie Wien
+base_year: 2019
+measures:
+  - measure: parking_management
+    unit: EUR/trip
+    intensity: {2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: mobility, note: change of parking charges against 2019}
+  - measure: traffic_calming
+    unit: share_removed
+    intensity: {2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: mobility, note: share of road space reallocated from car traffic}
+  - measure: pt_optimisation
+    unit: share_time_saved
+    intensity: {2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: mobility, note: PT expansion expressed as share of PT door-to-door time saved}
+  - measure: cycling_optimisation
+    unit: share
+    intensity: {2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: mobility, note: cycling network expansion as share of perceived resistance removed}
+  - measure: ev_fleet
+    unit: percent_of_fleet
+    intensity: {2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: mobility, note: zero-emission share of the passenger car fleet}
+  - measure: greening
+    unit: share_of_area
+    intensity: {2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: urban greening and unsealing}
+  - measure: retrofit
+    unit: percent_per_year
+    intensity: {2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: buildings, note: bundled sector; translate into the household heating pathways below}
+  - measure: pv
+    unit: MWp
+    intensity: {2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: energy supply, note: bundled; enters the supply pathway}
+pathways:
+  - row: EN_finEN_hh_space heating_fossil fuel
+    values: {2019: null, 2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: buildings, note: fossil space heating of households in GWh (Raus aus Gas)}
+  - row: EN_finEN_hh_space heating_DH
+    values: {2019: null, 2030: null, 2040: null}
+    source: {document: Wiener Klimafahrplan, section: district heating}
+outcomes:
+  - quantity: car_km_share
+    values: {2030: null}
+    source: {document: Smart Klima City Strategie Wien, section: mobility, note: car share; convert a trip-based target to the model quantity}
+  - quantity: emissions_total
+    relative_to: 2019
+    values: {2030: null, 2040: null}
+    source: {document: Smart Klima City Strategie Wien, section: climate neutrality, note: change of total CO2 against 2019}
