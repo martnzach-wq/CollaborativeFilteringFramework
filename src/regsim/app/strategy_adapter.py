@@ -48,6 +48,8 @@ class TargetSpec:
     relative_to: int | None = None  # target as change against this year
     bound: str = "max"  # "max": at most, "min": at least
     hard: bool = True  # hard targets decide "met"; the others are reported
+    scale: float = 1.0  # display of a level target: value x scale (e.g. 100 for shares)
+    unit: str = ""  # unit of a level target as displayed (e.g. "%")
 
 
 @dataclass(frozen=True)
@@ -118,6 +120,12 @@ def target_value(results: pd.DataFrame, t: TargetSpec) -> float:
     if t.relative_to is not None:
         v = v / float(results.loc[t.relative_to, t.quantity]) - 1.0
     return v
+
+
+def is_met(margin: float, target: TargetSpec) -> bool:
+    """Met within the solver tolerance (0.05 pp for changes, 1e-4 relative for levels)."""
+    tol = 5e-4 if target.relative_to is not None else 1e-4 * max(1.0, abs(target.value))
+    return bool(margin >= -tol)
 
 
 def margins(results: pd.DataFrame, targets: list[TargetSpec]) -> pd.DataFrame:

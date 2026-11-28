@@ -18,6 +18,7 @@ from regsim.app.strategy_adapter import (
     TargetSpec,
     contributions,
     display,
+    is_met,
     target_status,
     tr,
 )
@@ -80,11 +81,15 @@ TEXT = {
     "band_legend_resp": {"de": "Reaktionsband", "en": "response band"},
     "band_legend_clim": {"de": "Klimaband (min–max)", "en": "climate band (min–max)"},
     "climate_median": {"de": "Median der Klimamitglieder", "en": "median of the climate members"},
+    "band_weak": {"de": "schwache Reaktion", "en": "weak response"},
+    "band_strong": {"de": "starke Reaktion", "en": "strong response"},
     "no_climate": {
         "de": "Für diese Stadt ist kein Klimaband hinterlegt.",
         "en": "No climate band for this city.",
     },
 }
+TABLE = {"fontSize": "12px", "borderCollapse": "collapse", "width": "100%"}
+CELL = {"padding": "3px 8px", "borderBottom": f"1px solid {GRID}", "textAlign": "left"}
 EFFECT_COLOUR = {"modelled": SERIES[0], "stated effect": SERIES[6], "exogenous path": "#8a8984"}
 
 
@@ -154,9 +159,20 @@ def fig_series(
     fig.add_trace(
         go.Scatter(x=list(y.index), y=y.values, name=t("model", lang), line={"color": C_SCEN, "width": 2})
     )
-    pts = [tg for tg in (targets or []) if tg.quantity == spec.quantity]
+    pts, ty = [], []
+    for tg in targets or []:
+        if tg.quantity != spec.quantity:
+            continue
+        if spec.relative_to is not None and tg.relative_to == spec.relative_to:
+            ty.append(100 * tg.value)
+        elif spec.relative_to is None and tg.relative_to is None:
+            ty.append(tg.value * spec.scale)
+        elif spec.relative_to is None and tg.relative_to in central.index:  # change target on a level chart
+            ty.append(float(central.loc[tg.relative_to, spec.quantity]) * (1 + tg.value) * spec.scale)
+        else:
+            continue
+        pts.append(tg)
     if pts:
-        ty = [100 * tg.value if spec.relative_to is not None else tg.value * spec.scale for tg in pts]
         fig.add_trace(
             go.Scatter(
                 x=[tg.year for tg in pts],
@@ -192,7 +208,7 @@ def fig_stack(
                 marker={"color": SERIES[i % len(SERIES)], "line": {"color": "#ffffff", "width": 2}},
             )
         )
-    fig.update_layout(barmode="stack", bargap=0.45)
+    fig.update_layout(barmode="stack", bargap=0.45, legend={"traceorder": "normal"})
     return _layout(fig, title, unit)
 
 
@@ -266,9 +282,23 @@ def status_rows(status: pd.DataFrame, targets: list[TargetSpec], lang: str) -> l
         strict=True,
     ):
         pct = tg.relative_to is not None
-        fmt = (lambda v: f"{100 * v:+.1f} %") if pct else (lambda v: f"{v:,.3g}")
-        mfmt = (lambda v: f"{100 * v:+.1f} pp") if pct else (lambda v: f"{v:+,.3g}")
-        met = r.margin >= -1e-6
+        unit = f" {tg.unit}" if tg.unit else ""
+        if pct:
+
+            def fmt(v):
+                return f"{100 * v:+.1f} %"
+
+            def mfmt(v):
+                return f"{100 * v:+.1f} pp"
+        else:
+
+            def fmt(v, tg=tg, unit=unit):
+                return f"{v * tg.scale:,.3g}{unit}"
+
+            def mfmt(v, tg=tg):
+                return f"{v * tg.scale:+,.3g}" + (" pp" if tg.unit == "%" else "")
+
+        met = is_met(r.margin, tg)
         row = {
             "label": tr(tg.label, lang),
             "year": tg.year,
@@ -318,6 +348,8 @@ def create_strategy_app(adapter: StrategyAdapter, lang: str = "de", title: str |
                 "fontSize": "11px",
                 "marginRight": "4px",
                 "borderLeft": f"6px solid {colour}",
+                "whiteSpace": "nowrap",
+                "display": "inline-block",
             },
         )
 
@@ -378,9 +410,9 @@ def create_strategy_app(adapter: StrategyAdapter, lang: str = "de", title: str |
         g = g[g.id.isin(used)] if used else g
         head = ["id", "item", "current_value", "importance", "informant"]
         return html.Table(
-            [html.Thead(html.Tr([html.Th(h) for h in head]))]
-            + [html.Tr([html.Td(str(r[h])) for h in head]) for _, r in g.iterrows()],
-            style={"fontSize": "12px", "borderCollapse": "collapse", "width": "100%"},
+            [html.Thead(html.Tr([html.Th(h, style=CELL) for h in head]))]
+            + [html.Tr([html.Td(str(r[h]), style=CELL) for h in head]) for _, r in g.iterrows()],
+            style=TABLE,
         )
 
     def page(lg: str, mults: dict, opts: dict):
@@ -561,7 +593,7 @@ def create_strategy_app(adapter: StrategyAdapter, lang: str = "de", title: str |
         p = adapter.presets[name]
         mm = {**adapter.defaults(), **p.get("multipliers", {})}
         oo = {**default_opts, **p.get("options", {})}
-        return [mm[i["key"]] for i in lever_ids], [oo[i["key"]] for i in opt_ids]
+        return [round(float(mm[i["key"]]), 2) for i in lever_ids], [oo[i["key"]] for i in opt_ids]
 
     @app.callback(
         Output("mults", "data"),
@@ -641,7 +673,8 @@ def create_strategy_app(adapter: StrategyAdapter, lang: str = "de", title: str |
         ]
         cols = (
             ["label", "year", "kind", "target", "model", "margin"]
-            + sorted({c for r in rows for c in r if c.startswith("margin_")})
+            + [f"margin_{b}" for b in adapter.response_bands if any(f"margin_{b}" in r for r in rows)]
+            + (["margin_climate_min"] if any("margin_climate_min" in r for r in rows) else [])
             + ["status"]
         )
         names = {
@@ -655,22 +688,25 @@ def create_strategy_app(adapter: StrategyAdapter, lang: str = "de", title: str |
             "margin_climate_min": t("margin", lg) + ": " + t("climate_min", lg),
         }
         for b in adapter.response_bands:
-            names[f"margin_{b}"] = f"{t('margin', lg)}: {b}"
+            names[f"margin_{b}"] = f"{t('margin', lg)}: {t('band_' + b, lg)}"
         table = html.Table(
-            [html.Thead(html.Tr([html.Th(names.get(c, c)) for c in cols]))]
+            [html.Thead(html.Tr([html.Th(names.get(c, c), style=CELL) for c in cols]))]
             + [
                 html.Tr(
                     [
                         html.Td(
                             r.get(c, ""),
-                            style={"color": (GOOD if r["met"] else CRITICAL) if c == "status" else INK},
+                            style={
+                                **CELL,
+                                "color": (GOOD if r["met"] else CRITICAL) if c == "status" else INK,
+                            },
                         )
                         for c in cols
                     ]
                 )
                 for r in rows
             ],
-            style={"fontSize": "12px", "borderCollapse": "collapse", "width": "100%"},
+            style=TABLE,
         )
         band_graphs = [
             dcc.Graph(figure=fig_series(s, central, lg, band_runs, None, adapter.targets))
@@ -737,14 +773,14 @@ def create_strategy_app(adapter: StrategyAdapter, lang: str = "de", title: str |
         head = [t("levers", lg)] + list(scen)
         body = [
             html.Tr(
-                [html.Td(tr(lv.label, lg))]
-                + [html.Td(f"{float(m.get(lv.key, 1.0)):.2f}") for m, _ in scen.values()]
+                [html.Td(tr(lv.label, lg), style=CELL)]
+                + [html.Td(f"{float(m.get(lv.key, 1.0)):.2f}", style=CELL) for m, _ in scen.values()]
             )
             for lv in adapter.levers
         ]
         table = html.Table(
-            [html.Thead(html.Tr([html.Th(h) for h in head]))] + body,
-            style={"fontSize": "12px", "borderCollapse": "collapse"},
+            [html.Thead(html.Tr([html.Th(h, style=CELL) for h in head]))] + body,
+            style={**TABLE, "width": "auto"},
         )
         return [
             html.Div(
